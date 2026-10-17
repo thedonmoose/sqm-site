@@ -42,9 +42,9 @@ const navLinks = [
       ))}
       {
         callHref ? (
-          <a href={callHref} class="btn btn-primary">Call {site.phone}</a>
+          <a href={callHref} class="btn btn-primary btn-md">Call {site.phone}</a>
         ) : (
-          <span class="btn btn-primary" aria-disabled="true">Call — number coming soon</span>
+          <span class="btn btn-primary btn-md" aria-disabled="true">Call — number coming soon</span>
         )
       }
     </nav>
@@ -52,9 +52,9 @@ const navLinks = [
     <div class="flex items-center gap-3 md:hidden">
       {
         callHref ? (
-          <a href={callHref} class="btn btn-primary">Call {site.phone}</a>
+          <a href={callHref} class="btn btn-primary btn-md">Call {site.phone}</a>
         ) : (
-          <span class="btn btn-primary" aria-disabled="true">Call — number coming soon</span>
+          <span class="btn btn-primary btn-md" aria-disabled="true">Call — number coming soon</span>
         )
       }
       <button
