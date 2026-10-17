@@ -142,10 +142,11 @@ const structuredData = {
           <VehicleGallery vehicle={vehicle} />
         </section>
 
-        <aside
-          aria-label="Price and enquiry"
-          class="sqm-panel contents lg:order-2 lg:col-start-2 lg:sticky lg:top-6 lg:flex lg:flex-col lg:gap-5 lg:self-start lg:border lg:border-charcoal lg:bg-charcoal/5 lg:p-7"
-        >
+        <div class="sqm-panel contents lg:col-start-2 lg:block lg:self-stretch">
+          <aside
+            aria-label="Price and enquiry"
+            class="contents lg:sticky lg:top-6 lg:flex lg:flex-col lg:gap-5 lg:border lg:border-charcoal lg:bg-charcoal/5 lg:p-7"
+          >
           <div class="order-2 flex flex-col gap-2 lg:order-1">
             <div class="flex flex-wrap items-center gap-3">
               <span class="bg-charcoal px-3 py-1 text-[13px] font-semibold uppercase tracking-[0.12em] text-alabaster">
@@ -249,7 +250,8 @@ const structuredData = {
               <span data-copy-confirm hidden class="text-sm" role="status">Link copied</span>
             </div>
           </div>
-        </aside>
+          </aside>
+        </div>
 
         <section aria-labelledby="about-vehicle" class="order-4 flex flex-col gap-4 lg:col-start-1 lg:row-start-2">
           <h2 id="about-vehicle" class="text-[28px] leading-[1.1] font-medium md:text-[32px]">

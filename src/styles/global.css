@@ -173,9 +173,12 @@ body {
       align-items: start;
     }
 
-    /* Explicit end line: `1 / -1` mis-sizes tracks in this grid. */
+    /* Sticky containment: Chromium does not clamp a sticky grid item to its
+       grid area, so the panel sticks inside this stretched wrapper cell
+       instead. Rows 1-5 are the scrolling left column; row 6 is the
+       full-width disclosures section the panel must never reach. */
     .vehicle-layout > .sqm-panel {
-      grid-row: 1 / 7;
+      grid-row: 1 / 6;
     }
   }
 }
