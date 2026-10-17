@@ -1,0 +1,124 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import Form from "../components/Form.astro";
+import { site, fullAddress, telHref } from "../data/site";
+
+const callHref = telHref();
+const mapSrc =
+  "https://maps.google.com/maps?q=4650+Kingston+Rd,+Scarborough,+ON+M1E+2P9&output=embed";
+---
+
+<Layout
+  title={`Contact · ${site.name}`}
+  description={`Visit or message ${site.name} — ${fullAddress()}. Send a question and we'll get back to you.`}
+>
+  <Header />
+  <main id="main">
+    <section class="bg-charcoal text-alabaster">
+      <div class="container-sqm py-20 md:py-28">
+        <div class="max-w-3xl">
+          <p class="label text-alabaster/80">Contact</p>
+          <h1 class="display-2 mt-4">Talk to us</h1>
+          <p class="mt-6 max-w-2xl text-lg text-alabaster/80">
+            Questions about a vehicle, or something you want us to keep an eye out for — send a
+            message below and we'll get back to you.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-alabaster text-charcoal">
+      <div class="container-sqm py-16 md:py-24">
+        <div class="grid gap-12 lg:grid-cols-2 lg:gap-16">
+          <div class="flex flex-col gap-6">
+            <h2 class="text-2xl font-semibold">Visit the lot</h2>
+            <address class="not-italic leading-relaxed">
+              <strong>{site.name}</strong><br />
+              {site.address.street}<br />
+              {site.address.city}, {site.address.province} {site.address.postal}
+            </address>
+
+            <div class="flex flex-col gap-2 border-t border-charcoal/25 pt-6">
+              <h3 class="label text-charcoal/70">Phone</h3>
+              {
+                callHref && site.phone ? (
+                  <a href={callHref} class="text-lg hover:underline underline-offset-4">
+                    {site.phone}
+                  </a>
+                ) : (
+                  <span class="text-lg opacity-70">Phone — number coming soon</span>
+                )
+              }
+            </div>
+
+            <div class="flex flex-col gap-2 border-t border-charcoal/25 pt-6">
+              <h3 class="label text-charcoal/70">Email</h3>
+              {
+                site.email ? (
+                  <a href={`mailto:${site.email}`} class="text-lg hover:underline underline-offset-4">
+                    {site.email}
+                  </a>
+                ) : (
+                  <span class="text-lg opacity-70">Email — coming soon</span>
+                )
+              }
+            </div>
+
+            <div class="flex flex-col gap-2 border-t border-charcoal/25 pt-6">
+              <h3 class="label text-charcoal/70">Hours</h3>
+              {
+                site.hours ? (
+                  site.hours.map((line) => (
+                    <p class="text-lg">
+                      {line.days} <span class="opacity-70">{line.hours}</span>
+                    </p>
+                  ))
+                ) : (
+                  <span class="text-lg opacity-70">Hours — coming soon</span>
+                )
+              }
+            </div>
+
+            <p class="mt-auto border-t border-charcoal/25 pt-6 text-sm opacity-70">
+              OMVIC-registered dealer · Registration # {site.omvicRegistration}
+            </p>
+          </div>
+
+          <Form
+            id="contact-form"
+            heading="Send us a message"
+            hiddenFields={{ formName: "contact" }}
+            fields={[
+              { name: "name", label: "Name", required: true, autocomplete: "name" },
+              { name: "email", label: "Email", type: "email", required: true, autocomplete: "email" },
+              { name: "phone", label: "Phone (optional)", type: "tel", autocomplete: "tel" },
+              {
+                name: "message",
+                label: "Message",
+                type: "textarea",
+                required: true,
+                full: true,
+                placeholder: "What can we help with?",
+              },
+            ]}
+            submitLabel="Send message"
+          />
+        </div>
+
+        <div class="mt-16 border border-charcoal/30">
+          <iframe
+            src={mapSrc}
+            title={`Map showing ${site.name}, ${fullAddress()}`}
+            class="h-[360px] w-full md:h-[420px]"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
