@@ -1,0 +1,26 @@
+{
+  "name": "sqm-studio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "sanity dev",
+    "build": "sanity build",
+    "preview": "sanity preview",
+    "deploy": "sanity deploy",
+    "seed": "node scripts/seed.mjs",
+    "import:photos": "node scripts/import-photos.mjs"
+  },
+  "dependencies": {
+    "@sanity/client": "^8.9.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "sanity": "^6.19.0",
+    "styled-components": "^6.6.0"
+  },
+  "devDependencies": {
+    "@sanity/cli": "^8.19.0",
+    "@types/node": "^26.6.5",
+    "typescript": "^5.9.3"
+  }
+}
