@@ -37,7 +37,7 @@ const soldTarget = soldHref ?? `/inventory/?make=${encodeURIComponent(vehicle.ma
     />
     {
       sold ? (
-        <span class="absolute top-4 left-4 bg-green px-3 py-1.5 text-[13px] uppercase tracking-[0.12em] text-alabaster">
+        <span class="absolute top-4 left-4 bg-green px-3 py-1.5 text-[13px] font-bold uppercase tracking-[0.12em] text-alabaster">
           Sold
         </span>
       ) : badge ? (
@@ -71,7 +71,7 @@ const soldTarget = soldHref ?? `/inventory/?make=${encodeURIComponent(vehicle.ma
         <p class="flex flex-wrap items-baseline gap-3">
           <span class="text-[30px] font-bold">{formatPrice(vehicle.allInPrice)}</span>
           {vehicle.previousPrice != null && vehicle.previousPriceAdvertised === true && (
-            <span class="text-[18px] line-through opacity-65">{formatPrice(vehicle.previousPrice)}</span>
+            <span class="text-[18px] line-through opacity-75">{formatPrice(vehicle.previousPrice)}</span>
           )}
         </p>
       )

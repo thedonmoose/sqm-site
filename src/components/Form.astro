@@ -23,6 +23,8 @@ interface Props {
   successMessage?: string;
   errorMessage?: string;
   class?: string;
+  /** Classes for the submit button (e.g. add btn-md for large-text contrast on green). */
+  buttonClass?: string;
 }
 
 const {
@@ -34,6 +36,7 @@ const {
   successMessage = "Thanks — your message has been sent. We'll get back to you shortly.",
   errorMessage = "Something went wrong sending your message. Please try again.",
   class: className = "",
+  buttonClass = "btn btn-primary mt-6",
 } = Astro.props;
 const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? "";
 ---
@@ -96,7 +99,7 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? "";
     class="mt-5 border-l-2 border-green px-4 py-3 font-medium"
   ></p>
 
-  <button type="submit" class="btn btn-primary mt-6">{submitLabel}</button>
+  <button type="submit" class={buttonClass}>{submitLabel}</button>
 </form>
 
 <script src="../scripts/forms.ts"></script>
