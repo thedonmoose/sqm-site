@@ -1,0 +1,227 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import VehicleCard from "../components/VehicleCard.astro";
+import { site, telHref } from "../data/site";
+import { getVehicles, similarVehiclesHref } from "../lib/data";
+import { isSoldWithinDays } from "../lib/types";
+
+const vehicles = await getVehicles();
+const today = new Date();
+const forSale = vehicles
+  .filter((vehicle) => vehicle.status !== "sold")
+  .sort(
+    (a, b) =>
+      Number(a.status === "pending") - Number(b.status === "pending") ||
+      b.datePosted.localeCompare(a.datePosted),
+  );
+const sold = vehicles
+  .filter((vehicle) => isSoldWithinDays(vehicle, 30))
+  .sort((a, b) => (b.dateSold ?? "").localeCompare(a.dateSold ?? ""));
+
+const makes = [...new Set(forSale.map((vehicle) => vehicle.make))].sort();
+const years = [...new Set(forSale.map((vehicle) => vehicle.year))].sort((a, b) => b - a);
+const BODY_LABELS: Record<string, string> = {
+  sedan: "Sedan",
+  hatchback: "Hatchback",
+  coupe: "Coupe",
+  suv: "SUV",
+  crossover: "Crossover",
+  truck: "Truck",
+  van: "Van",
+  wagon: "Wagon",
+};
+const bodies = [...new Set(forSale.map((vehicle) => vehicle.bodyType))];
+
+const callHref = telHref();
+---
+
+<Layout
+  title={`Vehicles on the lot — ${site.name}`}
+  description="Browse every vehicle on the lot at Serene Quality Motors: photos, specs, disclosures and the all-in price for each one."
+>
+  <Header active="/inventory/" />
+
+  <main id="main" data-inventory>
+    <section class="bg-charcoal text-alabaster">
+      <div class="container-sqm flex flex-col gap-3 py-12 md:py-16">
+        <p class="label">Inventory</p>
+        <h1 class="text-4xl leading-[1.1] font-medium md:text-[56px]">Vehicles on the lot</h1>
+        <p class="max-w-[640px] text-lg md:text-xl">All prices are all-in, plus HST and licensing.</p>
+      </div>
+    </section>
+
+    <section class="border-b border-charcoal/20">
+      <div class="container-sqm flex flex-col gap-3 py-5">
+        <div class="flex items-end gap-3 md:gap-5">
+          <button
+            type="button"
+            data-filters-toggle
+            aria-expanded="false"
+            aria-controls="inventory-filter-form"
+            class="flex h-12 flex-1 items-center justify-center gap-2.5 border border-charcoal text-base font-semibold md:hidden"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true">
+              <path d="M3 6h18M6 12h12M10 18h4"></path>
+            </svg>
+            Filters
+          </button>
+
+          <form
+            id="inventory-filter-form"
+            data-filters-form
+            data-open="false"
+            class="fixed inset-0 z-50 hidden flex-col gap-5 overflow-y-auto bg-alabaster p-5 text-charcoal data-[open=true]:flex md:static md:z-auto md:flex md:flex-1 md:flex-row md:flex-wrap md:items-end md:gap-5 md:bg-transparent md:p-0"
+          >
+            <div class="flex items-center justify-between md:hidden">
+              <p class="text-xl font-semibold">Filters</p>
+              <button
+                type="button"
+                data-filters-close
+                class="inline-flex h-12 w-12 items-center justify-center border border-charcoal"
+              >
+                <span class="sr-only">Close filters</span>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true">
+                  <path d="M5 5l14 14M19 5L5 19"></path>
+                </svg>
+              </button>
+            </div>
+
+            <div class="flex flex-col gap-1.5 md:flex-1 md:basis-44">
+              <label for="f-make" class="text-sm tracking-[0.12em] uppercase">Make</label>
+              <select id="f-make" name="make" class="h-12 border border-charcoal bg-alabaster px-3 text-base">
+                <option value="">All makes</option>
+                {makes.map((make) => <option value={make}>{make}</option>)}
+              </select>
+            </div>
+
+            <div class="flex flex-col gap-1.5 md:flex-1 md:basis-44">
+              <label for="f-price" class="text-sm tracking-[0.12em] uppercase">Price</label>
+              <select id="f-price" name="price" class="h-12 border border-charcoal bg-alabaster px-3 text-base">
+                <option value="">Any price</option>
+                <option value="under-15">Under $15,000</option>
+                <option value="15-25">$15,000 – $25,000</option>
+                <option value="over-25">Over $25,000</option>
+              </select>
+            </div>
+
+            <div class="flex flex-col gap-1.5 md:flex-1 md:basis-44">
+              <label for="f-year" class="text-sm tracking-[0.12em] uppercase">Year</label>
+              <select id="f-year" name="year" class="h-12 border border-charcoal bg-alabaster px-3 text-base">
+                <option value="">Any year</option>
+                {years.map((year) => <option value={String(year)}>{year}</option>)}
+              </select>
+            </div>
+
+            <div class="flex flex-col gap-1.5 md:flex-1 md:basis-44">
+              <label for="f-body" class="text-sm tracking-[0.12em] uppercase">Body type</label>
+              <select id="f-body" name="body" class="h-12 border border-charcoal bg-alabaster px-3 text-base">
+                <option value="">All body types</option>
+                {bodies.map((body) => <option value={body}>{BODY_LABELS[body] ?? body}</option>)}
+              </select>
+            </div>
+
+            <div class="mt-auto flex gap-3 md:hidden">
+              <button type="button" data-filters-apply class="btn btn-primary flex-1">Apply</button>
+              <button type="button" data-filters-clear class="btn btn-outline-dark flex-1">Clear</button>
+            </div>
+          </form>
+
+          <div class="flex flex-col gap-1.5 md:basis-48">
+            <label for="f-sort" class="text-sm tracking-[0.12em] uppercase">Sort by</label>
+            <select id="f-sort" data-sort class="h-12 border border-charcoal bg-charcoal px-3 text-base text-alabaster">
+              <option value="newest">Newest first</option>
+              <option value="price-asc">Price: low to high</option>
+              <option value="price-desc">Price: high to low</option>
+              <option value="mileage">Mileage: lowest</option>
+            </select>
+          </div>
+        </div>
+
+        <div data-chips hidden class="flex flex-wrap gap-2 md:hidden"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container-sqm flex flex-col gap-8 pt-10 md:pt-14">
+        <p data-count class="text-base">{forSale.length} vehicles available</p>
+        <p data-empty hidden class="flex flex-wrap items-center gap-4 text-lg">
+          No vehicles match those filters.
+          <button type="button" data-filters-clear class="text-base font-semibold underline underline-offset-4">
+            Clear filters
+          </button>
+        </p>
+        <div data-grid class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+          {
+            forSale.map((vehicle) => (
+              <div
+                data-item
+                data-make={vehicle.make}
+                data-body={vehicle.bodyType}
+                data-year={vehicle.year}
+                data-price={vehicle.allInPrice}
+                data-mileage={vehicle.mileageKm}
+                data-posted={vehicle.datePosted}
+                data-status={vehicle.status}
+              >
+                <VehicleCard vehicle={vehicle} today={today} />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container-sqm pt-8 pb-12 md:pb-12">
+        <div class="flex flex-col gap-5 border border-charcoal p-6 md:flex-row md:items-center md:justify-between md:gap-6 md:p-10">
+          <div class="flex flex-col gap-2 md:flex-1 md:basis-[420px]">
+            <h2 class="text-[28px] leading-[1.15] font-medium md:text-[32px]">
+              Don’t see what you’re looking for?
+            </h2>
+            <p>Tell us the make, model or budget and we’ll get back to you.</p>
+          </div>
+          <div class="flex flex-col gap-3 md:flex-row md:flex-wrap md:gap-4">
+            <a href="/tell-us/" class="btn btn-primary btn-md">Tell us what you want</a>
+            {
+              callHref ? (
+                <a href={callHref} class="btn btn-outline-dark btn-md">Call {site.phone}</a>
+              ) : (
+                <span class="btn btn-outline-dark btn-md" aria-disabled="true">Call — number coming soon</span>
+              )
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {
+      sold.length > 0 && (
+        <section aria-labelledby="recently-sold">
+          <div class="container-sqm flex flex-col gap-8 pt-4 pb-16 md:pb-[88px]">
+            <div class="flex flex-col gap-2 border-t border-charcoal/30 pt-8 md:pt-10">
+              <p class="label">Recently sold</p>
+              <h2 id="recently-sold" class="text-[32px] leading-[1.1] font-medium md:text-4xl">
+                Just left the lot
+              </h2>
+            </div>
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+              {sold.map((vehicle) => (
+                <VehicleCard
+                  vehicle={vehicle}
+                  today={today}
+                  soldHref={similarVehiclesHref(vehicle, vehicles)}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+  </main>
+
+  <Footer />
+</Layout>
+
+<script src="../scripts/inventory-filters.ts"></script>
