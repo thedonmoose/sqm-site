@@ -1,20 +1,23 @@
 import {useCallback, useState} from 'react'
 import {Button, Flex, Stack, Text} from '@sanity/ui'
-import {useDocumentOperation} from 'sanity'
+import {useDocumentOperation, useValidationStatus} from 'sanity'
 import type {DocumentActionComponent, DocumentActionProps} from 'sanity'
 
 const markAsSold: DocumentActionComponent = (props: DocumentActionProps) => {
   const {patch, publish} = useDocumentOperation(props.id, props.type)
+  const validation = useValidationStatus(props.id, props.type, true)
+  const hasErrors = validation.validation.some((marker) => marker.level === 'error')
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [publishBlocker, setPublishBlocker] = useState<string | null>(null)
 
   const doc = (props.draft ?? props.published) as {status?: string} | undefined
   const onConfirm = useCallback(() => {
-    const publishDisabled = publish.disabled
-    if (publishDisabled) {
+    if (hasErrors) {
       setPublishBlocker(
-        typeof publishDisabled === 'string' ? publishDisabled : 'Publishing is currently unavailable.',
+        validation.validation.find((marker) => marker.level === 'error')?.message ??
+          'This vehicle has validation errors.',
       )
+      return
     }
     patch.execute([
       {
@@ -24,13 +27,10 @@ const markAsSold: DocumentActionComponent = (props: DocumentActionProps) => {
         },
       },
     ])
-    if (publishDisabled) {
-      return
-    }
     publish.execute()
     setConfirmOpen(false)
     props.onComplete()
-  }, [patch, publish, props])
+  }, [hasErrors, patch, props, publish, validation.validation])
 
   if (props.type !== 'vehicle' || !doc || (doc.status === 'sold' && !publishBlocker)) {
     return null
@@ -43,7 +43,10 @@ const markAsSold: DocumentActionComponent = (props: DocumentActionProps) => {
     dialog: confirmOpen && {
       type: 'dialog',
       header: 'Mark this vehicle as sold?',
-      onClose: () => setConfirmOpen(false),
+      onClose: () => {
+        setConfirmOpen(false)
+        setPublishBlocker(null)
+      },
       content: (
         <Stack gap={4} padding={4}>
           <Text>
@@ -53,15 +56,18 @@ const markAsSold: DocumentActionComponent = (props: DocumentActionProps) => {
           </Text>
           {publishBlocker && (
             <Text>
-              The status was updated in the draft but not published. Reason: <strong>{publishBlocker}</strong>. Resolve
-              the issue, then publish this vehicle manually.
+              This vehicle was not updated or published because it has a validation error. Resolve the issue, then try
+              again. Reason: <strong>{publishBlocker}</strong>.
             </Text>
           )}
           <Flex justify="flex-end" gap={2}>
             <Button
               text={publishBlocker ? 'Close' : 'Cancel'}
               mode="ghost"
-              onClick={() => setConfirmOpen(false)}
+              onClick={() => {
+                setConfirmOpen(false)
+                setPublishBlocker(null)
+              }}
             />
             <Button
               text="Yes, mark as sold"

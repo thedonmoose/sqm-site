@@ -1,27 +1,27 @@
 import {useCallback, useState} from 'react'
 import {Button, Flex, Stack, Text} from '@sanity/ui'
-import {useDocumentOperation} from 'sanity'
+import {useDocumentOperation, useValidationStatus} from 'sanity'
 import type {DocumentActionComponent, DocumentActionProps} from 'sanity'
 
 const markAsAvailable: DocumentActionComponent = (props: DocumentActionProps) => {
   const {patch, publish} = useDocumentOperation(props.id, props.type)
+  const validation = useValidationStatus(props.id, props.type, true)
+  const hasErrors = validation.validation.some((marker) => marker.level === 'error')
   const [publishBlocker, setPublishBlocker] = useState<string | null>(null)
 
   const doc = (props.draft ?? props.published) as {status?: string} | undefined
   const onHandle = useCallback(() => {
-    const publishDisabled = publish.disabled
-    if (publishDisabled) {
+    if (hasErrors) {
       setPublishBlocker(
-        typeof publishDisabled === 'string' ? publishDisabled : 'Publishing is currently unavailable.',
+        validation.validation.find((marker) => marker.level === 'error')?.message ??
+          'This vehicle has validation errors.',
       )
-    }
-    patch.execute([{set: {status: 'available'}}, {unset: ['dateSold']}])
-    if (publishDisabled) {
       return
     }
+    patch.execute([{set: {status: 'available'}}, {unset: ['dateSold']}])
     publish.execute()
     props.onComplete()
-  }, [patch, publish, props])
+  }, [hasErrors, patch, props, publish, validation.validation])
 
   if (props.type !== 'vehicle' || !doc || (doc.status !== 'sold' && !publishBlocker)) {
     return null
@@ -34,7 +34,7 @@ const markAsAvailable: DocumentActionComponent = (props: DocumentActionProps) =>
     dialog: publishBlocker
       ? {
           type: 'dialog',
-          header: 'Vehicle updated but not published',
+          header: 'Unable to mark this vehicle as available',
           onClose: () => {
             setPublishBlocker(null)
             props.onComplete()
@@ -42,8 +42,8 @@ const markAsAvailable: DocumentActionComponent = (props: DocumentActionProps) =>
           content: (
             <Stack gap={4} padding={4}>
               <Text>
-                The status was updated in the draft but not published. Reason: <strong>{publishBlocker}</strong>.
-                Resolve the issue, then publish this vehicle manually.
+                The status was not updated or published because this vehicle has a validation error. Resolve the issue,
+                then try again. Reason: <strong>{publishBlocker}</strong>.
               </Text>
               <Flex justify="flex-end">
                 <Button
