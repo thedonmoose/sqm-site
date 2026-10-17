@@ -256,6 +256,7 @@ const siteSettings = {
   businessName: 'Serene Quality Motors',
   omvicRegistration: '5923529',
   address: '4650 Kingston Rd, Scarborough, ON M1E 2P9',
+  phone: '437-603-4650',
 }
 await client.createIfNotExists(siteSettings)
 console.log('Created siteSettings if missing (fill in phone, email and hours in the Studio, then publish).')
