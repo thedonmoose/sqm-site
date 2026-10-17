@@ -41,6 +41,12 @@ const price = formatPrice(vehicle.allInPrice);
 const pageUrl = new URL(`/vehicles/${vehicle.slug}/`, Astro.site);
 const meta = `${formatKm(vehicle.mileageKm)} · ${formatTransmission(vehicle.transmission)} · ${vehicle.drivetrain.toUpperCase()}`;
 
+const AVAILABILITY: Record<Vehicle["status"], string> = {
+  available: "InStock",
+  pending: "InStoreOnly",
+  sold: "SoldOut",
+};
+
 const BODY_LABELS: Record<string, string> = {
   sedan: "Sedan",
   hatchback: "Hatchback",
@@ -109,7 +115,7 @@ const structuredData = {
     "@type": "Offer",
     price: vehicle.allInPrice,
     priceCurrency: "CAD",
-    availability: sold ? "https://schema.org/SoldOut" : "https://schema.org/InStock",
+    availability: `https://schema.org/${AVAILABILITY[vehicle.status]}`,
     url: pageUrl.toString(),
   },
 };

@@ -16,6 +16,8 @@ export const site = {
     postal: "M1E 2P9",
   } satisfies Address,
   googleReviewUrl: "https://maps.google.com/?cid=12411628102256281162",
+  // Storefront coordinates for schema.org GeoCoordinates (§7).
+  geo: { latitude: 43.7755185, longitude: -79.1765398 },
 
   // [CONFIRM] owner values — null until supplied.
   phone: null as string | null,

@@ -17,6 +17,28 @@ interface Props {
 const { title, description, ogImage, robots, headLinks = [] } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = ogImage ? new URL(ogImage, Astro.site) : undefined;
+
+const dealerSchema = {
+  "@context": "https://schema.org",
+  "@type": "AutoDealer",
+  name: site.name,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: site.address.street,
+    addressLocality: site.address.city,
+    addressRegion: site.address.province,
+    postalCode: site.address.postal,
+    addressCountry: "CA",
+  },
+  geo: { "@type": "GeoCoordinates", latitude: site.geo.latitude, longitude: site.geo.longitude },
+  additionalProperty: {
+    "@type": "PropertyValue",
+    name: "OMVIC registration",
+    value: site.omvicRegistration,
+  },
+  ...(site.phone ? { telephone: site.phone } : {}),
+  ...(site.email ? { email: site.email } : {}),
+};
 ---
 
 <!doctype html>
@@ -47,6 +69,7 @@ const ogImageURL = ogImage ? new URL(ogImage, Astro.site) : undefined;
     >
       Skip to content
     </a>
+    <script type="application/ld+json" set:html={JSON.stringify(dealerSchema)} />
     <slot />
   </body>
 </html>
