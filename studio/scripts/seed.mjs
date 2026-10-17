@@ -153,7 +153,7 @@ const sampleVehicles = [
     engine: '1.5L turbocharged 4-cylinder',
     exteriorColour: 'Modern Steel Metallic',
     interiorColour: 'Black',
-    description: [block(SAMPLE_PREFIX + 'Local trade-in in clean condition. Runs and drives well, cold air conditioning, all power equipment working. Book a test drive — this one will not last long.')],
+    description: [block(SAMPLE_PREFIX + 'Clean local vehicle in excellent condition. Runs and drives well, cold air conditioning, all power equipment working. Book a test drive — this one will not last long.')],
     highlights: [
       {title: 'New tires', detail: 'Installed 2025-11'},
       {title: 'Fresh service', detail: 'Oil and filter changed 2026-01'},
