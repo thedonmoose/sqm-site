@@ -1,0 +1,68 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import Form from "../components/Form.astro";
+import { site } from "../data/site";
+---
+
+<Layout
+  title={`Book a test drive · ${site.name}`}
+  description="Book a test drive at Serene Quality Motors in Scarborough. Tell us the vehicle and a time that works — we'll confirm."
+>
+  <Header />
+  <main id="main">
+    <section class="bg-charcoal text-alabaster">
+      <div class="container-sqm py-20 md:py-28">
+        <div class="max-w-3xl">
+          <p class="label text-alabaster/80">Test drive</p>
+          <h1 class="display-2 mt-4">Book a test drive</h1>
+          <p class="mt-6 max-w-2xl text-lg text-alabaster/80">
+            Tell us which vehicle you'd like to drive and a day that works. We'll call to confirm
+            the time.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-alabaster text-charcoal">
+      <div class="container-sqm max-w-3xl py-16 md:py-24">
+        <p class="mb-8 border-l-2 border-green px-4 py-3 font-medium">
+          Note: we do not offer financing.
+        </p>
+        <Form
+          id="test-drive-form"
+          heading="Your test drive"
+          hiddenFields={{ formName: "test-drive" }}
+          fields={[
+            { name: "name", label: "Name", required: true, autocomplete: "name" },
+            { name: "phone", label: "Phone", type: "tel", required: true, autocomplete: "tel" },
+            {
+              name: "preferred",
+              label: "Preferred day / time",
+              required: true,
+              full: true,
+              placeholder: "e.g. Saturday morning",
+            },
+            {
+              name: "vehicle",
+              label: "Vehicle",
+              required: true,
+              full: true,
+              placeholder: "e.g. 2019 Honda Civic EX",
+            },
+          ]}
+          submitLabel="Request a test drive"
+        />
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  // Prefill the vehicle field from ?vehicle= (linked from vehicle pages).
+  const vehicle = new URLSearchParams(location.search).get("vehicle");
+  const input = document.querySelector<HTMLInputElement>("#test-drive-form-vehicle");
+  if (vehicle && input && !input.value) input.value = vehicle;
+</script>
