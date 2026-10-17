@@ -5,9 +5,11 @@ import { site, telHref } from "../data/site";
 interface Props {
   /** Transparent over the hero (home); solid charcoal on interior pages. */
   overlay?: boolean;
+  /** Path of the current page for the active nav underline. */
+  active?: string;
 }
 
-const { overlay = false } = Astro.props;
+const { overlay = false, active } = Astro.props;
 const callHref = telHref();
 const navLinks = [
   { href: "/inventory/", label: "Inventory" },
@@ -27,7 +29,16 @@ const navLinks = [
 
     <nav aria-label="Main" class="hidden items-center gap-9 text-sm uppercase tracking-[0.18em] md:flex">
       {navLinks.map((link) => (
-        <a href={link.href} class="hover:underline underline-offset-4">{link.label}</a>
+        <a
+          href={link.href}
+          aria-current={active === link.href ? "page" : undefined}
+          class:list={[
+            "hover:underline underline-offset-4",
+            active === link.href && "underline decoration-green decoration-[3px] underline-offset-8",
+          ]}
+        >
+          {link.label}
+        </a>
       ))}
       {
         callHref ? (

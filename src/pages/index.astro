@@ -2,25 +2,262 @@
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-import { site } from "../data/site";
+import VehicleCard from "../components/VehicleCard.astro";
+import ReviewsSection from "../components/ReviewsSection.astro";
+import { site, fullAddress, telHref } from "../data/site";
+import { getVehicles } from "../lib/data";
+
+const today = new Date();
+const arrivals = (await getVehicles())
+  .filter((vehicle) => vehicle.status === "available")
+  .sort((a, b) => b.datePosted.localeCompare(a.datePosted))
+  .slice(0, 3);
+const callHref = telHref();
+
+// [CONFIRM] owner copy — provisional "Drive home" text (spec §12); revise here.
+const DRIVE_HOME_COPY =
+  "We finish the paperwork, you pay on pickup, and you drive home the same day.";
+
+const mapEmbed = `https://maps.google.com/maps?q=${encodeURIComponent(fullAddress())}&z=15&output=embed`;
+const rtbItems = [
+  {
+    title: "All-in pricing",
+    detail: "No surprise fees. Only HST and licensing are added.",
+    icon: '<path d="M3 12V4h8l10 10-8 8L3 12z"></path><circle cx="7.5" cy="8.5" r="1.5"></circle>',
+  },
+  {
+    title: "Disclosures up front",
+    detail: "Accident, damage and odometer details, shown plainly.",
+    icon: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle>',
+  },
+  {
+    title: "OMVIC-registered dealer",
+    detail: `Registration # ${site.omvicRegistration}`,
+    icon: '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"></path><path d="M8.5 12l2.5 2.5 5-5"></path>',
+  },
+];
+const steps = [
+  {
+    number: "01",
+    title: "Browse the lot",
+    detail: "Every vehicle has its own page with photos, the all-in price and full disclosures.",
+  },
+  {
+    number: "02",
+    title: "Book a visit or test drive",
+    detail: "Call, text or send an enquiry. We’ll set up a time that works for you.",
+  },
+  { number: "03", title: "Drive home", detail: DRIVE_HOME_COPY },
+];
+const hero = site.heroVideo;
 ---
 
 <Layout
   title={`${site.name} — Used cars in Scarborough, ON`}
   description="OMVIC-registered used-car dealer on 4650 Kingston Rd, Scarborough. Every vehicle listed at an honest all-in price with disclosures up front."
+  headLinks={[
+    { rel: "preload", href: hero.posterAvif, as: "image", type: "image/avif" },
+    { rel: "preload", href: hero.posterWebp, as: "image", type: "image/webp" },
+  ]}
 >
-  <Header />
+  <Header overlay />
+
   <main id="main">
-    <section class="bg-charcoal text-alabaster">
-      <div class="container-sqm flex flex-col gap-8 py-28 md:py-40">
-        <p class="label">{site.name} · Ontario</p>
-        <h1 class="display-1 max-w-[1100px]">Foundation build — pages coming next</h1>
-        <p class="max-w-2xl text-lg">
-          Placeholder page for the SQM site foundation. Home, inventory and vehicle pages land in
-          the next build turns.
-        </p>
+    <section
+      data-hero
+      class="relative flex min-h-[640px] flex-col justify-end overflow-hidden bg-charcoal text-alabaster md:min-h-[780px]"
+    >
+      <div class="absolute inset-0" aria-hidden="true">
+        <picture>
+          <source srcset={hero.posterAvif} type="image/avif" />
+          <img
+            src={hero.posterWebp}
+            alt=""
+            width="1920"
+            height="1080"
+            fetchpriority="high"
+            decoding="async"
+            class="h-full w-full object-cover"
+          />
+        </picture>
+        <video
+          data-hero-video
+          class="absolute inset-0 h-full w-full object-cover"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+        >
+          <source src={hero.mobileWebm} media="(max-width: 767px)" type="video/webm" />
+          <source src={hero.mobileMp4} media="(max-width: 767px)" type="video/mp4" />
+          <source src={hero.desktopWebm} type="video/webm" />
+          <source src={hero.desktopMp4} type="video/mp4" />
+        </video>
+        <div class="absolute inset-0 bg-charcoal/40"></div>
+      </div>
+
+      <div class="absolute top-24 bottom-0 left-0 w-1.5 bg-green md:top-[104px] md:w-3" aria-hidden="true"></div>
+
+      <button
+        type="button"
+        data-hero-toggle
+        class="absolute top-28 right-5 z-10 inline-flex h-12 w-12 items-center justify-center border border-alabaster/60"
+      >
+        <span class="sr-only" data-toggle-label>Pause video</span>
+        <svg data-icon-pause width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true">
+          <path d="M8 5v14M16 5v14"></path>
+        </svg>
+        <svg data-icon-play hidden width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true">
+          <path d="M7 5l12 7-12 7z"></path>
+        </svg>
+      </button>
+
+      <div class="relative z-10 flex flex-col gap-6 pt-24 pb-10 md:gap-8 md:pb-[72px]">
+        <div class="container-sqm flex flex-col gap-6 md:gap-8">
+          <p class="label">Serene Quality Motors · Ontario</p>
+          <h1 class="display-1 max-w-[1100px]">Priced all-in. Nothing hidden.</h1>
+          <div class="flex flex-col gap-3 md:flex-row md:gap-4">
+            <a href="/inventory/" class="btn btn-primary btn-lg">See what’s on the lot</a>
+            {
+              callHref ? (
+                <a href={callHref} class="btn btn-outline-light btn-lg">Call {site.phone}</a>
+              ) : (
+                <span class="btn btn-outline-light btn-lg" aria-disabled="true">Call — number coming soon</span>
+              )
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-green text-alabaster">
+      <h2 class="sr-only">Why buy from Serene Quality Motors</h2>
+      <div class="container-sqm grid gap-7 py-10 md:grid-cols-3 md:gap-x-10 md:gap-y-12 md:py-16">
+        {
+          rtbItems.map((item) => (
+            <div class="flex items-start gap-4 md:flex-col md:gap-5">
+              <span class="icon-tile">
+                <svg
+                  width="30"
+                  height="30"
+                  viewBox="0 0 24 24"
+                  class="h-[30px] w-[30px] md:h-[34px] md:w-[34px]"
+                  aria-hidden="true"
+                  set:html={item.icon}
+                />
+              </span>
+              <div class="flex flex-col gap-1 md:gap-5">
+                <div class="text-2xl leading-[1.15] font-semibold md:text-[30px]">{item.title}</div>
+                <div class="leading-snug font-semibold md:text-[19px]">{item.detail}</div>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="bg-alabaster text-charcoal" aria-labelledby="latest-arrivals">
+      <div class="container-sqm flex flex-col gap-10 py-14 md:gap-12 md:py-[104px]">
+        <div class="flex flex-wrap items-end justify-between gap-6">
+          <div class="flex flex-col gap-3">
+            <p class="label">On the lot now</p>
+            <h2 id="latest-arrivals" class="display-2">Latest arrivals</h2>
+          </div>
+          <a href="/inventory/" class="hidden min-h-12 items-center text-sm tracking-[0.2em] uppercase hover:underline underline-offset-4 md:flex">
+            View all inventory →
+          </a>
+        </div>
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+          {arrivals.map((vehicle) => (
+            <VehicleCard vehicle={vehicle} today={today} />
+          ))}
+        </div>
+        <a href="/inventory/" class="btn w-full border-charcoal bg-charcoal text-alabaster md:hidden">
+          View all inventory
+        </a>
+      </div>
+    </section>
+
+    <ReviewsSection />
+
+    <section class="bg-alabaster text-charcoal" aria-labelledby="how-it-works">
+      <div class="container-sqm flex flex-col gap-10 py-14 md:gap-12 md:py-[104px]">
+        <h2 id="how-it-works" class="display-2">How it works</h2>
+        <div class="grid gap-8 md:grid-cols-3 md:gap-10">
+          {
+            steps.map((step) => (
+              <div class="flex flex-col gap-3 border-t-[3px] border-charcoal pt-4 md:pt-6">
+                <div class="text-sm tracking-[0.24em]">{step.number}</div>
+                <div class="text-[26px] leading-[1.15] font-medium md:text-[32px]">{step.title}</div>
+                <p>{step.detail}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-charcoal text-alabaster" aria-labelledby="visit">
+      <div class="container-sqm flex flex-col gap-12 py-16 md:py-[112px] lg:flex-row">
+        <div class="flex flex-1 flex-col gap-6 lg:min-w-[320px]">
+          <p class="label">Visit</p>
+          <h2 id="visit" class="display-2">Come see them in person.</h2>
+          <div class="flex flex-wrap gap-10 text-lg md:gap-12">
+            <div class="flex flex-col gap-1">
+              <p>{fullAddress()}</p>
+              {
+                callHref && site.phone ? (
+                  <a href={callHref} class="hover:underline underline-offset-4">{site.phone}</a>
+                ) : (
+                  <span class="opacity-70">Phone — number coming soon</span>
+                )
+              }
+              {
+                site.email ? (
+                  <a href={`mailto:${site.email}`} class="hover:underline underline-offset-4">{site.email}</a>
+                ) : (
+                  <span class="opacity-70">Email — coming soon</span>
+                )
+              }
+            </div>
+            <div class="flex flex-col gap-1">
+              {
+                site.hours ? (
+                  site.hours.map((line) => <p>{line.days} {line.hours}</p>)
+                ) : (
+                  <span class="opacity-70">Hours — coming soon</span>
+                )
+              }
+            </div>
+          </div>
+          <div class="flex flex-col gap-3 md:flex-row md:flex-wrap md:gap-4">
+            <a href={site.googleReviewUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-md">
+              Get directions
+            </a>
+            {
+              callHref ? (
+                <a href={callHref} class="btn btn-outline-light btn-md">Call {site.phone}</a>
+              ) : (
+                <span class="btn btn-outline-light btn-md" aria-disabled="true">Call — number coming soon</span>
+              )
+            }
+          </div>
+        </div>
+        <div class="flex-1">
+          <iframe
+            src={mapEmbed}
+            title={`Map — ${site.name}, ${fullAddress()}`}
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            class="min-h-[240px] w-full border border-alabaster/25 md:min-h-[420px]"
+          ></iframe>
+        </div>
       </div>
     </section>
   </main>
+
   <Footer />
 </Layout>
+
+<script src="../scripts/hero-video.ts"></script>

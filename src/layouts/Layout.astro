@@ -8,9 +8,13 @@ interface Props {
   description: string;
   /** Path or absolute URL to the social sharing image. */
   ogImage?: string;
+  /** e.g. "noindex" for expired sold-vehicle pages. */
+  robots?: string;
+  /** Preloads rendered as <link> tags (hero poster as LCP image). */
+  headLinks?: { rel: string; href: string; as?: string; type?: string }[];
 }
 
-const { title, description, ogImage } = Astro.props;
+const { title, description, ogImage, robots, headLinks = [] } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = ogImage ? new URL(ogImage, Astro.site) : undefined;
 ---
@@ -29,6 +33,10 @@ const ogImageURL = ogImage ? new URL(ogImage, Astro.site) : undefined;
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     {ogImageURL && <meta property="og:image" content={ogImageURL} />}
+    {robots && <meta name="robots" content={robots} />}
+    {headLinks.map((link) => (
+      <link rel={link.rel} href={link.href} as={link.as} type={link.type} />
+    ))}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
   </head>

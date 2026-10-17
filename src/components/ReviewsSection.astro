@@ -1,0 +1,34 @@
+---
+/** Customer reviews (home, dark). Starts hidden; src/scripts/reviews.ts
+ * reveals it only when /api/reviews returns a usable payload. No review
+ * content is ever hardcoded here. */
+import { site } from "../data/site";
+---
+
+<section data-reviews hidden class="bg-charcoal text-alabaster">
+  <div class="container-sqm flex flex-col gap-12 py-24 md:py-28">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <div class="flex flex-col gap-3">
+        <p class="label">Customer reviews</p>
+        <h2 class="display-2 max-w-[900px]">Straight from our customers.</h2>
+      </div>
+      <p class="text-[22px] font-medium">
+        <span data-reviews-rating></span> ·
+        <a data-reviews-count href="#" target="_blank" rel="noopener noreferrer" class="underline decoration-alabaster/50 underline-offset-4 hover:decoration-alabaster"></a>
+      </p>
+    </div>
+
+    <div data-reviews-cards class="grid gap-8 md:grid-cols-3"></div>
+
+    <div class="flex flex-wrap gap-4">
+      <a data-reviews-read href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline-light btn-md">
+        Read our reviews
+      </a>
+      <a href={site.googleReviewUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline-light btn-md">
+        Leave a review
+      </a>
+    </div>
+  </div>
+</section>
+
+<script src="../scripts/reviews.ts"></script>
