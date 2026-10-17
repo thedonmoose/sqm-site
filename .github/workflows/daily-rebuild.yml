@@ -1,0 +1,22 @@
+name: Daily rebuild
+
+# Keeps time-based rules fresh without anyone editing: sold vehicles drop off
+# the Recently sold list after 30 days and "Just arrived" badges expire (spec §2).
+# 08:00 UTC ≈ 3-4am Toronto depending on DST.
+on:
+  schedule:
+    - cron: "0 8 * * *"
+  workflow_dispatch:
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Cloudflare Pages deploy hook
+        env:
+          # Cloudflare Pages → project → Settings → Deploy hooks; store the URL
+          # as a repository secret named CF_PAGES_DEPLOY_HOOK.
+          HOOK_URL: ${{ secrets.CF_PAGES_DEPLOY_HOOK }}
+        run: >-
+          curl --fail --retry 3 --retry-delay 5 --silent --show-error
+          -X POST "$HOOK_URL"
