@@ -9,7 +9,7 @@ const STAFF_HELP =
   '2. Add at least one photo. Drag photos to reorder — the first one is the cover photo shown everywhere on the site.\n' +
   '3. Answer every question in the Vehicle disclosures section at the bottom — Ontario law (OMVIC) requires this.\n' +
   '4. Press Publish. The car appears on the website within a few minutes.\n' +
-  'When a car sells, use the green "Mark as sold" button at the top of this page. Full instructions are in STAFF-GUIDE.md.'
+  'When a car sells, use the "Mark as sold" button at the top of this page. Full instructions are in STAFF-GUIDE.md.'
 
 const bodyTypeOptions = [
   {title: 'Sedan', value: 'sedan'},
