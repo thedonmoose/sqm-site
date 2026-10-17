@@ -1,0 +1,191 @@
+---
+import type { Vehicle } from "../../../lib/types";
+import Layout from "../../../layouts/Layout.astro";
+import { site, fullAddress } from "../../../data/site";
+import { getVehicles } from "../../../lib/data";
+import { formatPrice, formatKm, formatTransmission, vehicleTitle } from "../../../lib/format";
+
+/**
+ * Staff-only listing kit (§6): ready-to-paste ad text for AutoTrader/Kijiji/
+ * Marketplace. Not linked anywhere, noindex, and should sit behind
+ * Cloudflare Access in production (see README).
+ */
+export async function getStaticPaths() {
+  const vehicles = await getVehicles();
+  return vehicles
+    .filter((vehicle) => vehicle.status !== "sold")
+    .map((vehicle) => ({ params: { slug: vehicle.slug }, props: { vehicle } }));
+}
+
+interface Props {
+  vehicle: Vehicle;
+}
+
+const { vehicle } = Astro.props;
+const title = vehicleTitle(vehicle);
+const pageUrl = new URL(`/vehicles/${vehicle.slug}/`, Astro.site);
+const photos = vehicle.photos.map((photo) => ({
+  url: new URL(photo.src, Astro.site).href,
+  alt: photo.alt,
+}));
+
+const BODY_LABELS: Record<string, string> = {
+  sedan: "Sedan",
+  hatchback: "Hatchback",
+  coupe: "Coupe",
+  suv: "SUV",
+  crossover: "Crossover",
+  truck: "Truck",
+  van: "Van",
+  wagon: "Wagon",
+};
+const FUEL_LABELS: Record<string, string> = {
+  gasoline: "Gasoline",
+  diesel: "Diesel",
+  hybrid: "Hybrid",
+  electric: "Electric",
+  phev: "Plug-in hybrid",
+};
+
+const disclosureRows = [
+  {
+    label: "Accident or damage history",
+    value:
+      vehicle.disclosures.accidentOrDamageHistory.status === "disclosed"
+        ? `Disclosed — ${vehicle.disclosures.accidentOrDamageHistory.details ?? "details on request"}`
+        : "None disclosed",
+  },
+  {
+    label: "Rebuilt or salvage status",
+    value:
+      vehicle.disclosures.rebuiltOrSalvageStatus.status === "disclosed"
+        ? `Disclosed — ${vehicle.disclosures.rebuiltOrSalvageStatus.details ?? "details on request"}`
+        : "None",
+  },
+  {
+    label: "Odometer",
+    value:
+      vehicle.disclosures.odometerNote.status === "accurate"
+        ? "Accurate"
+        : `Discrepancy disclosed — ${vehicle.disclosures.odometerNote.details ?? "details on request"}`,
+  },
+  {
+    label: "Sold as certified",
+    value: vehicle.disclosures.soldAsCertified
+      ? `Yes — ${vehicle.disclosures.certificationDetails ?? "details on request"}`
+      : "No (sold as-is per OMVIC rules unless otherwise agreed in writing)",
+  },
+  { label: "UVIP", value: vehicle.uvipAvailable ? "Available on request" : "Not available" },
+  {
+    label: "Vehicle history report",
+    value: vehicle.historyReportUrl ?? "Not provided",
+  },
+  ...(vehicle.disclosures.otherDisclosures
+    ? [{ label: "Other disclosures", value: vehicle.disclosures.otherDisclosures }]
+    : []),
+];
+
+const specsLine =
+  `${formatKm(vehicle.mileageKm)} · ` +
+  `${formatTransmission(vehicle.transmission)} · ${vehicle.drivetrain.toUpperCase()} · ` +
+  `${vehicle.engine} · ${BODY_LABELS[vehicle.bodyType] ?? vehicle.bodyType} · ` +
+  `${vehicle.exteriorColour} / ${vehicle.interiorColour}` +
+  (vehicle.stockNumber ? ` · Stock #${vehicle.stockNumber}` : "") +
+  ` · VIN ${vehicle.vin}`;
+
+const listingText = [
+  `${title} — ${formatPrice(vehicle.allInPrice)} all-in, plus HST and licensing`,
+  "",
+  specsLine,
+  "",
+  vehicle.description,
+  "",
+  ...(vehicle.highlights.length > 0
+    ? ["Highlights:", ...vehicle.highlights.map((h) => `- ${h.title}: ${h.detail}`), ""]
+    : []),
+  "Features:",
+  ...vehicle.features.map((feature) => `- ${feature}`),
+  "",
+  "Disclosures:",
+  ...disclosureRows.map((row) => `- ${row.label}: ${row.value}`),
+  "",
+  "Photos:",
+  ...photos.map((photo, i) => `${i + 1}. ${photo.url}`),
+  "",
+  `View online: ${pageUrl.href}`,
+  "",
+  `${site.name} — OMVIC-registered dealer · Registration # ${site.omvicRegistration}`,
+  fullAddress(),
+].join("\n");
+---
+
+<Layout
+  title={`Listing kit — ${title} | ${site.name}`}
+  description={`Staff listing kit for the ${title}.`}
+  robots="noindex"
+>
+  <main id="main" class="bg-alabaster text-charcoal">
+    <div class="container-sqm flex flex-col gap-6 py-12 md:py-16">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="flex flex-col gap-2">
+          <p class="label">Staff only · Listing kit</p>
+          <h1 class="text-[28px] leading-[1.1] font-medium md:text-[32px]">{title}</h1>
+          <p class="text-sm opacity-75">
+            Paste-ready ad text for AutoTrader, Kijiji and Facebook Marketplace. Select all inside
+            the box to copy. This page is not linked anywhere and is noindex — keep it behind
+            Cloudflare Access in production.
+          </p>
+        </div>
+        <button type="button" data-print-kit class="btn btn-outline-dark">Print</button>
+      </div>
+
+      <div class="border border-charcoal/40 p-4 md:p-6">
+        <label for="kit-text" class="mb-2 block text-sm tracking-[0.12em] uppercase">
+          Listing text
+        </label>
+        <textarea
+          id="kit-text"
+          readonly
+          rows="28"
+          class="w-full border border-charcoal/30 bg-transparent p-4 font-mono text-[13px] leading-relaxed">{listingText}</textarea>
+      </div>
+
+      <div class="border border-charcoal/40 p-4 md:p-6">
+        <h2 class="mb-3 text-lg font-semibold">Photos</h2>
+        <ul class="flex flex-col gap-1.5 font-mono text-[13px]">
+          {photos.map((photo) => (
+            <li>
+              <a href={photo.url} target="_blank" rel="noopener noreferrer" class="break-all underline underline-offset-4">
+                {photo.url}
+              </a>
+              <span class="opacity-70"> — {photo.alt}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="border border-charcoal/40 p-4 md:p-6">
+        <h2 class="mb-3 text-lg font-semibold">Listing page</h2>
+        <a href={pageUrl.href} class="break-all underline underline-offset-4">{pageUrl.href}</a>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  document.querySelector("[data-print-kit]")?.addEventListener("click", () => window.print());
+</script>
+
+<style is:global>
+  @media print {
+    [data-sqm-header],
+    [data-sqm-footer],
+    [data-print-kit] {
+      display: none !important;
+    }
+    body {
+      background: #fff;
+      color: #000;
+    }
+  }
+</style>
