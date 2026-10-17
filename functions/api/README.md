@@ -13,7 +13,9 @@ The `/api/reviews` Pages Function calls Places API (New) at request time and bri
 
 ### Billing allowance
 
-Google's current pricing lists **10,000 free monthly requests** for the Place Details Essentials SKU. That allowance does **not** apply to this endpoint's field mask: requesting `reviews` is billed at the higher **Place Details Enterprise + Atmosphere** SKU, whose current free usage cap is **1,000 requests per month**. The first pricing tier after that cap is currently $25 per 1,000 requests (USD). Google pricing can change; check the [current pricing table](https://developers.google.com/maps/billing-and-pricing/pricing#places-api-new) before launch. The Function's default one-hour edge cache reduces repeat Google calls for the same request URL.
+Google's current pricing lists **10,000 free monthly requests** for the Place Details Essentials SKU. That allowance does **not** apply to this endpoint's field mask: requesting `reviews` is billed at the higher **Place Details Enterprise + Atmosphere** SKU, whose current free usage cap is **1,000 requests per month**. The first pricing tier after that cap is currently $25 per 1,000 requests (USD). Google pricing can change; check the [current pricing table](https://developers.google.com/maps/billing-and-pricing/pricing#places-api-new) before launch.
+
+The Function's Cache API cache is per colo, so each colo may make one Google call per 6-hour TTL. Query strings share the canonical `/api/reviews` cache key, so adding query parameters can no longer bypass the cached response. The 6-hour default helps keep usage well below the Enterprise + Atmosphere SKU's 1,000-request monthly free allowance.
 
 ## Find the Place ID
 
@@ -31,7 +33,7 @@ In the Cloudflare dashboard, open **Workers & Pages → your Pages project → S
 | --- | --- | --- |
 | `GOOGLE_PLACES_API_KEY` | Secret | The restricted API key created above |
 | `GOOGLE_PLACE_ID` | Variable | The Place ID Finder result for this business |
-| `REVIEWS_CACHE_TTL_SECONDS` | Variable, optional | Cache lifetime in seconds; defaults to `3600` |
+| `REVIEWS_CACHE_TTL_SECONDS` | Variable, optional | Cache lifetime in seconds; defaults to `21600` |
 
 Save the settings and redeploy the project for the bindings to take effect.
 

@@ -138,18 +138,20 @@ function hiddenResponse(): Response {
 
 function cacheTtlSeconds(env: ReviewsEnv): number {
   const configured = env.REVIEWS_CACHE_TTL_SECONDS;
-  if (configured === undefined || configured.trim() === "") return 3600;
+  if (configured === undefined || configured.trim() === "") return 21600;
 
   const ttl = Number(configured);
-  return Number.isSafeInteger(ttl) && ttl >= 0 ? ttl : 3600;
+  return Number.isSafeInteger(ttl) && ttl >= 0 ? ttl : 21600;
 }
 
 export async function onRequestGet({
   request,
   env,
+  context,
 }: {
   request: Request;
   env: ReviewsEnv;
+  context: { waitUntil: (p: Promise<unknown>) => void };
 }): Promise<Response> {
   const apiKey = env.GOOGLE_PLACES_API_KEY;
   const placeId = env.GOOGLE_PLACE_ID;
@@ -160,7 +162,8 @@ export async function onRequestGet({
       caches: { default: EdgeCache };
     };
     const cache = cloudflareGlobals.caches.default;
-    const cached = await cache.match(request);
+    const key = new Request(new URL("/api/reviews", request.url).toString());
+    const cached = await cache.match(key);
     if (cached) return cached;
 
     const placesResponse = await fetch(
@@ -185,7 +188,7 @@ export async function onRequestGet({
         "Cache-Control": `public, max-age=${cacheTtlSeconds(env)}`,
       },
     });
-    await cache.put(request, response.clone());
+    context.waitUntil(cache.put(key, response.clone()));
     return response;
   } catch {
     return hiddenResponse();
