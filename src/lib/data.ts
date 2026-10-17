@@ -97,3 +97,37 @@ export async function getVehicles(): Promise<Vehicle[]> {
   const { result } = (await response.json()) as { result: unknown[] };
   return result.map(toVehicle).filter((v): v is Vehicle => v !== null);
 }
+
+/** Link target for "See similar vehicles": make filter when that make is in
+ * stock, else body type, else plain inventory (spec §4.2). */
+export function similarVehiclesHref(vehicle: Vehicle, all: Vehicle[]): string {
+  const available = all.filter((v) => v.status !== "sold");
+  if (available.some((v) => v.make === vehicle.make)) {
+    return `/inventory/?make=${encodeURIComponent(vehicle.make)}`;
+  }
+  if (available.some((v) => v.bodyType === vehicle.bodyType)) {
+    return `/inventory/?body=${encodeURIComponent(vehicle.bodyType)}`;
+  }
+  return "/inventory/";
+}
+
+/** Prefer same make, then same body type, then newest available (spec §4.4). */
+export function pickRelated(vehicle: Vehicle, all: Vehicle[]): Vehicle[] {
+  const pool = all
+    .filter((candidate) => candidate.slug !== vehicle.slug && candidate.status === "available")
+    .sort((a, b) => b.datePosted.localeCompare(a.datePosted));
+  const ranked = [
+    ...pool.filter((candidate) => candidate.make === vehicle.make),
+    ...pool.filter((candidate) => candidate.bodyType === vehicle.bodyType),
+    ...pool,
+  ];
+  const seen = new Set<string>();
+  const out: Vehicle[] = [];
+  for (const candidate of ranked) {
+    if (seen.has(candidate.slug)) continue;
+    seen.add(candidate.slug);
+    out.push(candidate);
+    if (out.length === 3) break;
+  }
+  return out;
+}

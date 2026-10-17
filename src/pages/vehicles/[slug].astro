@@ -1,0 +1,445 @@
+---
+import type { Vehicle } from "../../lib/types";
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import VehicleCard from "../../components/VehicleCard.astro";
+import VehicleGallery from "../../components/VehicleGallery.astro";
+import Form from "../../components/Form.astro";
+import { site, telHref, smsHref } from "../../data/site";
+import { getVehicles, pickRelated, similarVehiclesHref } from "../../lib/data";
+import { isSoldWithinDays } from "../../lib/types";
+import { formatPrice, formatKm, formatTransmission, vehicleTitle } from "../../lib/format";
+
+export async function getStaticPaths() {
+  const vehicles = await getVehicles();
+  return vehicles.map((vehicle) => ({
+    params: { slug: vehicle.slug },
+    props: {
+      vehicle,
+      related: pickRelated(vehicle, vehicles),
+      soldHref: similarVehiclesHref(vehicle, vehicles),
+    },
+  }));
+}
+
+interface Props {
+  vehicle: Vehicle;
+  related: Vehicle[];
+  soldHref: string;
+}
+
+const { vehicle, related, soldHref } = Astro.props;
+const title = vehicleTitle(vehicle);
+const sold = vehicle.status === "sold";
+// A sold page drops out of search after 30 days (spec §6).
+const noindex = sold && !isSoldWithinDays(vehicle, 30);
+const callHref = telHref();
+const smsHrefValue = smsHref(undefined, `Is the ${title} still available?`);
+const statusLabel = vehicle.status.charAt(0).toUpperCase() + vehicle.status.slice(1);
+const price = formatPrice(vehicle.allInPrice);
+const pageUrl = new URL(`/vehicles/${vehicle.slug}/`, Astro.site);
+const meta = `${formatKm(vehicle.mileageKm)} · ${formatTransmission(vehicle.transmission)} · ${vehicle.drivetrain.toUpperCase()}`;
+
+const BODY_LABELS: Record<string, string> = {
+  sedan: "Sedan",
+  hatchback: "Hatchback",
+  coupe: "Coupe",
+  suv: "SUV",
+  crossover: "Crossover",
+  truck: "Truck",
+  van: "Van",
+  wagon: "Wagon",
+};
+const FUEL_LABELS: Record<string, string> = {
+  gasoline: "Gasoline",
+  diesel: "Diesel",
+  hybrid: "Hybrid",
+  electric: "Electric",
+  phev: "Plug-in hybrid",
+};
+
+const specs = [
+  { label: "Mileage", value: formatKm(vehicle.mileageKm) },
+  { label: "Transmission", value: formatTransmission(vehicle.transmission) },
+  { label: "Drivetrain", value: vehicle.drivetrain.toUpperCase() },
+  { label: "Fuel", value: FUEL_LABELS[vehicle.fuelType] ?? vehicle.fuelType },
+  { label: "Engine", value: vehicle.engine },
+  { label: "Body type", value: BODY_LABELS[vehicle.bodyType] ?? vehicle.bodyType },
+  { label: "Exterior", value: vehicle.exteriorColour },
+  { label: "Interior", value: vehicle.interiorColour },
+  ...(vehicle.stockNumber ? [{ label: "Stock #", value: vehicle.stockNumber }] : []),
+];
+
+const disclosures = [
+  {
+    label: "Accident or damage history",
+    value: vehicle.disclosures.accidentOrDamageHistory.status === "disclosed" ? "Disclosed" : "None disclosed",
+    details: vehicle.disclosures.accidentOrDamageHistory.details,
+  },
+  {
+    label: "Rebuilt or salvage status",
+    value: vehicle.disclosures.rebuiltOrSalvageStatus.status === "disclosed" ? "Disclosed" : "None",
+    details: vehicle.disclosures.rebuiltOrSalvageStatus.details,
+  },
+  {
+    label: "Odometer",
+    value: vehicle.disclosures.odometerNote.status === "accurate" ? "Accurate" : "Discrepancy disclosed",
+    details: vehicle.disclosures.odometerNote.details,
+  },
+  {
+    label: "Sold as certified",
+    value: vehicle.disclosures.soldAsCertified ? "Yes" : "No",
+    details: vehicle.disclosures.certificationDetails,
+  },
+  { label: "UVIP", value: vehicle.uvipAvailable ? "Available" : "Not available" },
+];
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Car",
+  name: title,
+  vehicleIdentificationNumber: vehicle.vin,
+  brand: { "@type": "Brand", name: vehicle.make },
+  model: vehicle.model,
+  vehicleModelDate: String(vehicle.year),
+  mileage: { "@type": "QuantitativeValue", value: vehicle.mileageKm, unitCode: "KMT" },
+  itemCondition: "https://schema.org/UsedCondition",
+  offer: {
+    "@type": "Offer",
+    price: vehicle.allInPrice,
+    priceCurrency: "CAD",
+    availability: sold ? "https://schema.org/SoldOut" : "https://schema.org/InStock",
+    url: pageUrl.toString(),
+  },
+};
+---
+
+<Layout
+  title={`${title}, ${formatKm(vehicle.mileageKm)}, ${price} | ${site.name}`}
+  description={vehicle.description.slice(0, 155)}
+  robots={noindex ? "noindex" : undefined}
+  ogImage={vehicle.photos[0].src}
+>
+  <Header active="/inventory/" />
+
+  <main id="main" class="bg-alabaster text-charcoal">
+    <div class="container-sqm pt-4">
+      <a href="/inventory/" class="flex min-h-11 items-center hover:underline underline-offset-4">
+        &larr; Back to inventory
+      </a>
+    </div>
+
+    <section class="container-sqm pt-6 pb-14 md:pb-20">
+      <div class="vehicle-layout">
+        <section aria-label="Photos" class="order-1 lg:col-start-1 lg:row-start-1">
+          <VehicleGallery vehicle={vehicle} />
+        </section>
+
+        <aside
+          aria-label="Price and enquiry"
+          class="sqm-panel contents lg:order-2 lg:col-start-2 lg:sticky lg:top-6 lg:flex lg:flex-col lg:gap-5 lg:self-start lg:border lg:border-charcoal lg:bg-charcoal/5 lg:p-7"
+        >
+          <div class="order-2 flex flex-col gap-2 lg:order-1">
+            <div class="flex flex-wrap items-center gap-3">
+              <span class="bg-charcoal px-3 py-1 text-[13px] font-semibold uppercase tracking-[0.12em] text-alabaster">
+                {statusLabel}
+              </span>
+              {vehicle.stockNumber && (
+                <span class="text-[13px] uppercase tracking-[0.08em]">Stock # {vehicle.stockNumber}</span>
+              )}
+            </div>
+            <h1 class="text-[32px] leading-[1.1] font-medium md:text-[38px]">{title}</h1>
+            <p class="text-[17px] opacity-80">{meta}</p>
+            {
+              vehicle.historyReportUrl && (
+                <a
+                  href={vehicle.historyReportUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex min-h-8 items-center font-semibold hover:underline underline-offset-4"
+                >
+                  View history report →
+                </a>
+              )
+            }
+            <div data-price-block class="mt-2 border-y border-charcoal/30 py-4">
+              <div class="text-[44px] leading-[1.05] font-bold md:text-[52px]">{price}</div>
+              <p class="text-[15px]">All-in price. Plus HST and licensing.</p>
+            </div>
+          </div>
+
+          {
+            !sold ? (
+              <div class="order-9 lg:order-2" data-print-hide>
+                <Form
+                  id="vehicle-enquiry"
+                  heading="Is this vehicle still available?"
+                  fields={[
+                    { name: "name", label: "Name", required: true, autocomplete: "name" },
+                    { name: "phone", label: "Phone", type: "tel", required: true, autocomplete: "tel" },
+                  ]}
+                  hiddenFields={{
+                    vehicle: title,
+                    vin: vehicle.vin,
+                    url: pageUrl.toString(),
+                    message: `Is the ${title} still available?`,
+                  }}
+                  submitLabel="Send enquiry"
+                  successMessage="Thanks — your enquiry has been sent. We’ll get back to you shortly."
+                />
+              </div>
+            ) : (
+              <p class="order-9 text-lg font-medium lg:order-2">This vehicle has been sold.</p>
+            )
+          }
+
+          <div class="order-3 flex flex-col gap-3" data-print-hide>
+            {
+              sold ? (
+                <a href={soldHref} class="btn btn-outline-dark min-h-[52px]">
+                  See similar vehicles
+                </a>
+              ) : (
+                <>
+                  <div class="flex flex-col gap-3 sm:flex-row">
+                    {callHref ? (
+                      <a href={callHref} class="btn btn-outline-dark min-h-[52px] flex-1 sm:basis-40">
+                        Call {site.phone}
+                      </a>
+                    ) : (
+                      <span class="btn btn-outline-dark min-h-[52px] flex-1 sm:basis-40" aria-disabled="true">
+                        Call — number coming soon
+                      </span>
+                    )}
+                    <a
+                      href={`/test-drive/?vehicle=${vehicle.slug}`}
+                      class="btn btn-outline-dark min-h-[52px] flex-1 sm:basis-40"
+                    >
+                      Book a test drive
+                    </a>
+                  </div>
+                  {smsHrefValue ? (
+                    <a href={smsHrefValue} class="flex min-h-8 items-center font-semibold hover:underline underline-offset-4">
+                      Prefer to text? Text {site.textPhone} →
+                    </a>
+                  ) : (
+                    <span class="flex min-h-8 items-center opacity-70">
+                      Prefer to text? Text — number coming soon
+                    </span>
+                  )}
+                </>
+              )
+            }
+            <div class="flex items-center gap-3">
+              <button
+                type="button"
+                data-copy-link
+                class="text-sm font-semibold tracking-[0.12em] uppercase hover:underline underline-offset-4"
+              >
+                Copy link
+              </button>
+              <span data-copy-confirm hidden class="text-sm" role="status">Link copied</span>
+            </div>
+          </div>
+        </aside>
+
+        <section aria-labelledby="about-vehicle" class="order-4 flex flex-col gap-4 lg:col-start-1 lg:row-start-2">
+          <h2 id="about-vehicle" class="text-[28px] leading-[1.1] font-medium md:text-[32px]">
+            About this vehicle
+          </h2>
+          {vehicle.description.split("\n\n").map((paragraph) => <p>{paragraph}</p>)}
+        </section>
+
+        {
+          vehicle.highlights.length > 0 && (
+            <section aria-labelledby="highlights" class="order-5 flex flex-col gap-5 lg:col-start-1 lg:row-start-3">
+              <h2 id="highlights" class="text-[28px] leading-[1.1] font-medium md:text-[32px]">
+                Highlights
+              </h2>
+              <div class="grid gap-5 sm:grid-cols-2">
+                {vehicle.highlights.map((highlight) => (
+                  <div class="flex items-start gap-4 border border-charcoal/30 p-5">
+                    <span class="flex h-9 w-9 flex-none items-center justify-center bg-green">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DBD7D2" stroke-width="3" stroke-linecap="square" aria-hidden="true">
+                        <path d="M5 12l5 5 9-10" />
+                      </svg>
+                    </span>
+                    <div>
+                      <div class="text-xl leading-[1.25] font-semibold">{highlight.title}</div>
+                      <div>{highlight.detail}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )
+        }
+
+        <section aria-labelledby="vehicle-specs" class="order-6 flex flex-col gap-5 lg:col-start-1 lg:row-start-4">
+          <h2 id="vehicle-specs" class="text-[28px] leading-[1.1] font-medium md:text-[32px]">Vehicle specs</h2>
+          <dl class="grid grid-cols-2 gap-x-6 gap-y-6 lg:grid-cols-3">
+            {specs.map((spec) => (
+              <div>
+                <dt class="text-[13px] tracking-[0.14em] uppercase">{spec.label}</dt>
+                <dd class="text-xl font-semibold">{spec.value}</dd>
+              </div>
+            ))}
+            <div class="col-span-2 lg:col-span-3">
+              <dt class="text-[13px] tracking-[0.14em] uppercase">VIN</dt>
+              <dd class="text-xl font-semibold">{vehicle.vin}</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section aria-labelledby="features" class="order-7 flex flex-col gap-5 lg:col-start-1 lg:row-start-5">
+          <h2 id="features" class="text-[28px] leading-[1.1] font-medium md:text-[32px]">Features</h2>
+          <ul class="grid list-disc grid-cols-1 gap-2 pl-5 sm:grid-cols-2">
+            {vehicle.features.map((feature) => <li>{feature}</li>)}
+          </ul>
+        </section>
+
+        <section
+          aria-labelledby="disclosures"
+          class="order-8 -mx-5 bg-charcoal px-5 py-10 text-alabaster md:-mx-10 md:px-10 md:py-[72px] lg:col-start-1 lg:col-span-2 lg:row-start-6"
+        >
+          <div class="flex flex-col gap-10 lg:flex-row lg:gap-12">
+            <div class="flex flex-col gap-3 lg:flex-1 lg:min-w-[320px]">
+              <p class="label">Know before you visit</p>
+              <h2 id="disclosures" class="text-[32px] leading-[1.1] font-medium md:text-[44px]">
+                Vehicle disclosures
+              </h2>
+              <p class="text-lg">
+                Every vehicle lists its history and condition details plainly. Nothing is hidden or
+                collapsed.
+              </p>
+            </div>
+            <dl class="flex flex-col lg:flex-[2] lg:min-w-[520px]">
+              {
+                disclosures.map((disclosure) => (
+                  <div class="border-t border-alabaster/30 py-4">
+                    <div class="flex flex-wrap justify-between gap-4">
+                      <dt class="text-lg">{disclosure.label}</dt>
+                      <dd class="text-lg text-right font-semibold">{disclosure.value}</dd>
+                    </div>
+                    {disclosure.details && (
+                      <p class="mt-2 max-w-prose text-base opacity-80">{disclosure.details}</p>
+                    )}
+                  </div>
+                ))
+              }
+              <div class="border-y border-alabaster/30 py-4">
+                <div class="flex flex-wrap justify-between gap-4">
+                  <dt class="text-lg">Vehicle history report</dt>
+                  <dd class="text-lg text-right font-semibold">
+                    {vehicle.historyReportUrl ? (
+                      <a
+                        href={vehicle.historyReportUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="hover:underline underline-offset-4"
+                      >
+                        View report →
+                      </a>
+                    ) : (
+                      "Not provided"
+                    )}
+                  </dd>
+                </div>
+              </div>
+            </dl>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    {
+      related.length > 0 && (
+        <section aria-labelledby="more-from-lot" class="pb-20 md:pb-[88px]" data-print-hide>
+          <div class="container-sqm flex flex-col gap-8 md:gap-10">
+            <div class="flex flex-wrap items-end justify-between gap-6">
+              <div class="flex flex-col gap-2.5">
+                <p class="label">Keep looking</p>
+                <h2 id="more-from-lot" class="display-2">More from the lot</h2>
+              </div>
+              <a
+                href="/inventory/"
+                class="hidden min-h-12 items-center text-sm tracking-[0.2em] uppercase hover:underline underline-offset-4 md:flex"
+              >
+                View all inventory →
+              </a>
+            </div>
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+              {related.map((candidate, index) => (
+                <div class={index === 2 ? "hidden md:block" : undefined}>
+                  <VehicleCard vehicle={candidate} today={new Date()} />
+                </div>
+              ))}
+            </div>
+            <a href="/inventory/" class="min-h-12 items-center text-sm tracking-[0.2em] uppercase hover:underline underline-offset-4 md:hidden">
+              View all inventory →
+            </a>
+          </div>
+        </section>
+      )
+    }
+  </main>
+
+  <Footer />
+
+  {
+    !sold && (
+      <div
+        data-sticky-bar
+        hidden
+        class="fixed inset-x-0 bottom-0 z-30 border-t border-alabaster/25 bg-charcoal text-alabaster lg:hidden"
+        style="padding-bottom: env(safe-area-inset-bottom)"
+        data-print-hide
+      >
+        <div class="flex items-center gap-2.5 px-4 py-3">
+          <div class="mr-auto leading-tight">
+            <span class="block text-2xl font-bold">{price}</span>
+            <span class="text-xs opacity-80">All-in</span>
+          </div>
+          {callHref ? (
+            <a href={callHref} class="btn btn-outline-light min-h-14 flex-1">Call</a>
+          ) : (
+            <span class="btn btn-outline-light min-h-14 flex-1" aria-disabled="true">Call — soon</span>
+          )}
+          <button type="button" data-scroll-enquiry class="btn btn-primary min-h-14 flex-[1.3]">
+            Send enquiry
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+</Layout>
+
+<script src="../../scripts/gallery.ts"></script>
+<script src="../../scripts/vehicle-page.ts"></script>
+
+<style is:global>
+  /* Room for the mobile sticky bar above the footer content. */
+  @media (max-width: 1023px) {
+    [data-sqm-footer] {
+      padding-bottom: calc(7rem + env(safe-area-inset-bottom));
+    }
+  }
+
+  @media print {
+    [data-print-hide],
+    [data-sqm-header],
+    [data-sqm-footer],
+    [data-sticky-bar],
+    [data-gallery-thumbs],
+    [data-gallery] [role="group"] {
+      display: none !important;
+    }
+    body {
+      background: #fff;
+      color: #000;
+    }
+  }
+</style>

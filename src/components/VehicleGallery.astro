@@ -1,0 +1,88 @@
+---
+/** Vehicle photo gallery (spec §4.4): Exterior/Interior segmented toggle,
+ * fixed 4:3 main frame, thumbnail strip with +N overflow. Keyboard and touch
+ * handled in src/scripts/gallery.ts. */
+import type { Vehicle } from "../lib/types";
+
+interface Props {
+  vehicle: Vehicle;
+}
+
+const { vehicle } = Astro.props;
+const categories = [...new Set(vehicle.photos.map((photo) => photo.category))];
+const MAX_THUMBS = 5;
+---
+
+<div data-gallery class="flex flex-col gap-4">
+  {
+    categories.length > 1 && (
+      <div role="group" aria-label="Photo set" class="flex self-start border border-charcoal">
+        {categories.map((category, i) => (
+          <button
+            type="button"
+            data-gallery-cat={category}
+            aria-pressed={i === 0 ? "true" : "false"}
+            class:list={[
+              "min-h-11 flex-1 px-7 text-base font-semibold capitalize",
+              i === 0 ? "bg-charcoal text-alabaster" : "bg-transparent text-charcoal",
+            ]}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
+    )
+  }
+
+  <figure class="relative aspect-4/3 overflow-hidden bg-charcoal/10">
+    <img
+      data-gallery-main
+      src={vehicle.photos[0].src}
+      alt={vehicle.photos[0].alt}
+      data-category={categories[0]}
+      width="1200"
+      height="900"
+      fetchpriority="high"
+      decoding="async"
+      class="h-full w-full object-cover"
+    />
+    <span
+      data-gallery-counter
+      class="absolute right-4 bottom-4 bg-charcoal px-3 py-1.5 text-[13px] uppercase tracking-[0.12em] text-alabaster"
+    >
+      {vehicle.photos.length} photos
+    </span>
+  </figure>
+  <p data-gallery-live class="sr-only" role="status" aria-live="polite"></p>
+
+  <div data-gallery-thumbs class="grid grid-cols-4 gap-2 md:grid-cols-5 md:gap-3">
+    {vehicle.photos.map((photo, i) => (
+      <button
+        type="button"
+        data-gallery-thumb
+        data-category={photo.category}
+        data-full={photo.src}
+        data-alt={photo.alt}
+        aria-label={`Show photo ${i + 1}: ${photo.alt}`}
+        aria-pressed={i === 0 ? "true" : "false"}
+        class="relative aspect-4/3 overflow-hidden bg-charcoal/10"
+      >
+        <img
+          src={photo.src}
+          alt=""
+          width="320"
+          height="240"
+          loading={i < 2 ? "eager" : "lazy"}
+          decoding="async"
+          class="h-full w-full object-cover"
+        />
+        {vehicle.photos.length > MAX_THUMBS && i === MAX_THUMBS - 1 && (
+          <span
+            data-thumb-more
+            class="absolute inset-0 flex items-center justify-center bg-charcoal/60 text-lg font-semibold text-alabaster"
+          ></span>
+        )}
+      </button>
+    ))}
+  </div>
+</div>
