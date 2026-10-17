@@ -23,17 +23,17 @@
       "photos": [
         {
           "src": "/images/vehicles/2019-honda-civic-ex/01.jpg",
-          "alt": "2019 Honda Civic EX sedan, front three-quarter view, Sonic Gray Pearl, on the lot at Serene Quality Motors",
+          "alt": "2019 Honda Civic EX sedan in gray, front three-quarter view parked among greenery",
           "category": "exterior"
         },
         {
           "src": "/images/vehicles/2019-honda-civic-ex/02.jpg",
-          "alt": "2019 Honda Civic EX sedan, rear three-quarter view showing trunk and taillights",
+          "alt": "2019 Honda Civic EX sedan in gray, rear three-quarter view parked on a residential street",
           "category": "exterior"
         },
         {
           "src": "/images/vehicles/2019-honda-civic-ex/03.jpg",
-          "alt": "2019 Honda Civic EX interior, dashboard and centre console with odometer visible",
+          "alt": "2019 Honda Civic EX interior, steering wheel and dashboard with the driver's hands on the wheel",
           "category": "interior"
         }
       ],
@@ -92,17 +92,17 @@
       "photos": [
         {
           "src": "/images/vehicles/2021-toyota-rav4-le/01.jpg",
-          "alt": "2021 Toyota RAV4 LE SUV, front three-quarter view, Blueprint blue, on the lot at Serene Quality Motors",
+          "alt": "2021 Toyota RAV4 SUV in blue, front three-quarter view parked near a house",
           "category": "exterior"
         },
         {
           "src": "/images/vehicles/2021-toyota-rav4-le/02.jpg",
-          "alt": "2021 Toyota RAV4 LE SUV, rear three-quarter view showing hatch and wheels",
+          "alt": "2021 Toyota RAV4 SUV in gray, rear view on a scenic road",
           "category": "exterior"
         },
         {
           "src": "/images/vehicles/2021-toyota-rav4-le/03.jpg",
-          "alt": "2021 Toyota RAV4 LE interior, dashboard and infotainment screen with odometer visible",
+          "alt": "2021 Toyota RAV4 interior, dashboard, steering wheel and centre controls",
           "category": "interior"
         }
       ],
@@ -159,17 +159,17 @@
       "photos": [
         {
           "src": "/images/vehicles/2017-ford-f150-xlt/01.jpg",
-          "alt": "2017 Ford F-150 XLT SuperCrew, front three-quarter view, Ingot Silver, on the lot at Serene Quality Motors",
+          "alt": "White Ford F-150 pickup, front three-quarter view at sunset",
           "category": "exterior"
         },
         {
           "src": "/images/vehicles/2017-ford-f150-xlt/02.jpg",
-          "alt": "2017 Ford F-150 XLT SuperCrew, rear three-quarter view showing the truck bed and tailgate",
+          "alt": "White Ford F-150 pickup, front three-quarter view driving on a road",
           "category": "exterior"
         },
         {
           "src": "/images/vehicles/2017-ford-f150-xlt/03.jpg",
-          "alt": "2017 Ford F-150 XLT interior, front seats and dashboard with odometer visible",
+          "alt": "Ford F-150 interior, steering wheel and dashboard",
           "category": "interior"
         }
       ],
@@ -225,17 +225,17 @@
       "photos": [
         {
           "src": "/images/vehicles/2020-hyundai-elantra-preferred/01.jpg",
-          "alt": "2020 Hyundai Elantra Preferred sedan, front three-quarter view, Polar White, on the lot at Serene Quality Motors",
+          "alt": "White Hyundai Elantra sedan, rear three-quarter view at night",
           "category": "exterior"
         },
         {
           "src": "/images/vehicles/2020-hyundai-elantra-preferred/02.jpg",
-          "alt": "2020 Hyundai Elantra Preferred sedan, rear three-quarter view showing trunk and wheels",
+          "alt": "White Hyundai Elantra sedan, front three-quarter view at night",
           "category": "exterior"
         },
         {
           "src": "/images/vehicles/2020-hyundai-elantra-preferred/03.jpg",
-          "alt": "2020 Hyundai Elantra Preferred interior, dashboard and steering wheel with odometer visible",
+          "alt": "Hyundai Elantra interior, steering wheel and dashboard close-up",
           "category": "interior"
         }
       ],
