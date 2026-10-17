@@ -1,0 +1,102 @@
+---
+/**
+ * Generic accessible form. POSTs to Web3Forms; when PUBLIC_WEB3FORMS_KEY is
+ * unset the client script shows an inline error instead of submitting.
+ */
+export interface FormField {
+  name: string;
+  label: string;
+  type?: "text" | "tel" | "email" | "date" | "textarea";
+  required?: boolean;
+  autocomplete?: string;
+  placeholder?: string;
+  /** Span both grid columns. */
+  full?: boolean;
+}
+
+interface Props {
+  id: string;
+  fields: FormField[];
+  submitLabel: string;
+  heading?: string;
+  hiddenFields?: Record<string, string>;
+  successMessage?: string;
+  errorMessage?: string;
+  class?: string;
+}
+
+const {
+  id,
+  fields,
+  submitLabel,
+  heading,
+  hiddenFields = {},
+  successMessage = "Thanks — your message has been sent. We'll get back to you shortly.",
+  errorMessage = "Something went wrong sending your message. Please try again.",
+  class: className = "",
+} = Astro.props;
+const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? "";
+---
+
+<form
+  id={id}
+  data-web3forms
+  data-success-message={successMessage}
+  data-error-message={errorMessage}
+  method="POST"
+  action="https://api.web3forms.com/submit"
+  class={className}
+>
+  <input type="hidden" name="access_key" value={accessKey} />
+  <!-- Honeypot: humans never see or tick this. -->
+  <input type="checkbox" name="botcheck" class="hidden" tabindex="-1" aria-hidden="true" />
+  {Object.entries(hiddenFields).map(([name, value]) => <input type="hidden" name={name} value={value} />)}
+
+  <div data-form-fields>
+    {heading && <p class="mb-5 text-xl font-semibold">{heading}</p>}
+    <div class="grid gap-5 sm:grid-cols-2">
+      {
+        fields.map((field) => (
+          <div class={field.full ? "sm:col-span-2" : ""}>
+            <label for={`${id}-${field.name}`} class="mb-1.5 block text-sm uppercase tracking-[0.18em]">
+              {field.label}
+              {field.required && <span aria-hidden="true"> *</span>}
+            </label>
+            {field.type === "textarea" ? (
+              <textarea
+                id={`${id}-${field.name}`}
+                name={field.name}
+                rows="4"
+                required={field.required}
+                placeholder={field.placeholder}
+                class="w-full border border-charcoal/40 bg-transparent px-4 py-3 text-base"
+              />
+            ) : (
+              <input
+                id={`${id}-${field.name}`}
+                name={field.name}
+                type={field.type ?? "text"}
+                required={field.required}
+                autocomplete={field.autocomplete}
+                placeholder={field.placeholder}
+                class="h-12 w-full border border-charcoal/40 bg-transparent px-4 text-base"
+              />
+            )}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <p
+    data-form-status
+    role="status"
+    aria-live="polite"
+    hidden
+    class="mt-5 border-l-2 border-green px-4 py-3 font-medium"
+  ></p>
+
+  <button type="submit" class="btn btn-primary mt-6">{submitLabel}</button>
+</form>
+
+<script src="../scripts/forms.ts"></script>

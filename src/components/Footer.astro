@@ -1,0 +1,76 @@
+---
+import Logo from "./Logo.astro";
+import { site, fullAddress, telHref } from "../data/site";
+
+const callHref = telHref();
+const navLinks = [
+  { href: "/inventory/", label: "Inventory" },
+  { href: "/about/", label: "About" },
+  { href: "/contact/", label: "Contact" },
+];
+const legalLinks = [
+  { href: "/privacy/", label: "Privacy" },
+  { href: "/terms/", label: "Terms" },
+  { href: "/accessibility/", label: "Accessibility" },
+];
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-alabaster/25 bg-charcoal text-alabaster">
+  <div class="container-sqm flex flex-wrap justify-between gap-x-12 gap-y-10 pb-8 pt-14">
+    <div class="flex max-w-xs flex-col gap-5">
+      <a href="/" aria-label="Serene Quality Motors — home" class="w-fit">
+        <Logo variant="dark-bg" class="h-14 w-auto" />
+      </a>
+      <p class="text-base">
+        {
+          site.registeredLegalName ? (
+            site.registeredLegalName
+          ) : (
+            <span class="italic opacity-70">[Registered business name — TBC]</span>
+          )
+        }
+        <br />
+        {fullAddress()}
+      </p>
+    </div>
+
+    <nav aria-label="Footer" class="flex flex-col items-start gap-2 text-base">
+      {navLinks.map((link) => (
+        <a href={link.href} class="hover:underline underline-offset-4">{link.label}</a>
+      ))}
+    </nav>
+
+    <div class="flex flex-col items-start gap-2 text-base">
+      {
+        callHref && site.phone ? (
+          <a href={callHref} class="hover:underline underline-offset-4">{site.phone}</a>
+        ) : (
+          <span class="opacity-70">Phone — number coming soon</span>
+        )
+      }
+      {
+        site.email ? (
+          <a href={`mailto:${site.email}`} class="hover:underline underline-offset-4">{site.email}</a>
+        ) : (
+          <span class="opacity-70">Email — coming soon</span>
+        )
+      }
+      {
+        site.hours ? (
+          site.hours.map((line) => <div>{line.days} {line.hours}</div>)
+        ) : (
+          <span class="opacity-70">Hours — coming soon</span>
+        )
+      }
+    </div>
+  </div>
+
+  <div class="container-sqm flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-alabaster/25 pb-10 pt-6 text-sm">
+    <span>OMVIC-registered dealer · Registration # {site.omvicRegistration}</span>
+    {legalLinks.map((link) => (
+      <a href={link.href} class="hover:underline underline-offset-4">{link.label}</a>
+    ))}
+    <span class="ms-auto">© {year} {site.name}</span>
+  </div>
+</footer>

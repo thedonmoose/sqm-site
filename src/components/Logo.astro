@@ -1,0 +1,24 @@
+---
+/**
+ * Brand logo, used unaltered (public/logos/). "dark-bg" carries alabaster
+ * artwork for charcoal/hero surfaces; "light-bg" carries green artwork for
+ * light surfaces. Intrinsic 1318x922 keeps layout stable at any CSS size.
+ */
+interface Props {
+  variant?: "dark-bg" | "light-bg";
+  class?: string;
+}
+
+const { variant = "dark-bg", class: className = "h-14 w-auto" } = Astro.props;
+const src = variant === "dark-bg" ? "/logos/sqm-on-dark.svg" : "/logos/sqm-on-light.svg";
+---
+
+<img
+  src={src}
+  width="1318"
+  height="922"
+  alt="Serene Quality Motors"
+  class={className}
+  loading="eager"
+  decoding="async"
+/>
