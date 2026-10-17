@@ -1,0 +1,86 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { site } from "../data/site";
+
+/* ----------------------------------------------------------------
+   PROVISIONAL COPY — clean placeholder text for the owner to
+   revise (spec §12: About copy is provisional). No invented
+   facts: no team bios, no years in business, no warranty claims.
+   The three differentiators below restate the site's RTB trio,
+   which are stated facts.
+---------------------------------------------------------------- */
+const story = {
+  title: "A used-car lot, without the runaround",
+  paragraph:
+    "Serene Quality Motors is a small used-car dealership on Kingston Road in Scarborough. Every vehicle on the lot is priced all-in, its history is disclosed up front, and nobody will pressure you while you look. If you want something we don't have, tell us and we'll call when one lands.",
+};
+---
+
+<Layout
+  title={`About · ${site.name}`}
+  description="Serene Quality Motors is a small OMVIC-registered used-car dealership in Scarborough — all-in pricing, disclosures up front, no pressure."
+>
+  <Header />
+  <main id="main">
+    <section class="bg-charcoal text-alabaster">
+      <div class="container-sqm py-20 md:py-28">
+        <div class="max-w-3xl">
+          <p class="label text-alabaster/80">About {site.name}</p>
+          <h1 class="display-2 mt-4">{story.title}</h1>
+          <p class="mt-6 max-w-2xl text-lg text-alabaster/80">{story.paragraph}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-alabaster text-charcoal">
+      <div class="container-sqm py-20 md:py-28">
+        <h2 class="display-2 max-w-2xl">What makes us different</h2>
+        <div class="mt-12 grid gap-12 md:mt-16 md:grid-cols-3 md:gap-10">
+          <div class="flex flex-col gap-5">
+            <span class="icon-tile" aria-hidden="true">
+              <svg width="34" height="34" viewBox="0 0 24 24">
+                <path d="M3 12V4h8l10 10-8 8L3 12z"></path>
+                <circle cx="7.5" cy="8.5" r="1.5"></circle>
+              </svg>
+            </span>
+            <h3 class="text-2xl font-semibold leading-tight">All-in pricing</h3>
+            <p>The price you see is the price you pay — only HST and licensing are added.</p>
+          </div>
+          <div class="flex flex-col gap-5">
+            <span class="icon-tile" aria-hidden="true">
+              <svg width="34" height="34" viewBox="0 0 24 24">
+                <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </span>
+            <h3 class="text-2xl font-semibold leading-tight">Disclosures up front</h3>
+            <p>Accident, damage and odometer history, shown plainly on every listing.</p>
+          </div>
+          <div class="flex flex-col gap-5">
+            <span class="icon-tile" aria-hidden="true">
+              <svg width="34" height="34" viewBox="0 0 24 24">
+                <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"></path>
+                <path d="M8.5 12l2.5 2.5 5-5"></path>
+              </svg>
+            </span>
+            <h3 class="text-2xl font-semibold leading-tight">OMVIC-registered dealer</h3>
+            <p>Registration # {site.omvicRegistration}. We follow Ontario's used-car rules.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-charcoal text-alabaster">
+      <div class="container-sqm flex flex-col items-start gap-10 py-20 md:py-24">
+        <h2 class="display-2 max-w-2xl">Come see what's on the lot</h2>
+        <div class="flex flex-wrap gap-4">
+          <a href="/inventory/" class="btn btn-primary btn-lg">See what's on the lot</a>
+          <a href="/contact/" class="btn btn-outline-light btn-lg">Contact</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
