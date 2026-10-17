@@ -1,0 +1,268 @@
+{
+  "_comment": "SAMPLE inventory for development/preview only. Dates are generated relative to the build day via daysAgoPosted / daysAgoSold so badges stay exercisable. Ignored entirely once SANITY_PROJECT_ID is set at build time. Photos live at /images/vehicles/<slug>/ and are supplied by the photo pipeline.",
+  "vehicles": [
+    {
+      "status": "available",
+      "year": 2019,
+      "make": "Honda",
+      "model": "Civic",
+      "trim": "EX",
+      "vin": "1HGCV1F34LA000001",
+      "stockNumber": "S-1001",
+      "allInPrice": 19995,
+      "mileageKm": 62000,
+      "bodyType": "sedan",
+      "drivetrain": "fwd",
+      "transmission": "automatic",
+      "fuelType": "gasoline",
+      "engine": "2.0L 4-cylinder",
+      "exteriorColour": "Sonic Gray Pearl",
+      "interiorColour": "Black",
+      "daysAgoPosted": 2,
+      "slug": "2019-honda-civic-ex",
+      "photos": [
+        {
+          "src": "/images/vehicles/2019-honda-civic-ex/01.jpg",
+          "alt": "2019 Honda Civic EX sedan, front three-quarter view, Sonic Gray Pearl, on the lot at Serene Quality Motors",
+          "category": "exterior"
+        },
+        {
+          "src": "/images/vehicles/2019-honda-civic-ex/02.jpg",
+          "alt": "2019 Honda Civic EX sedan, rear three-quarter view showing trunk and taillights",
+          "category": "exterior"
+        },
+        {
+          "src": "/images/vehicles/2019-honda-civic-ex/03.jpg",
+          "alt": "2019 Honda Civic EX interior, dashboard and centre console with odometer visible",
+          "category": "interior"
+        }
+      ],
+      "description": "One-owner 2019 Civic EX sedan in clean shape. Runs and drives as it should, with the usual EX equipment: backup camera, heated front seats and CarPlay/Android Auto. Sold at the all-in price below — only HST and licensing are added.",
+      "highlights": [
+        {
+          "title": "New tires: installed 2025-11",
+          "detail": "Four new all-season tires fitted, balanced and torque-set to spec."
+        },
+        {
+          "title": "Fresh service: 2026-09",
+          "detail": "Oil and filter change plus a multi-point inspection completed in-house."
+        }
+      ],
+      "features": [
+        "Backup camera",
+        "Heated front seats",
+        "Apple CarPlay and Android Auto",
+        "Bluetooth audio",
+        "Cruise control",
+        "Push-button start",
+        "Dual-zone climate control",
+        "Power sunroof"
+      ],
+      "historyReportUrl": "https://www.carfax.ca",
+      "uvipAvailable": true,
+      "disclosures": {
+        "accidentOrDamageHistory": { "status": "none" },
+        "rebuiltOrSalvageStatus": { "status": "none" },
+        "odometerNote": { "status": "accurate" },
+        "soldAsCertified": false,
+        "otherDisclosures": "Vehicle is sold as-is per OMVIC rules unless otherwise agreed in writing at the time of sale."
+      }
+    },
+    {
+      "status": "available",
+      "year": 2021,
+      "make": "Toyota",
+      "model": "RAV4",
+      "trim": "LE",
+      "vin": "2T3W1RFV8MW000002",
+      "stockNumber": "S-1002",
+      "allInPrice": 27495,
+      "previousPrice": 28995,
+      "previousPriceAdvertised": true,
+      "mileageKm": 48500,
+      "bodyType": "suv",
+      "drivetrain": "awd",
+      "transmission": "cvt",
+      "fuelType": "gasoline",
+      "engine": "2.5L 4-cylinder",
+      "exteriorColour": "Blueprint",
+      "interiorColour": "Black",
+      "daysAgoPosted": 20,
+      "slug": "2021-toyota-rav4-le",
+      "photos": [
+        {
+          "src": "/images/vehicles/2021-toyota-rav4-le/01.jpg",
+          "alt": "2021 Toyota RAV4 LE SUV, front three-quarter view, Blueprint blue, on the lot at Serene Quality Motors",
+          "category": "exterior"
+        },
+        {
+          "src": "/images/vehicles/2021-toyota-rav4-le/02.jpg",
+          "alt": "2021 Toyota RAV4 LE SUV, rear three-quarter view showing hatch and wheels",
+          "category": "exterior"
+        },
+        {
+          "src": "/images/vehicles/2021-toyota-rav4-le/03.jpg",
+          "alt": "2021 Toyota RAV4 LE interior, dashboard and infotainment screen with odometer visible",
+          "category": "interior"
+        }
+      ],
+      "description": "AWD 2021 RAV4 LE with low kilometres and the rest of the factory powertrain warranty still in force. Honest, economical crossover space with Toyota Safety Sense standard. Price reduced from $28,995 — the previous price was advertised.",
+      "highlights": [
+        {
+          "title": "New brakes: installed 2026-04",
+          "detail": "Front brake pads and rotors replaced, system inspected."
+        }
+      ],
+      "features": [
+        "All-wheel drive",
+        "Toyota Safety Sense 2.0",
+        "Backup camera",
+        "Apple CarPlay",
+        "Heated front seats",
+        "Bluetooth audio",
+        "Lane tracing assist",
+        "Adaptive cruise control"
+      ],
+      "historyReportUrl": "https://www.carfax.ca",
+      "uvipAvailable": false,
+      "disclosures": {
+        "accidentOrDamageHistory": {
+          "status": "disclosed",
+          "details": "Low-speed rear-end collision in 2023; rear bumper cover and tailgate panel repainted. Repair invoices on file; close-up photos available on request."
+        },
+        "rebuiltOrSalvageStatus": { "status": "none" },
+        "odometerNote": { "status": "accurate" },
+        "soldAsCertified": false,
+        "otherDisclosures": "Vehicle is sold as-is per OMVIC rules unless otherwise agreed in writing at the time of sale."
+      }
+    },
+    {
+      "status": "sold",
+      "year": 2017,
+      "make": "Ford",
+      "model": "F-150",
+      "trim": "XLT",
+      "vin": "1FTEW1CP7HK000003",
+      "stockNumber": "S-1003",
+      "allInPrice": 24900,
+      "mileageKm": 118000,
+      "bodyType": "truck",
+      "drivetrain": "4wd",
+      "transmission": "automatic",
+      "fuelType": "gasoline",
+      "engine": "5.0L V8",
+      "exteriorColour": "Ingot Silver",
+      "interiorColour": "Earth Gray",
+      "daysAgoPosted": 45,
+      "daysAgoSold": 12,
+      "slug": "2017-ford-f150-xlt",
+      "photos": [
+        {
+          "src": "/images/vehicles/2017-ford-f150-xlt/01.jpg",
+          "alt": "2017 Ford F-150 XLT SuperCrew, front three-quarter view, Ingot Silver, on the lot at Serene Quality Motors",
+          "category": "exterior"
+        },
+        {
+          "src": "/images/vehicles/2017-ford-f150-xlt/02.jpg",
+          "alt": "2017 Ford F-150 XLT SuperCrew, rear three-quarter view showing the truck bed and tailgate",
+          "category": "exterior"
+        },
+        {
+          "src": "/images/vehicles/2017-ford-f150-xlt/03.jpg",
+          "alt": "2017 Ford F-150 XLT interior, front seats and dashboard with odometer visible",
+          "category": "interior"
+        }
+      ],
+      "description": "SuperCrew 2017 F-150 XLT with the 5.0L V8 and 4WD — a straight, working truck with towing package and spray-in bedliner. This vehicle has been sold.",
+      "highlights": [
+        {
+          "title": "New battery: installed 2025-12",
+          "detail": "Group 94R AGM battery fitted and registered."
+        }
+      ],
+      "features": [
+        "5.0L V8 engine",
+        "Four-wheel drive",
+        "Towing package",
+        "Spray-in bedliner",
+        "Backup camera",
+        "Bluetooth audio",
+        "Trailer brake controller",
+        "Power adjustable pedals"
+      ],
+      "historyReportUrl": "https://www.carfax.ca",
+      "uvipAvailable": false,
+      "disclosures": {
+        "accidentOrDamageHistory": { "status": "none" },
+        "rebuiltOrSalvageStatus": { "status": "none" },
+        "odometerNote": {
+          "status": "discrepancy",
+          "details": "Instrument cluster was replaced at 96,000 km in 2019; the odometer does not show total distance. Documented on the UVIP, copy available on request."
+        },
+        "soldAsCertified": false,
+        "otherDisclosures": "Vehicle is sold as-is per OMVIC rules unless otherwise agreed in writing at the time of sale."
+      }
+    },
+    {
+      "status": "available",
+      "year": 2020,
+      "make": "Hyundai",
+      "model": "Elantra",
+      "trim": "Preferred",
+      "vin": "5NPE34AF4HH000004",
+      "stockNumber": "S-1004",
+      "allInPrice": 17895,
+      "mileageKm": 74300,
+      "bodyType": "sedan",
+      "drivetrain": "fwd",
+      "transmission": "automatic",
+      "fuelType": "gasoline",
+      "engine": "2.0L 4-cylinder",
+      "exteriorColour": "Polar White",
+      "interiorColour": "Black",
+      "daysAgoPosted": 9,
+      "slug": "2020-hyundai-elantra-preferred",
+      "photos": [
+        {
+          "src": "/images/vehicles/2020-hyundai-elantra-preferred/01.jpg",
+          "alt": "2020 Hyundai Elantra Preferred sedan, front three-quarter view, Polar White, on the lot at Serene Quality Motors",
+          "category": "exterior"
+        },
+        {
+          "src": "/images/vehicles/2020-hyundai-elantra-preferred/02.jpg",
+          "alt": "2020 Hyundai Elantra Preferred sedan, rear three-quarter view showing trunk and wheels",
+          "category": "exterior"
+        },
+        {
+          "src": "/images/vehicles/2020-hyundai-elantra-preferred/03.jpg",
+          "alt": "2020 Hyundai Elantra Preferred interior, dashboard and steering wheel with odometer visible",
+          "category": "interior"
+        }
+      ],
+      "description": "Well-kept 2020 Elantra Preferred with heated seats and wheel, Apple CarPlay and clean wear inside and out. An economical commuter at an all-in price — only HST and licensing are added.",
+      "highlights": [
+        {
+          "title": "Serviced: 2026-08",
+          "detail": "Oil and filter change, cabin air filter and multi-point inspection completed."
+        }
+      ],
+      "features": [
+        "Heated front seats",
+        "Heated steering wheel",
+        "Apple CarPlay and Android Auto",
+        "Backup camera",
+        "Blind-spot monitoring",
+        "Bluetooth audio",
+        "Steering wheel audio controls"
+      ],
+      "uvipAvailable": false,
+      "disclosures": {
+        "accidentOrDamageHistory": { "status": "none" },
+        "rebuiltOrSalvageStatus": { "status": "none" },
+        "odometerNote": { "status": "accurate" },
+        "soldAsCertified": false,
+        "otherDisclosures": "Aftermarket all-weather floor mats installed; originals included. Vehicle is sold as-is per OMVIC rules unless otherwise agreed in writing at the time of sale."
+      }
+    }
+  ]
+}
