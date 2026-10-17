@@ -1,0 +1,117 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { site, fullAddress, telHref } from "../data/site";
+
+const callHref = telHref();
+---
+
+<Layout
+  title={`Privacy · ${site.name}`}
+  description="How Serene Quality Motors handles the personal information you share through this website."
+>
+  <Header />
+  <main id="main">
+    <section class="bg-charcoal text-alabaster">
+      <div class="container-sqm py-16 md:py-24">
+        <p class="label text-alabaster/80">Legal</p>
+        <h1 class="display-2 mt-4">Privacy</h1>
+      </div>
+    </section>
+
+    <section class="bg-alabaster text-charcoal">
+      <div class="container-sqm py-16 md:py-24">
+        <div
+          role="note"
+          class="border border-charcoal/40 bg-charcoal px-5 py-4 text-alabaster"
+        >
+          <p class="label">Provisional draft — to be reviewed before launch</p>
+        </div>
+
+        <div class="mt-12 max-w-3xl space-y-10">
+          <p>
+            This page explains, in plain language, what happens to the information you share with{" "}
+            {site.name} through this website. It applies to {site.name}, {fullAddress()}
+            {site.registeredLegalName ? `, operated by ${site.registeredLegalName}` : ""},
+            OMVIC registration # {site.omvicRegistration}.
+          </p>
+
+          <section>
+            <h2 class="text-2xl font-semibold">What we collect</h2>
+            <p class="mt-3">
+              Only what you type into our forms: your name, phone number, email address, and the
+              details of your message or request (for example the vehicle you're asking about, a
+              preferred test-drive time, or your budget). We don't run advertising trackers and we
+              don't collect anything else about you.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-semibold">How we use it</h2>
+            <p class="mt-3">
+              To answer your question, arrange your test drive, or call you when a vehicle you asked
+              about arrives. That's it. We don't add you to marketing lists, and we never sell or
+              rent your information to anyone.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-semibold">Who else sees it</h2>
+            <p class="mt-3">
+              Our forms are delivered through a third-party form service that forwards your message
+              to us, and our contact page embeds a Google map (which loads under Google's own
+              policies when you use it). Otherwise, your information stays with us except where the
+              law requires disclosure.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-semibold">How long we keep it</h2>
+            <p class="mt-3">
+              Only as long as we need it to handle your enquiry, and any longer period required by
+              Ontario's record-keeping rules for motor vehicle dealers. After that it's deleted.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-semibold">Your choices</h2>
+            <p class="mt-3">
+              You can ask what information we hold about you, ask us to correct it, or ask us to
+              delete it. Just contact us and we'll take care of it.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-semibold">Contact us about privacy</h2>
+            <p class="mt-3">
+              {
+                callHref && site.phone ? (
+                  <a href={callHref} class="underline underline-offset-4">{site.phone}</a>
+                ) : (
+                  <span class="italic opacity-70">[Phone — TBC]</span>
+                )
+              }
+              {" · "}
+              {
+                site.email ? (
+                  <a href={`mailto:${site.email}`} class="underline underline-offset-4">{site.email}</a>
+                ) : (
+                  <span class="italic opacity-70">[Email — TBC]</span>
+                )
+              }
+              {" · "}
+              {fullAddress()}
+            </p>
+          </section>
+
+          <p class="border-t border-charcoal/25 pt-6 text-sm opacity-70">
+            This page describes our current practices and will be updated if they change. It's
+            provided for information and isn't legal advice.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>

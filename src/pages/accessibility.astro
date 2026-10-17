@@ -1,0 +1,101 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { site, fullAddress, telHref } from "../data/site";
+
+const callHref = telHref();
+---
+
+<Layout
+  title={`Accessibility · ${site.name}`}
+  description="Our accessibility commitment: an AODA-aware statement covering this website, our lot, and how to give us feedback."
+>
+  <Header />
+  <main id="main">
+    <section class="bg-charcoal text-alabaster">
+      <div class="container-sqm py-16 md:py-24">
+        <p class="label text-alabaster/80">Legal</p>
+        <h1 class="display-2 mt-4">Accessibility</h1>
+      </div>
+    </section>
+
+    <section class="bg-alabaster text-charcoal">
+      <div class="container-sqm py-16 md:py-24">
+        <div
+          role="note"
+          class="border border-charcoal/40 bg-charcoal px-5 py-4 text-alabaster"
+        >
+          <p class="label">Provisional draft — to be reviewed before launch</p>
+        </div>
+
+        <div class="mt-12 max-w-3xl space-y-10">
+          <p>
+            {site.name} wants every customer to be able to browse, ask questions and buy a car
+            comfortably. This statement explains how we're working to make that true — on this
+            website and at the lot — consistent with Ontario's accessibility law (AODA).
+          </p>
+
+          <section>
+            <h2 class="text-2xl font-semibold">This website</h2>
+            <ul class="mt-3 list-disc space-y-2 pl-6">
+              <li>Every part of the site works with a keyboard alone.</li>
+              <li>Pages are structured to work with screen readers and browser text resizing.</li>
+              <li>Text and background colours meet contrast standards.</li>
+              <li>Images and form fields have labels or text alternatives.</li>
+              <li>Animations respect your system's reduced-motion setting.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-semibold">At the dealership</h2>
+            <p class="mt-3">
+              If visiting the lot is difficult for any reason, tell us and we'll serve you another
+              way — by phone, email or at your vehicle. Service animals are always welcome, and we
+              invite you to bring a support person with you.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-semibold">Alternate formats</h2>
+            <p class="mt-3">
+              Any document we provide about a vehicle or a purchase can be given in another format
+              (large print, read aloud, and similar) at no cost, in a timely way. Just ask.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-semibold">Tell us about a barrier</h2>
+            <p class="mt-3">
+              If something on this site or at the lot gets in your way, we want to hear about it.
+              Contact us at{" "}
+              {
+                callHref && site.phone ? (
+                  <a href={callHref} class="underline underline-offset-4">{site.phone}</a>
+                ) : (
+                  <span class="italic opacity-70">[Phone — TBC]</span>
+                )
+              }
+              {" · "}
+              {
+                site.email ? (
+                  <a href={`mailto:${site.email}`} class="underline underline-offset-4">{site.email}</a>
+                ) : (
+                  <span class="italic opacity-70">[Email — TBC]</span>
+                )
+              }
+              {" · "}
+              {fullAddress()}, and we'll respond promptly and do our best to fix it.
+            </p>
+          </section>
+
+          <p class="border-t border-charcoal/25 pt-6 text-sm opacity-70">
+            This statement is reviewed and updated as our practices and Ontario's accessibility
+            requirements evolve.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>

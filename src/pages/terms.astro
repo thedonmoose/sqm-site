@@ -1,0 +1,113 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { site, fullAddress, telHref } from "../data/site";
+
+const callHref = telHref();
+---
+
+<Layout
+  title={`Terms · ${site.name}`}
+  description="Plain-language terms for using the Serene Quality Motors website and reading our vehicle listings."
+>
+  <Header />
+  <main id="main">
+    <section class="bg-charcoal text-alabaster">
+      <div class="container-sqm py-16 md:py-24">
+        <p class="label text-alabaster/80">Legal</p>
+        <h1 class="display-2 mt-4">Terms of use</h1>
+      </div>
+    </section>
+
+    <section class="bg-alabaster text-charcoal">
+      <div class="container-sqm py-16 md:py-24">
+        <div
+          role="note"
+          class="border border-charcoal/40 bg-charcoal px-5 py-4 text-alabaster"
+        >
+          <p class="label">Provisional draft — to be reviewed before launch</p>
+        </div>
+
+        <div class="mt-12 max-w-3xl space-y-10">
+          <p>
+            These terms cover the use of this website. {site.name} is a used-car dealership at{" "}
+            {fullAddress()}, OMVIC registration # {site.omvicRegistration}
+            {site.registeredLegalName ? `, operated by ${site.registeredLegalName}` : ""}.
+          </p>
+
+          <section>
+            <h2 class="text-2xl font-semibold">Vehicle listings and pricing</h2>
+            <p class="mt-3">
+              Listed prices are all-in: only HST and licensing are added. Vehicles are sold used, as
+              they are, subject to the disclosures shown on each listing. Listings can change at any
+              time — a vehicle may be sold or the price may be corrected before you visit, so please
+              confirm availability with us. A sale is only made in person at the dealership, on
+              signed paperwork.
+            </p>
+            <p class="mt-3">We do not offer financing.</p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-semibold">Website content</h2>
+            <p class="mt-3">
+              This site is provided for information. We work to keep it accurate and current, but we
+              can't promise it's complete or error-free, and nothing on the site is legal, financial
+              or tax advice. Don't rely on the site alone — confirm details with us before making a
+              decision.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-semibold">Links and embedded content</h2>
+            <p class="mt-3">
+              The site embeds a Google map and may link to other websites. Those are operated by
+              third parties under their own terms and privacy policies, and we're not responsible
+              for their content.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-semibold">Liability</h2>
+            <p class="mt-3">
+              To the extent permitted by Ontario law, {site.name} isn't liable for losses arising
+              from use of, or inability to use, this website. Nothing here limits your rights as a
+              consumer under Ontario law or under a signed purchase agreement.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-semibold">Governing law and contact</h2>
+            <p class="mt-3">
+              These terms are governed by the laws of Ontario and the laws of Canada that apply
+              there. Questions about them go to{" "}
+              {
+                callHref && site.phone ? (
+                  <a href={callHref} class="underline underline-offset-4">{site.phone}</a>
+                ) : (
+                  <span class="italic opacity-70">[Phone — TBC]</span>
+                )
+              }
+              {" · "}
+              {
+                site.email ? (
+                  <a href={`mailto:${site.email}`} class="underline underline-offset-4">{site.email}</a>
+                ) : (
+                  <span class="italic opacity-70">[Email — TBC]</span>
+                )
+              }
+              {" · "}
+              {fullAddress()}.
+            </p>
+          </section>
+
+          <p class="border-t border-charcoal/25 pt-6 text-sm opacity-70">
+            We may update these terms as the site changes; the current version always lives on this
+            page.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
