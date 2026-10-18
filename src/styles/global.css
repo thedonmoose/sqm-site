@@ -129,6 +129,10 @@ body {
   .btn-outline-dark:hover {
     background-color: rgb(39 37 37 / 0.08);
   }
+  .btn-card-cta:hover {
+    background-color: var(--color-charcoal);
+    color: var(--color-alabaster);
+  }
 
   .btn-md {
     min-height: 44px;
