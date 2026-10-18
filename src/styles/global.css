@@ -26,6 +26,12 @@ body {
   outline-offset: 2px;
 }
 
+/* Hero fills the first viewport; svh keeps mobile browser chrome honest. */
+[data-hero] {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
 /* Layout */
 @layer components {
   .container-sqm {
