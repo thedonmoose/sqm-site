@@ -24,7 +24,11 @@ const navLinks = [
 >
   <div class="container-sqm flex flex-wrap items-center justify-between gap-x-6 gap-y-4 py-6">
     <a href="/" aria-label="Serene Quality Motors — home" class="shrink-0">
-      <Logo variant="dark-bg" class="h-12 w-auto md:h-14" />
+      {overlay ? (
+        <Logo variant="icon-dark" class="h-11 w-auto" />
+      ) : (
+        <Logo variant="dark-bg" class="h-12 w-auto md:h-14" />
+      )}
     </a>
 
     <nav aria-label="Main" class="hidden items-center gap-9 text-sm uppercase tracking-[0.18em] md:flex">

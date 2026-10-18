@@ -2,21 +2,27 @@
 /**
  * Brand logo, used unaltered (public/logos/). "dark-bg" carries alabaster
  * artwork for charcoal/hero surfaces; "light-bg" carries green artwork for
- * light surfaces. Intrinsic 1318x922 keeps layout stable at any CSS size.
+ * light surfaces; "icon-dark" is the icon-only knockout for dark surfaces.
+ * Intrinsic sizes keep layout stable at any CSS size.
  */
 interface Props {
-  variant?: "dark-bg" | "light-bg";
+  variant?: "dark-bg" | "light-bg" | "icon-dark";
   class?: string;
 }
 
 const { variant = "dark-bg", class: className = "h-14 w-auto" } = Astro.props;
-const src = variant === "dark-bg" ? "/logos/sqm-on-dark.svg" : "/logos/sqm-on-light.svg";
+const art =
+  variant === "light-bg"
+    ? { src: "/logos/sqm-on-light.svg", width: 1318, height: 922 }
+    : variant === "icon-dark"
+      ? { src: "/logos/sqm-icon-on-dark.svg", width: 1318, height: 689 }
+      : { src: "/logos/sqm-on-dark.svg", width: 1318, height: 922 };
 ---
 
 <img
-  src={src}
-  width="1318"
-  height="922"
+  src={art.src}
+  width={art.width}
+  height={art.height}
   alt="Serene Quality Motors"
   class={className}
   loading="eager"
