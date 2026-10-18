@@ -6,7 +6,7 @@ import Footer from "../../components/Footer.astro";
 import VehicleCard from "../../components/VehicleCard.astro";
 import VehicleGallery from "../../components/VehicleGallery.astro";
 import Form from "../../components/Form.astro";
-import { site, telHref, smsHref } from "../../data/site";
+import { site, telHref, smsHref, whatsappHref } from "../../data/site";
 import { getVehicles, pickRelated, similarVehiclesHref } from "../../lib/data";
 import { isSoldWithinDays } from "../../lib/types";
 import { formatPrice, formatKm, formatTransmission, vehicleTitle } from "../../lib/format";
@@ -36,6 +36,7 @@ const sold = vehicle.status === "sold";
 const noindex = sold && !isSoldWithinDays(vehicle, 30);
 const callHref = telHref();
 const smsHrefValue = smsHref(undefined, `Is the ${title} still available?`);
+const whatsappHrefValue = whatsappHref();
 const statusLabel = vehicle.status.charAt(0).toUpperCase() + vehicle.status.slice(1);
 const price = formatPrice(vehicle.allInPrice);
 const pageUrl = new URL(`/vehicles/${vehicle.slug}/`, Astro.site);
@@ -193,7 +194,7 @@ const structuredData = {
                     message: `Is the ${title} still available?`,
                   }}
                   submitLabel="Send enquiry"
-                  buttonClass="btn btn-primary btn-md mt-6"
+                  buttonClass="btn btn-primary btn-md mt-6 w-full"
                   successMessage="Thanks — your enquiry has been sent. We’ll get back to you shortly."
                 />
               </div>
@@ -227,13 +228,22 @@ const structuredData = {
                       Book a test drive
                     </a>
                   </div>
-                  {smsHrefValue ? (
-                    <a href={smsHrefValue} class="flex min-h-8 items-center font-semibold hover:underline underline-offset-4">
-                      Prefer to text? Text {site.textPhone} →
-                    </a>
+                  {smsHrefValue && whatsappHrefValue ? (
+                    <span class="flex min-h-8 flex-wrap items-center gap-x-1.5">
+                      Prefer to text?
+                      <a href={smsHrefValue} class="font-semibold hover:underline underline-offset-4">Text</a>
+                      or
+                      <a
+                        href={whatsappHrefValue}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="font-semibold hover:underline underline-offset-4"
+                      >WhatsApp</a>
+                      {site.textPhone}
+                    </span>
                   ) : (
                     <span class="flex min-h-8 items-center opacity-70">
-                      Prefer to text? Text — number coming soon
+                      Prefer to text? — number coming soon
                     </span>
                   )}
                 </>

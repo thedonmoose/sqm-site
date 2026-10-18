@@ -21,7 +21,7 @@ export const site = {
 
   // [CONFIRM] owner values — null until supplied.
   phone: "437-603-4650" as string | null,
-  textPhone: null as string | null,
+  textPhone: "437-603-4650" as string | null,
   email: null as string | null,
   hours: null as HoursLine[] | null,
   registeredLegalName: null as string | null,
@@ -55,4 +55,11 @@ export function smsHref(
   if (!phone) return null;
   const body = message ? `?body=${encodeURIComponent(message)}` : "";
   return `sms:${phone.replace(/[^+\d]/g, "")}${body}`;
+}
+
+/** WhatsApp click-to-chat link; wa.me needs the full international number. */
+export function whatsappHref(phone: string | null | undefined = site.textPhone): string | null {
+  if (!phone) return null;
+  const digits = phone.replace(/\D/g, "");
+  return `https://wa.me/${digits.length === 10 ? `1${digits}` : digits}`;
 }
