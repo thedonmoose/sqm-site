@@ -1,7 +1,7 @@
 ---
-/** Vehicle photo gallery (spec §4.4): Exterior/Interior segmented toggle,
- * fixed 4:3 main frame, thumbnail strip with +N overflow. Keyboard and touch
- * handled in src/scripts/gallery.ts. */
+/** Vehicle photo gallery: fixed 4:3 main frame, single thumbnail strip with
+ * +N overflow. Keyboard and touch handled in src/scripts/gallery.ts.
+ * Photo category data is kept in the CMS but the gallery shows all photos. */
 import type { Vehicle } from "../lib/types";
 
 interface Props {
@@ -9,37 +9,15 @@ interface Props {
 }
 
 const { vehicle } = Astro.props;
-const categories = [...new Set(vehicle.photos.map((photo) => photo.category))];
 const MAX_THUMBS = 5;
 ---
 
 <div data-gallery class="flex flex-col gap-4">
-  {
-    categories.length > 1 && (
-      <div role="group" aria-label="Photo set" class="flex self-start border border-charcoal">
-        {categories.map((category, i) => (
-          <button
-            type="button"
-            data-gallery-cat={category}
-            aria-pressed={i === 0 ? "true" : "false"}
-            class:list={[
-              "min-h-11 flex-1 px-7 text-base font-semibold capitalize",
-              i === 0 ? "bg-charcoal text-alabaster" : "bg-transparent text-charcoal",
-            ]}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
-    )
-  }
-
   <figure class="relative aspect-4/3 overflow-hidden bg-charcoal/10">
     <img
       data-gallery-main
       src={vehicle.photos[0].src}
       alt={vehicle.photos[0].alt}
-      data-category={categories[0]}
       width="1200"
       height="900"
       fetchpriority="high"
@@ -60,7 +38,6 @@ const MAX_THUMBS = 5;
       <button
         type="button"
         data-gallery-thumb
-        data-category={photo.category}
         data-full={photo.src}
         data-alt={photo.alt}
         aria-label={`Show photo ${i + 1}: ${photo.alt}`}
