@@ -136,16 +136,16 @@ const hero = site.heroVideo;
         {
           rtbItems.map((item) => (
             <div class="flex items-start gap-4 md:flex-col md:gap-5">
-              <span class="icon-tile">
-                <svg
-                  width="30"
-                  height="30"
-                  viewBox="0 0 24 24"
-                  class="h-[30px] w-[30px] md:h-[34px] md:w-[34px]"
-                  aria-hidden="true"
-                  set:html={item.icon}
-                />
-              </span>
+              <svg
+                viewBox="0 0 24 24"
+                class="h-10 w-10 flex-none text-alabaster"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="square"
+                aria-hidden="true"
+                set:html={item.icon}
+              ></svg>
               <div class="flex flex-col gap-1 md:gap-5">
                 <div class="text-2xl leading-[1.15] font-semibold md:text-[30px]">{item.title}</div>
                 <div class="text-[19px] leading-snug font-bold">{item.detail}</div>
