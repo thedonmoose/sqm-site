@@ -43,6 +43,13 @@ function initGallery(root: HTMLElement): void {
     update();
   }
 
+  thumbs.forEach((thumb, i) => {
+    thumb.addEventListener("click", () => {
+      index = i;
+      update();
+    });
+  });
+
   root.addEventListener("keydown", (event) => {
     if (event.key === "ArrowLeft") {
       show(index - 1);
