@@ -38,9 +38,11 @@ npx tsc --noEmit   # type-check
 | `REVIEWS_CACHE_TTL_SECONDS` | Pages env (Functions) | Edge-cache TTL for reviews. Defaults to 21600 (6 h). |
 | `CF_PAGES_DEPLOY_HOOK` | GitHub **secret** | Deploy-hook URL used by the nightly rebuild workflow. |
 
-Local dev copies `.env.example` to `.env` for the build-time variables. Reviews
-run only on deployed Cloudflare Pages (Functions don't run under
-`astro preview`), so the home reviews section simply stays hidden locally.
+Local dev copies `.env.example` to `.env` for the build-time variables. When
+either Google variable is absent, home reviews render server-side from the
+reviews fixture. Set both at build time to switch to live Google reviews; that
+branch uses the deployed `/api/reviews` Pages Function (`astro preview` does
+not run Functions).
 
 ## Where content lives
 
