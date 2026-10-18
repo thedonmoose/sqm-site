@@ -16,11 +16,11 @@ function initGallery(root: HTMLElement): void {
     const thumb = thumbs[Math.min(index, thumbs.length - 1)] ?? thumbs[0];
     index = thumbs.indexOf(thumb);
     const src = thumb?.dataset.full ?? "";
+    const srcset = thumb?.dataset.fullSrcset ?? "";
     const alt = thumb?.dataset.alt ?? "";
-    if (mainImage.getAttribute("src") !== src) {
-      mainImage.src = src;
-      mainImage.alt = alt;
-    }
+    if (mainImage.getAttribute("srcset") !== srcset) mainImage.srcset = srcset;
+    if (mainImage.getAttribute("src") !== src) mainImage.src = src;
+    mainImage.alt = alt;
     for (const other of thumbs) {
       const activeThumb = other === thumb;
       other.classList.toggle("outline-[3px]", activeThumb);

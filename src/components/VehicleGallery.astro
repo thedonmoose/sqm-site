@@ -3,6 +3,7 @@
  * +N overflow. Keyboard and touch handled in src/scripts/gallery.ts.
  * Photo category data is kept in the CMS but the gallery shows all photos. */
 import type { Vehicle } from "../lib/types";
+import { responsiveImage } from "../lib/images";
 
 interface Props {
   vehicle: Vehicle;
@@ -10,16 +11,20 @@ interface Props {
 
 const { vehicle } = Astro.props;
 const MAX_THUMBS = 5;
+const mainImage = responsiveImage(vehicle.photos[0].src, "gallery");
 ---
 
 <div data-gallery class="flex flex-col gap-4">
   <figure class="relative aspect-4/3 overflow-hidden bg-charcoal/10">
     <img
       data-gallery-main
-      src={vehicle.photos[0].src}
+      src={mainImage.src}
+      srcset={mainImage.srcset}
+      sizes={mainImage.sizes}
       alt={vehicle.photos[0].alt}
-      width="1200"
-      height="900"
+      width="1600"
+      height="1200"
+      loading="eager"
       fetchpriority="high"
       decoding="async"
       class="h-full w-full object-cover"
@@ -34,32 +39,38 @@ const MAX_THUMBS = 5;
   <p data-gallery-live class="sr-only" role="status" aria-live="polite"></p>
 
   <div data-gallery-thumbs class="grid grid-cols-4 gap-2 md:grid-cols-5 md:gap-3">
-    {vehicle.photos.map((photo, i) => (
-      <button
-        type="button"
-        data-gallery-thumb
-        data-full={photo.src}
-        data-alt={photo.alt}
-        aria-label={`Show photo ${i + 1}: ${photo.alt}`}
-        aria-pressed={i === 0 ? "true" : "false"}
-        class="relative aspect-4/3 overflow-hidden bg-charcoal/10"
-      >
-        <img
-          src={photo.src}
-          alt=""
-          width="320"
-          height="240"
-          loading={i < 2 ? "eager" : "lazy"}
-          decoding="async"
-          class="h-full w-full object-cover"
-        />
-        {vehicle.photos.length > MAX_THUMBS && i === MAX_THUMBS - 1 && (
-          <span
-            data-thumb-more
-            class="absolute inset-0 flex items-center justify-center bg-charcoal/60 text-lg font-semibold text-alabaster"
-          ></span>
-        )}
-      </button>
-    ))}
+    {vehicle.photos.map((photo, i) => {
+      const image = responsiveImage(photo.src, "thumbnail");
+      return (
+        <button
+          type="button"
+          data-gallery-thumb
+          data-full={image.src}
+          data-full-srcset={image.srcset}
+          data-alt={photo.alt}
+          aria-label={`Show photo ${i + 1}: ${photo.alt}`}
+          aria-pressed={i === 0 ? "true" : "false"}
+          class="relative aspect-4/3 overflow-hidden bg-charcoal/10"
+        >
+          <img
+            src={image.src}
+            srcset={image.srcset}
+            sizes={image.sizes}
+            alt=""
+            width="1600"
+            height="1200"
+            loading="lazy"
+            decoding="async"
+            class="h-full w-full object-cover"
+          />
+          {vehicle.photos.length > MAX_THUMBS && i === MAX_THUMBS - 1 && (
+            <span
+              data-thumb-more
+              class="absolute inset-0 flex items-center justify-center bg-charcoal/60 text-lg font-semibold text-alabaster"
+            ></span>
+          )}
+        </button>
+      );
+    })}
   </div>
 </div>
