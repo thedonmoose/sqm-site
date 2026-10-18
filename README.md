@@ -33,8 +33,8 @@ npx tsc --noEmit   # type-check
 | `PUBLIC_WEB3FORMS_KEY` | Build env | Web3Forms access key. Without it, forms show an inline "not connected" error on submit. |
 | `SANITY_PROJECT_ID` | Build env | When set, inventory is fetched from the Sanity CDN instead of the sample fixture. |
 | `SANITY_DATASET` | Build env | Sanity dataset. Defaults to `production`. |
-| `GOOGLE_PLACES_API_KEY` | Pages env/secret (Functions) | Google Places API (New) key for `/api/reviews`. Restricted key recommended. |
-| `GOOGLE_PLACE_ID` | Pages env/secret (Functions) | Place ID of the Google Business Profile. |
+| `GOOGLE_PLACES_API_KEY` | Build env + Pages secret (Functions) | Google Places API (New) key for `/api/reviews`. Restricted key recommended. Set together with `GOOGLE_PLACE_ID` to switch the home reviews section to live Google data. |
+| `GOOGLE_PLACE_ID` | Build env + Pages secret (Functions) | Place ID of the Google Business Profile. |
 | `REVIEWS_CACHE_TTL_SECONDS` | Pages env (Functions) | Edge-cache TTL for reviews. Defaults to 21600 (6 h). |
 | `CF_PAGES_DEPLOY_HOOK` | GitHub **secret** | Deploy-hook URL used by the nightly rebuild workflow. |
 

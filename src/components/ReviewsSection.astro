@@ -1,27 +1,74 @@
 ---
-/** Customer reviews (home, dark). Starts hidden; src/scripts/reviews.ts
- * reveals it only when /api/reviews returns a usable payload. No review
- * content is ever hardcoded here. */
+/** Customer reviews (home, dark). Renders src/data/reviews.fixture.ts
+ * server-side (visible without JS). When GOOGLE_PLACES_API_KEY and
+ * GOOGLE_PLACE_ID are both set at build time, renders hidden instead and
+ * src/scripts/reviews.ts fills it from /api/reviews with live data. */
 import { site } from "../data/site";
+import { reviewSummary, reviews } from "../data/reviews.fixture";
+
+const live = Boolean(import.meta.env.GOOGLE_PLACES_API_KEY && import.meta.env.GOOGLE_PLACE_ID);
 ---
 
-<section data-reviews hidden class="bg-charcoal text-alabaster">
+<section data-reviews class="bg-charcoal text-alabaster" {...(live ? { hidden: true } : {})}>
   <div class="container-sqm flex flex-col gap-12 py-24 md:py-28">
     <div class="flex flex-wrap items-end justify-between gap-6">
       <div class="flex flex-col gap-3">
         <p class="label">Customer reviews</p>
         <h2 class="display-2 max-w-[900px]">Straight from our customers.</h2>
       </div>
-      <p class="text-[22px] font-medium">
-        <span data-reviews-rating></span> ·
-        <a data-reviews-count href="#" target="_blank" rel="noopener noreferrer" class="underline decoration-alabaster/50 underline-offset-4 hover:decoration-alabaster"></a>
-      </p>
+      {
+        live ? (
+          <p class="text-[22px] font-medium">
+            <span data-reviews-rating></span> ·
+            <a data-reviews-count href="#" target="_blank" rel="noopener noreferrer" class="underline decoration-alabaster/50 underline-offset-4 hover:decoration-alabaster"></a>
+          </p>
+        ) : (
+          <p class="text-[22px] font-medium">
+            <span>{reviewSummary.rating.toFixed(1)} stars</span> ·
+            <a
+              href={site.googleReviewUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="underline decoration-alabaster/50 underline-offset-4 hover:decoration-alabaster"
+            >
+              {reviewSummary.count} reviews
+            </a>
+          </p>
+        )
+      }
     </div>
 
-    <div data-reviews-cards class="grid gap-8 md:grid-cols-3"></div>
+    <div data-reviews-cards class="grid gap-8 md:grid-cols-3">
+      {
+        !live &&
+          reviews.map((review, index) => (
+            <figure class:list={["flex flex-col gap-5 border border-alabaster/25 p-8", index === 2 && "hidden md:flex"]}>
+              <span class="flex gap-1" role="img" aria-label={`Rated ${review.rating} out of 5 stars`}>
+                {[0, 1, 2, 3, 4].map(() => (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true">
+                    <path d="M12 3l2.7 5.9 6.3.7-4.7 4.3 1.3 6.1L12 16.9 6.4 20l1.3-6.1L3 9.6l6.3-.7z" />
+                  </svg>
+                ))}
+              </span>
+              <blockquote class="text-xl">{review.quote}</blockquote>
+              <figcaption class="text-sm uppercase tracking-[0.08em]">
+                {review.reviewerName}
+                {review.city && ` · ${review.city}`}
+                {` · ${review.relativeTime}`}
+              </figcaption>
+            </figure>
+          ))
+      }
+    </div>
 
     <div class="flex flex-wrap gap-4">
-      <a data-reviews-read href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline-light btn-md">
+      <a
+        data-reviews-read
+        href={live ? "#" : site.googleReviewUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn btn-outline-light btn-md"
+      >
         Read our reviews
       </a>
       <a href={site.googleReviewUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline-light btn-md">
@@ -31,4 +78,6 @@ import { site } from "../data/site";
   </div>
 </section>
 
-<script src="../scripts/reviews.ts"></script>
+{
+  live && <script src="../scripts/reviews.ts"></script>
+}
