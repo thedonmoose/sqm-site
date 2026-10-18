@@ -64,6 +64,11 @@ body {
     line-height: 1;
   }
 
+  /* Designer: −30% section headings on the home page only. */
+  .home .display-2 {
+    font-size: clamp(24px, 0.75rem + 3vw, 50px);
+  }
+
   .label {
     font-size: 14px;
     text-transform: uppercase;
