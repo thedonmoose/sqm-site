@@ -205,24 +205,24 @@ const structuredData = {
           <div class="order-3 flex flex-col gap-3" data-print-hide>
             {
               sold ? (
-                <a href={soldHref} class="btn btn-outline-dark min-h-[52px]">
+                <a href={soldHref} class="btn btn-outline-dark min-h-11">
                   See similar vehicles
                 </a>
               ) : (
                 <>
                   <div class="flex flex-col gap-3 sm:flex-row">
                     {callHref ? (
-                      <a href={callHref} class="btn btn-outline-dark min-h-[52px] flex-1 sm:basis-40">
+                      <a href={callHref} class="btn btn-outline-dark min-h-11 flex-1 sm:basis-40">
                         Call {site.phone}
                       </a>
                     ) : (
-                      <span class="btn btn-outline-dark min-h-[52px] flex-1 sm:basis-40" aria-disabled="true">
+                      <span class="btn btn-outline-dark min-h-11 flex-1 sm:basis-40" aria-disabled="true">
                         Call — number coming soon
                       </span>
                     )}
                     <a
                       href={`/test-drive/?vehicle=${vehicle.slug}`}
-                      class="btn btn-outline-dark min-h-[52px] flex-1 sm:basis-40"
+                      class="btn btn-outline-dark min-h-11 flex-1 sm:basis-40"
                     >
                       Book a test drive
                     </a>
