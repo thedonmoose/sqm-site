@@ -43,7 +43,11 @@ export function responsiveImage(
 ): { src: string; srcset: string; sizes: string } {
   let candidates: [string, number][];
   if (src.startsWith("/images/vehicles/") && /\/\d+\.webp(?:\?.*)?$/.test(src)) {
-    candidates = [400, 800, 1600].map((width) => [localCandidate(src, width), width]);
+    candidates = [
+      [localCandidate(src, 400), 400],
+      [localCandidate(src, 800), 800],
+      [src, 1600],
+    ];
   } else if (/^https?:\/\//.test(src)) {
     candidates = [400, 800, 1600].map((width) => [sanityCandidate(src, width), width]);
   } else {
