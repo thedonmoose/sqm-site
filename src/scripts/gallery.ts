@@ -36,6 +36,22 @@ function initGallery(root: HTMLElement): void {
     });
     if (counter) counter.textContent = `${thumbs.length} photos`;
     if (live) live.textContent = `Photo ${index + 1} of ${thumbs.length}: ${alt}`;
+    syncLightbox();
+  }
+
+  const lightbox = root.querySelector<HTMLDialogElement>("[data-gallery-lightbox]");
+  const lightboxImg = lightbox?.querySelector<HTMLImageElement>("[data-lightbox-img]");
+  const lightboxCounter = lightbox?.querySelector<HTMLElement>("[data-lightbox-counter]");
+
+  function syncLightbox(): void {
+    if (!lightboxImg) return;
+    const thumb = thumbs[index];
+    lightboxImg.src = thumb?.dataset.full ?? "";
+    lightboxImg.srcset = thumb?.dataset.fullSrcset ?? "";
+    lightboxImg.alt = thumb?.dataset.alt ?? "";
+    if (lightboxCounter) {
+      lightboxCounter.textContent = `${index + 1} / ${thumbs.length}`;
+    }
   }
 
   function show(nextIndex: number): void {
@@ -47,13 +63,35 @@ function initGallery(root: HTMLElement): void {
     thumb.addEventListener("click", () => {
       index = i;
       update();
+      lightbox?.showModal();
     });
+  });
+
+  const openButton = root.querySelector<HTMLButtonElement>("[data-gallery-open]");
+  openButton?.addEventListener("click", () => {
+    syncLightbox();
+    lightbox?.showModal();
   });
 
   const prevButton = root.querySelector<HTMLButtonElement>("[data-gallery-prev]");
   const nextButton = root.querySelector<HTMLButtonElement>("[data-gallery-next]");
   prevButton?.addEventListener("click", () => show(index - 1));
   nextButton?.addEventListener("click", () => show(index + 1));
+
+  lightbox
+    ?.querySelector("[data-lightbox-close]")
+    ?.addEventListener("click", () => lightbox.close());
+  lightbox
+    ?.querySelector("[data-lightbox-prev]")
+    ?.addEventListener("click", () => show(index - 1));
+  lightbox
+    ?.querySelector("[data-lightbox-next]")
+    ?.addEventListener("click", () => show(index + 1));
+  // Click on the backdrop (the dialog element itself) closes; clicks on the
+  // image or controls target children and stay.
+  lightbox?.addEventListener("click", (event) => {
+    if (event.target === lightbox) lightbox.close();
+  });
 
   root.addEventListener("keydown", (event) => {
     if (event.key === "ArrowLeft") {
