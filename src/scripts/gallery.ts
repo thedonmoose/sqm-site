@@ -41,7 +41,9 @@ function initGallery(root: HTMLElement): void {
 
   const lightbox = root.querySelector<HTMLDialogElement>("[data-gallery-lightbox]");
   const lightboxImg = lightbox?.querySelector<HTMLImageElement>("[data-lightbox-img]");
-  const lightboxCounter = lightbox?.querySelector<HTMLElement>("[data-lightbox-counter]");
+  const lightboxThumbs = lightbox
+    ? [...lightbox.querySelectorAll<HTMLButtonElement>("[data-lightbox-thumb]")]
+    : [];
 
   function syncLightbox(): void {
     if (!lightboxImg) return;
@@ -49,8 +51,14 @@ function initGallery(root: HTMLElement): void {
     lightboxImg.src = thumb?.dataset.full ?? "";
     lightboxImg.srcset = thumb?.dataset.fullSrcset ?? "";
     lightboxImg.alt = thumb?.dataset.alt ?? "";
-    if (lightboxCounter) {
-      lightboxCounter.textContent = `${index + 1} / ${thumbs.length}`;
+    lightboxThumbs.forEach((item, i) => {
+      const active = i === index;
+      item.classList.toggle("outline-[3px]", active);
+      item.classList.toggle("-outline-offset-1", active);
+      item.classList.toggle("outline-green", active);
+    });
+    if (lightbox?.open) {
+      lightboxThumbs[index]?.scrollIntoView({ block: "nearest", inline: "nearest" });
     }
   }
 
@@ -87,6 +95,15 @@ function initGallery(root: HTMLElement): void {
   lightbox
     ?.querySelector("[data-lightbox-next]")
     ?.addEventListener("click", () => show(index + 1));
+  lightboxThumbs.forEach((thumb, i) => {
+    thumb.addEventListener("click", () => show(i));
+  });
+  // Click on the grey stage around the photo exits; clicks on the image or
+  // the arrows target children and stay.
+  const stage = lightbox?.querySelector("[data-lightbox-stage]");
+  stage?.addEventListener("click", (event) => {
+    if (event.target === stage) lightbox?.close();
+  });
   // Click on the backdrop (the dialog element itself) closes; clicks on the
   // image or controls target children and stay.
   lightbox?.addEventListener("click", (event) => {
