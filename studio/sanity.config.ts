@@ -8,7 +8,7 @@ import markAsSold from './documentActions/markAsSold'
 export default defineConfig({
   name: 'default',
   title: 'Serene Quality Motors',
-  projectId: process.env.SANITY_STUDIO_PROJECT_ID ?? 'sqmplaceholder',
+  projectId: process.env.SANITY_STUDIO_PROJECT_ID ?? 'e15y8b3s',
   dataset: process.env.SANITY_STUDIO_DATASET ?? 'production',
   plugins: [
     structureTool({
