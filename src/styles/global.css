@@ -26,6 +26,11 @@ body {
   outline-offset: 2px;
 }
 
+/* Clickable buttons show the pointer; .btn:disabled keeps not-allowed. */
+button:not(:disabled):not([aria-disabled="true"]) {
+  cursor: pointer;
+}
+
 /* Hero fills the first viewport; svh keeps mobile browser chrome honest. */
 [data-hero] {
   min-height: 100vh;
