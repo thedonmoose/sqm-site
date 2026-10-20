@@ -147,11 +147,11 @@ function cacheTtlSeconds(env: ReviewsEnv): number {
 export async function onRequestGet({
   request,
   env,
-  context,
+  waitUntil,
 }: {
   request: Request;
   env: ReviewsEnv;
-  context: { waitUntil: (p: Promise<unknown>) => void };
+  waitUntil: (p: Promise<unknown>) => void;
 }): Promise<Response> {
   const apiKey = env.GOOGLE_PLACES_API_KEY;
   const placeId = env.GOOGLE_PLACE_ID;
@@ -188,7 +188,7 @@ export async function onRequestGet({
         "Cache-Control": `public, max-age=${cacheTtlSeconds(env)}`,
       },
     });
-    context.waitUntil(cache.put(key, response.clone()));
+    waitUntil(cache.put(key, response.clone()));
     return response;
   } catch {
     return hiddenResponse();
