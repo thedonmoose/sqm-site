@@ -50,6 +50,11 @@ function initGallery(root: HTMLElement): void {
     });
   });
 
+  const prevButton = root.querySelector<HTMLButtonElement>("[data-gallery-prev]");
+  const nextButton = root.querySelector<HTMLButtonElement>("[data-gallery-next]");
+  prevButton?.addEventListener("click", () => show(index - 1));
+  nextButton?.addEventListener("click", () => show(index + 1));
+
   root.addEventListener("keydown", (event) => {
     if (event.key === "ArrowLeft") {
       show(index - 1);
