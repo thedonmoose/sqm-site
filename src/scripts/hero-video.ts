@@ -36,16 +36,15 @@ if (!video) {
       const iconPause = toggle.querySelector<HTMLElement>("[data-icon-pause]");
       const iconPlay = toggle.querySelector<HTMLElement>("[data-icon-play]");
       const label = toggle.querySelector<HTMLElement>("[data-toggle-label]");
-      if (video.paused) {
-        video.play();
-        if (iconPause) iconPause.hidden = false;
-        if (iconPlay) iconPlay.hidden = true;
-        if (label) label.textContent = "Pause video";
-      } else {
+      // SVGElement has no `hidden` IDL attribute — toggle Tailwind's class.
+      const wasPlaying = !video.paused;
+      iconPause?.classList.toggle("hidden", wasPlaying);
+      iconPlay?.classList.toggle("hidden", !wasPlaying);
+      if (label) label.textContent = wasPlaying ? "Play video" : "Pause video";
+      if (wasPlaying) {
         video.pause();
-        if (iconPause) iconPause.hidden = true;
-        if (iconPlay) iconPlay.hidden = false;
-        if (label) label.textContent = "Play video";
+      } else {
+        video.play();
       }
     });
   }

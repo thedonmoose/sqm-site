@@ -31,6 +31,13 @@ button:not(:disabled):not([aria-disabled="true"]) {
   cursor: pointer;
 }
 
+/* Display utilities (.flex, preflight svg rules) defeat the hidden attribute
+   on HTML elements (gallery +N badge); enforce it globally. Note: SVG elements
+   never reflect `hidden` — toggle a class instead (hero pause/play icons). */
+[hidden] {
+  display: none !important;
+}
+
 /* Hero fills the first viewport; svh keeps mobile browser chrome honest. */
 [data-hero] {
   min-height: 100vh;
