@@ -28,17 +28,24 @@ const soldTarget = soldHref ?? `/inventory/?make=${encodeURIComponent(vehicle.ma
 
 <article class="flex h-full flex-col border border-charcoal/30 bg-alabaster text-charcoal">
   <div class="relative aspect-4/3 overflow-hidden bg-charcoal/10">
-    <img
-      src={coverImage.src}
-      srcset={coverImage.srcset}
-      sizes={coverImage.sizes}
-      alt={cover.alt}
-      width="1600"
-      height="1200"
-      loading="lazy"
-      decoding="async"
-      class="h-full w-full object-cover"
-    />
+    <a
+      href={sold ? undefined : vehicleHref(vehicle)}
+      aria-hidden={sold ? undefined : "true"}
+      tabindex={sold ? undefined : -1}
+      class="block h-full w-full"
+    >
+      <img
+        src={coverImage.src}
+        srcset={coverImage.srcset}
+        sizes={coverImage.sizes}
+        alt={cover.alt}
+        width="1600"
+        height="1200"
+        loading="lazy"
+        decoding="async"
+        class="h-full w-full object-cover"
+      />
+    </a>
     {
       sold ? (
         <span class="absolute top-4 left-4 bg-green px-3 py-1.5 text-[13px] font-bold uppercase tracking-[0.12em] text-alabaster">
@@ -54,7 +61,13 @@ const soldTarget = soldHref ?? `/inventory/?make=${encodeURIComponent(vehicle.ma
 
   <div class="flex flex-1 flex-col gap-1.5 p-6">
     <h3 class="min-h-[65px] text-[26px] leading-tight font-semibold">
-      {vehicleTitle(vehicle)}
+      {sold ? (
+        vehicleTitle(vehicle)
+      ) : (
+        <a href={vehicleHref(vehicle)} class="underline-offset-4 hover:underline">
+          {vehicleTitle(vehicle)}
+        </a>
+      )}
     </h3>
     <p class="text-[17px] opacity-75">
       {formatKm(vehicle.mileageKm)} · {formatTransmission(vehicle.transmission)} ·
