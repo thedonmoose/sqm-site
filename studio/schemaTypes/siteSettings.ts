@@ -12,13 +12,6 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'omvicRegistration',
-      title: 'OMVIC registration number',
-      type: 'string',
-      initialValue: '5923529',
-      description: 'Shown in the footer and on the home page. Ontario law requires it.',
-    }),
-    defineField({
       name: 'address',
       title: 'Address',
       type: 'string',

@@ -43,7 +43,7 @@ export SANITY_API_TOKEN=your-token
 node scripts/seed.mjs --project-id your-project-id
 ```
 
-Creates the site settings singleton (business name, OMVIC number, address) and 4 clearly-marked sample vehicles (one sold, one with a disclosed accident history). Samples are prefixed `[SAMPLE VEHICLE — remove before launch]` — delete those documents before going live. Fill in phone, email and hours in the Studio, then publish **Site settings**.
+Creates the site settings singleton (business name, address) and 4 clearly-marked sample vehicles (one sold, one with a disclosed accident history). Samples are prefixed `[SAMPLE VEHICLE — remove before launch]` — delete those documents before going live. Fill in phone, email and hours in the Studio, then publish **Site settings**.
 
 ## 5. Import photos from a folder
 
@@ -71,5 +71,5 @@ The site also runs a scheduled daily rebuild (see the site repo), which expires 
 ## Content model
 
 - **vehicle** — one document per car. Publish is blocked until the all-in price, a 17-character VIN, at least one photo (with alt text), and a full set of OMVIC disclosures are present. Sold handling is via the **Mark as sold** / **Mark as available** document actions.
-- **siteSettings** — singleton (address, phone, OMVIC registration, review rating, announcement banner).
+- **siteSettings** — singleton (address, phone, review rating, announcement banner).
 - **review** — individual real customer quotes, used with permission.

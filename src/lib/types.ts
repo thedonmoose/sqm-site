@@ -100,8 +100,6 @@ export interface Review {
 /** Sanity `siteSettings` singleton. */
 export interface SiteSettings {
   businessName: string;
-  registeredLegalName?: string;
-  omvicRegistration: string;
   address: Address;
   phone?: string;
   phoneAcceptsTexts: boolean;

@@ -254,7 +254,6 @@ const siteSettings = {
   _id: 'siteSettings',
   _type: 'siteSettings',
   businessName: 'Serene Quality Motors',
-  omvicRegistration: '5923529',
   address: '4650 Kingston Rd, Scarborough, ON M1E 2P9',
   phone: '437-603-4650',
 }

@@ -70,11 +70,7 @@ const mapSrc =
               <h3 class="label text-charcoal/70">Hours</h3>
               {
                 site.hours ? (
-                  site.hours.map((line) => (
-                    <p class="text-lg">
-                      {line.days} <span class="opacity-70">{line.hours}</span>
-                    </p>
-                  ))
+                  <p class="text-lg">{site.hours}</p>
                 ) : (
                   <span class="text-lg opacity-70">Hours — coming soon</span>
                 )
@@ -82,7 +78,7 @@ const mapSrc =
             </div>
 
             <p class="mt-auto border-t border-charcoal/25 pt-6 text-sm opacity-70">
-              OMVIC-registered dealer · Registration # {site.omvicRegistration}
+              Registered with {site.ucda.name}
             </p>
           </div>
 
