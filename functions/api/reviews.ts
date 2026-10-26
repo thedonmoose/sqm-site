@@ -12,6 +12,7 @@ interface PlacesReview {
   authorAttribution?: {
     displayName?: string;
     uri?: string;
+    photoUri?: string;
   };
   rating?: number;
   text?: LocalizedText;
@@ -33,6 +34,7 @@ interface Review {
   text: string;
   relativeTime: string;
   authorUri?: string;
+  authorPhotoUri?: string;
 }
 
 interface ReviewsPayload {
@@ -68,11 +70,10 @@ export function mapPlacesResponse(value: unknown): ReviewsPayload | null {
     return null;
   }
 
-  const datedReviews: { publishedAt: number; review: Review }[] = [];
+  const mappedReviews: Review[] = [];
   for (const item of reviews) {
-    if (!isRecord(item) || typeof item.publishTime !== "string") continue;
+    if (!isRecord(item)) continue;
 
-    const publishedAt = Date.parse(item.publishTime);
     const authorAttribution = isRecord(item.authorAttribution)
       ? item.authorAttribution
       : null;
@@ -85,7 +86,6 @@ export function mapPlacesResponse(value: unknown): ReviewsPayload | null {
     const relativeTime = item.relativePublishTimeDescription;
 
     if (
-      !Number.isFinite(publishedAt) ||
       typeof reviewRating !== "number" ||
       !Number.isFinite(reviewRating) ||
       typeof author !== "string"
@@ -107,13 +107,13 @@ export function mapPlacesResponse(value: unknown): ReviewsPayload | null {
     if (typeof authorAttribution?.uri === "string") {
       review.authorUri = authorAttribution.uri;
     }
-    datedReviews.push({ publishedAt, review });
+    if (typeof authorAttribution?.photoUri === "string") {
+      review.authorPhotoUri = authorAttribution.photoUri;
+    }
+    mappedReviews.push(review);
   }
 
-  const mappedReviews = datedReviews
-    .sort((a, b) => b.publishedAt - a.publishedAt)
-    .slice(0, 3)
-    .map(({ review }) => review);
+  mappedReviews.splice(3);
 
   if (mappedReviews.length === 0) return null;
 
