@@ -31,11 +31,8 @@ const dealerSchema = {
     addressCountry: "CA",
   },
   geo: { "@type": "GeoCoordinates", latitude: site.geo.latitude, longitude: site.geo.longitude },
-  additionalProperty: {
-    "@type": "PropertyValue",
-    name: "OMVIC registration",
-    value: site.omvicRegistration,
-  },
+  memberOf: { "@type": "Organization", name: site.ucda.fullName, alternateName: site.ucda.name },
+  ...(site.hours ? { openingHours: site.hours } : {}),
   ...(site.phone ? { telephone: site.phone } : {}),
   ...(site.email ? { email: site.email } : {}),
 };

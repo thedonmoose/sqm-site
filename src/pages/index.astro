@@ -31,8 +31,8 @@ const rtbItems = [
     icon: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle>',
   },
   {
-    title: "OMVIC-registered dealer",
-    detail: `Registration # ${site.omvicRegistration}`,
+    title: "Registered with UCDA",
+    detail: `Member of the ${site.ucda.fullName}.`,
     icon: '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"></path><path d="M8.5 12l2.5 2.5 5-5"></path>',
   },
 ];
@@ -54,7 +54,7 @@ const hero = site.heroVideo;
 
 <Layout
   title={`${site.name} — Used cars in Scarborough, ON`}
-  description="OMVIC-registered used-car dealer on 4650 Kingston Rd, Scarborough. Every vehicle listed at an honest all-in price with disclosures up front."
+  description="UCDA-registered used-car dealer on 4650 Kingston Rd, Scarborough. Every vehicle listed at an honest all-in price with disclosures up front."
   ogImage="/og/home.jpg"
   headLinks={[
     { rel: "preload", href: hero.posterAvif, as: "image", type: "image/avif" },
@@ -223,7 +223,7 @@ const hero = site.heroVideo;
             <div class="flex flex-col gap-1">
               {
                 site.hours ? (
-                  site.hours.map((line) => <p>{line.days} {line.hours}</p>)
+                  <p>{site.hours}</p>
                 ) : (
                   <span class="opacity-70">Hours — coming soon</span>
                 )

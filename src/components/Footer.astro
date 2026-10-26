@@ -20,16 +20,10 @@ const year = new Date().getFullYear();
   <div class="container-sqm flex flex-wrap justify-between gap-x-12 gap-y-10 pb-8 pt-14">
     <div class="flex max-w-xs flex-col gap-5">
       <a href="/" aria-label="Serene Quality Motors — home" class="w-fit">
-        <Logo variant="dark-bg" class="h-14 w-auto" />
+        <Logo class="h-11 w-auto" />
       </a>
       <p class="text-base">
-        {
-          site.registeredLegalName ? (
-            site.registeredLegalName
-          ) : (
-            <span class="italic opacity-70">[Registered business name — TBC]</span>
-          )
-        }
+        {site.name}
         <br />
         {fullAddress()}
       </p>
@@ -58,7 +52,7 @@ const year = new Date().getFullYear();
       }
       {
         site.hours ? (
-          site.hours.map((line) => <div>{line.days} {line.hours}</div>)
+          <div>{site.hours}</div>
         ) : (
           <span class="opacity-70">Hours — coming soon</span>
         )
@@ -67,7 +61,13 @@ const year = new Date().getFullYear();
   </div>
 
   <div class="container-sqm flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-alabaster/25 pb-10 pt-6 text-sm">
-    <span>OMVIC-registered dealer · Registration # {site.omvicRegistration}</span>
+    <span class="inline-flex items-center gap-2">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true">
+        <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"></path>
+        <path d="M8.5 12l2.5 2.5 5-5"></path>
+      </svg>
+      Registered with {site.ucda.name}
+    </span>
     {legalLinks.map((link) => (
       <a href={link.href} class="hover:underline underline-offset-4">{link.label}</a>
     ))}

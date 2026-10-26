@@ -1,4 +1,4 @@
-import type { Address, HoursLine } from "../lib/types";
+import type { Address } from "../lib/types";
 
 /**
  * Single source for owner-supplied values.
@@ -8,7 +8,7 @@ import type { Address, HoursLine } from "../lib/types";
  */
 export const site = {
   name: "Serene Quality Motors",
-  omvicRegistration: "5923529",
+  ucda: { name: "UCDA", fullName: "Used Car Dealers Association of Ontario" },
   address: {
     street: "4650 Kingston Rd",
     city: "Scarborough",
@@ -22,9 +22,8 @@ export const site = {
   // [CONFIRM] owner values — null until supplied.
   phone: "437-603-4650" as string | null,
   textPhone: "437-603-4650" as string | null,
-  email: null as string | null,
-  hours: null as HoursLine[] | null,
-  registeredLegalName: null as string | null,
+  email: "sales@sereneqmotors.ca" as string | null,
+  hours: "By Appointment Only" as string | null,
   domain: null as string | null,
 
   // Files produced outside the repo; referenced as-is.

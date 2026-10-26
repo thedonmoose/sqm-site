@@ -1,6 +1,6 @@
 # Serene Quality Motors (SQM) — website
 
-Marketing and inventory site for SQM, a small OMVIC-registered used-car dealer
+Marketing and inventory site for SQM, a small UCDA-registered used-car dealer
 at 4650 Kingston Rd, Scarborough, ON. Every vehicle carries an all-in price
 (nothing hidden beyond HST and licensing) and full disclosures, per OMVIC
 advertising rules.
@@ -99,8 +99,6 @@ inventory.
 ## Owner [CONFIRM] checklist
 
 - [ ] Phone number and text-capable number (`src/data/site.ts`)
-- [ ] Email address and opening hours
-- [ ] Registered legal business name
 - [ ] Final domain + DNS (set `PUBLIC_SITE_URL`, redirect apex/www)
 - [ ] Web3Forms access key
 - [ ] Sanity project ID (+ dataset) and invited editor accounts

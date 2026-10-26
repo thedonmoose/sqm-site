@@ -20,7 +20,7 @@ const story = {
 
 <Layout
   title={`About · ${site.name}`}
-  description="Serene Quality Motors is a small OMVIC-registered used-car dealership in Scarborough — all-in pricing, disclosures up front, no pressure."
+  description="Serene Quality Motors is a small UCDA-registered used-car dealership in Scarborough — all-in pricing, disclosures up front, no pressure."
 >
   <Header />
   <main id="main">
@@ -65,8 +65,10 @@ const story = {
                 <path d="M8.5 12l2.5 2.5 5-5"></path>
               </svg>
             </span>
-            <h3 class="text-2xl font-semibold leading-tight">OMVIC-registered dealer</h3>
-            <p>Registration # {site.omvicRegistration}. We follow Ontario's used-car rules.</p>
+            <h3 class="text-2xl font-semibold leading-tight">Registered with UCDA</h3>
+            <p>
+              We're registered with the {site.ucda.fullName} and follow Ontario's used-car rules.
+            </p>
           </div>
         </div>
       </div>

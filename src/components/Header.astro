@@ -24,11 +24,7 @@ const navLinks = [
 >
   <div class="container-sqm flex flex-wrap items-center justify-between gap-x-6 gap-y-4 py-6">
     <a href="/" aria-label="Serene Quality Motors — home" class="shrink-0">
-      {overlay ? (
-        <Logo variant="icon-dark" class="h-11 w-auto" />
-      ) : (
-        <Logo variant="dark-bg" class="h-12 w-auto md:h-14" />
-      )}
+      <Logo class="h-11 w-auto" />
     </a>
 
     <nav aria-label="Main" class="hidden items-center gap-9 text-sm uppercase tracking-[0.18em] md:flex">
@@ -83,8 +79,8 @@ const navLinks = [
     aria-label="Mobile"
     class="fixed inset-0 z-40 flex flex-col bg-charcoal text-alabaster"
   >
-    <div class="container-sqm flex items-center justify-between py-6">
-      <Logo variant="dark-bg" class="h-12 w-auto" />
+    <div class="container-sqm flex w-full items-center justify-between py-6">
+      <Logo class="h-11 w-auto" />
       <button
         type="button"
         data-menu-close
@@ -96,7 +92,7 @@ const navLinks = [
         </svg>
       </button>
     </div>
-    <div class="container-sqm flex flex-1 flex-col justify-start gap-10 pb-16">
+    <div class="container-sqm flex w-full flex-1 flex-col justify-start gap-10 pb-16">
       {navLinks.map((link) => (
         <a href={link.href} class="display-2 hover:underline underline-offset-8">{link.label}</a>
       ))}
