@@ -25,6 +25,21 @@ The Function's Cache API cache is per colo, so each colo may make one Google cal
 
 Google recommends refreshing a stored Place ID if it is more than 12 months old. See [Google's Place ID documentation](https://developers.google.com/maps/documentation/places/web-service/place-id).
 
+## Try it locally
+
+The home page picks live vs fixture at **build** time (`.env`), and the Function reads its secrets at **runtime** (`.dev.vars`). Both files are gitignored. Put the same two lines in each:
+
+```
+GOOGLE_PLACES_API_KEY=...
+GOOGLE_PLACE_ID=...
+```
+
+Then `npm run build && npx wrangler pages dev dist` (`astro preview` does not run Functions). `curl localhost:8788/api/reviews` should return `"hidden":false` with three reviews. If it returns `{"hidden":true}`, query Google directly to see the real error:
+
+```bash
+curl -s -H "X-Goog-Api-Key: $GOOGLE_PLACES_API_KEY" -H "X-Goog-FieldMask: rating,userRatingCount" "https://places.googleapis.com/v1/places/$GOOGLE_PLACE_ID"
+```
+
 ## Cloudflare Pages variables
 
 In the Cloudflare dashboard, open **Workers & Pages → your Pages project → Settings → Variables and Secrets**. Add the bindings for the production environment (and Preview too if the reviews section should work on preview deployments):
