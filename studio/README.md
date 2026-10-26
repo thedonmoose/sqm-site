@@ -61,9 +61,9 @@ When content is published, the website rebuilds automatically. Set this up once 
 
 1. Get the **deploy hook URL** from the Cloudflare Pages dashboard (*Settings → Builds & deployments → Deploy hooks*), created for the SQM site.
 2. In Sanity Manage: project → **API** → **Webhooks** → *Create webhook*.
-3. Trigger on **Create, Update, Delete**, HTTP method **POST**, and add the filter below so the hook only fires when a document is actually published (not on every draft keystroke):
+3. Trigger on **Create, Update, Delete**, HTTP method **POST**, leave **Drafts** off, and add the filter below. Only `vehicle` documents feed the site today (the build never reads `review` or `siteSettings`), so only they should trigger a rebuild; add types here if that changes:
    ```
-   _type in ["vehicle", "siteSettings", "review"] && !(_id in path("drafts.**"))
+   _type == "vehicle" && !(_id in path("drafts.**"))
    ```
 
 The site also runs a scheduled daily rebuild (see the site repo), which expires "Just arrived" badges and the 30-day "Recently sold" window without anyone editing.
