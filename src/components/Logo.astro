@@ -1,30 +1,17 @@
 ---
 /**
- * Brand logo, used unaltered (public/logos/). "dark-bg" carries alabaster
- * artwork for charcoal/hero surfaces; "light-bg" carries green artwork for
- * light surfaces; "icon-dark" is the icon-only knockout for dark surfaces.
- * Intrinsic sizes keep layout stable at any CSS size.
+ * The one brand logo (alabaster mark for charcoal/hero surfaces), used unaltered.
+ * Inlined rather than <img> so it paints with the HTML on every navigation —
+ * no network fetch or async decode to flash blank between pages.
  */
+import logo from "../assets/sqm-logo.svg?raw";
+
 interface Props {
-  variant?: "dark-bg" | "light-bg" | "icon-dark";
   class?: string;
 }
 
-const { variant = "dark-bg", class: className = "h-14 w-auto" } = Astro.props;
-const art =
-  variant === "light-bg"
-    ? { src: "/logos/sqm-on-light.svg", width: 1318, height: 922 }
-    : variant === "icon-dark"
-      ? { src: "/logos/sqm-icon-on-dark.svg", width: 1318, height: 689 }
-      : { src: "/logos/sqm-on-dark.svg", width: 1318, height: 922 };
+const { class: className = "h-11 w-auto" } = Astro.props;
+const svg = logo.replace("<svg ", `<svg class="${className}" role="img" aria-label="Serene Quality Motors" `);
 ---
 
-<img
-  src={art.src}
-  width={art.width}
-  height={art.height}
-  alt="Serene Quality Motors"
-  class={className}
-  loading="eager"
-  decoding="async"
-/>
+<Fragment set:html={svg} />
