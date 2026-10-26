@@ -61,6 +61,14 @@ const live = Boolean(import.meta.env.GOOGLE_PLACES_API_KEY && import.meta.env.GO
       }
     </div>
 
+    {
+      live && (
+        <p class="text-sm text-alabaster/70">
+          Reviews from Google Maps. Showing the 3 most relevant reviews Google returned for this listing.
+        </p>
+      )
+    }
+
     <div class="flex flex-wrap gap-4">
       <a
         data-reviews-read

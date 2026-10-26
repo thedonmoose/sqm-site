@@ -6,6 +6,7 @@ interface ReviewItem {
   text: string;
   relativeTime: string;
   authorUri?: string;
+  authorPhotoUri?: string;
 }
 
 interface ReviewsPayload {
@@ -42,21 +43,36 @@ function reviewCard(review: ReviewItem, extraClass: string): HTMLElement {
   figure.append(quote);
 
   const caption = document.createElement("figcaption");
-  caption.className = "text-sm uppercase tracking-[0.08em]";
-  if (review.authorUri && review.authorUri.startsWith("https://")) {
+  caption.className = "flex items-center gap-3 text-sm uppercase tracking-[0.08em]";
+
+  const isHttps = (uri?: string): uri is string => Boolean(uri?.startsWith("https://"));
+
+  if (isHttps(review.authorPhotoUri)) {
+    const avatar = document.createElement("img");
+    avatar.src = review.authorPhotoUri;
+    avatar.alt = "";
+    avatar.width = 40;
+    avatar.height = 40;
+    avatar.className = "size-10 shrink-0 rounded-full object-cover";
+    caption.append(avatar);
+  }
+
+  const text = document.createElement("span");
+  if (isHttps(review.authorUri)) {
     const link = document.createElement("a");
     link.href = review.authorUri;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
     link.className = "hover:underline underline-offset-4";
     link.textContent = review.author;
-    caption.append(link);
+    text.append(link);
   } else {
-    caption.textContent = review.author;
+    text.textContent = review.author;
   }
   if (review.relativeTime) {
-    caption.append(document.createTextNode(` · ${review.relativeTime}`));
+    text.append(document.createTextNode(` · ${review.relativeTime}`));
   }
+  caption.append(text);
   figure.append(caption);
   return figure;
 }
@@ -90,7 +106,7 @@ async function init(): Promise<void> {
   if (!rating || !count || !cards || !read) return;
 
   rating.textContent = `${payload.rating} stars`;
-  count.textContent = `${payload.count} Google reviews`;
+  count.textContent = `${payload.count} reviews on Google Maps`;
   count.href = payload.mapsUri;
   read.href = payload.mapsUri;
 
