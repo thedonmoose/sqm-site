@@ -188,6 +188,7 @@ const structuredData = {
                     { name: "phone", label: "Phone", type: "tel", required: true, autocomplete: "tel" },
                   ]}
                   hiddenFields={{
+                    subject: `Enquiry: ${title}`,
                     vehicle: title,
                     vin: vehicle.vin,
                     url: pageUrl.toString(),

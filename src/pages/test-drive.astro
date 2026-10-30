@@ -33,7 +33,7 @@ import { site } from "../data/site";
         <Form
           id="test-drive-form"
           heading="Your test drive"
-          hiddenFields={{ formName: "test-drive" }}
+          hiddenFields={{ formName: "test-drive", subject: "New test drive request" }}
           fields={[
             { name: "name", label: "Name", required: true, autocomplete: "name" },
             { name: "phone", label: "Phone", type: "tel", required: true, autocomplete: "tel" },

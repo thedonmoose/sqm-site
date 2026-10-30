@@ -51,6 +51,7 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? "";
   class={className}
 >
   <input type="hidden" name="access_key" value={accessKey} />
+  <input type="hidden" name="from_name" value="SQM Website" />
   <!-- Honeypot: humans never see or tick this. -->
   <input type="checkbox" name="botcheck" class="hidden" tabindex="-1" aria-hidden="true" />
   {Object.entries(hiddenFields).map(([name, value]) => <input type="hidden" name={name} value={value} />)}
