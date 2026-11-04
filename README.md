@@ -29,7 +29,7 @@ npx tsc --noEmit   # type-check
 
 | Variable | Where it lives | What it does |
 | --- | --- | --- |
-| `PUBLIC_SITE_URL` | Build env (Cloudflare Pages) | Canonical/OG/sitemap base URL. Defaults to `https://sqm-site.pages.dev`. |
+| `PUBLIC_SITE_URL` | Build env (Cloudflare Pages) | Canonical/OG/sitemap base URL and the no-JS form redirect target (`/thanks/`). Must match the origin the build is served from: Web3Forms' free plan ignores cross-domain redirects. Defaults to `https://sqm-site.pages.dev`. |
 | `PUBLIC_WEB3FORMS_KEY` | Build env | Web3Forms access key. Without it, forms show an inline "not connected" error on submit. |
 | `SANITY_PROJECT_ID` | Build env | When set, inventory is fetched from the Sanity CDN instead of the sample fixture. |
 | `SANITY_DATASET` | Build env | Sanity dataset. Defaults to `production`. |
