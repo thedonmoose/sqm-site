@@ -25,6 +25,15 @@ export function vehicleTitle(v: Vehicle): string {
   return `${v.year} ${v.make} ${v.model}${v.trim ? ` ${v.trim}` : ""}`;
 }
 
+/** Collapse whitespace and cut at a word boundary so search snippets don't end mid-word. */
+export function metaDescription(text: string, max = 155): string {
+  const flat = text.replace(/\s+/g, " ").trim();
+  if (flat.length <= max) return flat;
+  const cut = flat.slice(0, max - 1);
+  const space = cut.lastIndexOf(" ");
+  return `${(space > 0 ? cut.slice(0, space) : cut).replace(/[\s,;:.–—-]+$/, "")}…`;
+}
+
 export function vehicleHref(v: Vehicle): string {
   return `/vehicles/${v.slug}/`;
 }
