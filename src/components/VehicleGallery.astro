@@ -73,6 +73,7 @@ const mainImage = responsiveImage(vehicle.photos[0].src, "gallery");
           data-alt={photo.alt}
           aria-label={`Show photo ${i + 1}: ${photo.alt}`}
           aria-pressed={i === 0 ? "true" : "false"}
+          hidden={i >= MAX_THUMBS}
           class="relative aspect-4/3 overflow-hidden bg-charcoal/10"
         >
           <img
