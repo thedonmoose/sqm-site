@@ -10,6 +10,7 @@ import { site, telHref, smsHref, whatsappHref } from "../../data/site";
 import { getVehicles, pickRelated, similarVehiclesHref } from "../../lib/data";
 import { isSoldWithinDays } from "../../lib/types";
 import { formatPrice, formatKm, formatTransmission, metaDescription, vehicleTitle } from "../../lib/format";
+import { ogImageSrc } from "../../lib/images";
 
 export async function getStaticPaths() {
   const vehicles = await getVehicles();
@@ -128,7 +129,7 @@ const structuredData = {
     vehicle.description || `${title}, ${meta}. ${price} all-in at ${site.name} in ${site.address.city}.`,
   )}
   robots={noindex ? "noindex" : undefined}
-  ogImage={vehicle.photos[0].src}
+  ogImage={ogImageSrc(vehicle.photos[0].src)}
 >
   <Header active="/inventory/" />
 

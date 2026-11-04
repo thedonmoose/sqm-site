@@ -59,3 +59,13 @@ export function responsiveImage(
     sizes: IMAGE_SIZES[slot],
   };
 }
+
+/** 1200×630 JPEG for link previews; Sanity originals are multi-MB portraits. */
+export function ogImageSrc(src: string): string {
+  if (!/^https?:\/\//.test(src)) return src;
+  const url = new URL(src);
+  for (const [key, value] of Object.entries({ w: "1200", h: "630", fit: "crop", fm: "jpg", q: "80" })) {
+    url.searchParams.set(key, value);
+  }
+  return url.toString();
+}
