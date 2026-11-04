@@ -113,8 +113,8 @@ button:not(:disabled):not([aria-disabled="true"]) {
 
   .btn-primary {
     background-color: var(--color-green);
-    color: var(--color-alabaster);
-    /* Alabaster on green is 4.2:1 — qualify as WCAG large text (bold). */
+    color: #fff;
+    /* White on green is 5.96:1 (AA at any size); alabaster is only 4.16:1. */
     font-weight: 700;
   }
 
