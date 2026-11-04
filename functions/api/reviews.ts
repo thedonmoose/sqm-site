@@ -126,15 +126,21 @@ export function mapPlacesResponse(value: unknown): ReviewsPayload | null {
   };
 }
 
-function hiddenResponse(): Response {
+/** Pages `_headers` rules don't apply to Function responses; set nosniff here. */
+function hiddenResponse(maxAgeSeconds = 0): Response {
   return new Response(JSON.stringify({ hidden: true }), {
     status: 200,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "Cache-Control": "no-store",
+      "Cache-Control": maxAgeSeconds > 0 ? `public, max-age=${maxAgeSeconds}` : "no-store",
+      "X-Content-Type-Options": "nosniff",
     },
   });
 }
+
+/** Google bills the lookup even when it yields nothing usable; cache that
+ * outcome briefly so repeat requests can't each trigger a paid call. */
+const FAILED_LOOKUP_TTL_SECONDS = 600;
 
 function cacheTtlSeconds(env: ReviewsEnv): number {
   const configured = env.REVIEWS_CACHE_TTL_SECONDS;
@@ -175,17 +181,21 @@ export async function onRequestGet({
         },
       },
     );
-    if (!placesResponse.ok) return hiddenResponse();
-
-    const data = (await placesResponse.json()) as PlacesApiResponse;
-    const result = mapPlacesResponse(data);
-    if (!result) return hiddenResponse();
+    const result = placesResponse.ok
+      ? mapPlacesResponse((await placesResponse.json()) as PlacesApiResponse)
+      : null;
+    if (!result) {
+      const hidden = hiddenResponse(FAILED_LOOKUP_TTL_SECONDS);
+      waitUntil(cache.put(key, hidden.clone()));
+      return hidden;
+    }
 
     const response = new Response(JSON.stringify(result), {
       status: 200,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "Cache-Control": `public, max-age=${cacheTtlSeconds(env)}`,
+        "X-Content-Type-Options": "nosniff",
       },
     });
     waitUntil(cache.put(key, response.clone()));
