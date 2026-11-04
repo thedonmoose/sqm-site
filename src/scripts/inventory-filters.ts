@@ -1,3 +1,5 @@
+import { setInertOutside } from "./inert";
+
 /** Inventory: client-side filtering over server-rendered cards, sorting,
  * mobile filter sheet and active-filter chips (spec §4.2). No reloads. */
 
@@ -132,10 +134,16 @@ function initInventory(root: HTMLElement): void {
   sortSelect.addEventListener("change", apply);
 
   const setSheet = (open: boolean) => {
+    if ((form.dataset.open === "true") === open) return;
     form.dataset.open = String(open);
     sheetToggle?.setAttribute("aria-expanded", String(open));
     document.documentElement.classList.toggle("overflow-hidden", open);
-    if (open) form.querySelector<HTMLElement>("select, button")?.focus();
+    setInertOutside(form, open);
+    if (open) {
+      form.querySelector<HTMLElement>("select, button")?.focus();
+    } else {
+      sheetToggle?.focus();
+    }
   };
   sheetToggle?.addEventListener("click", () => setSheet(form.dataset.open !== "true"));
   form.querySelector("[data-filters-apply]")?.addEventListener("click", () => setSheet(false));
