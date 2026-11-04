@@ -8,6 +8,7 @@ import type { Address } from "../lib/types";
  */
 export const site = {
   name: "Serene Quality Motors",
+  omvic: { name: "OMVIC", fullName: "Ontario Motor Vehicle Industry Council" },
   ucda: { name: "UCDA", fullName: "Used Car Dealers Association of Ontario" },
   address: {
     street: "4650 Kingston Rd",
