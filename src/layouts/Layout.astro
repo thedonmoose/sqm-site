@@ -14,9 +14,10 @@ interface Props {
   headLinks?: { rel: string; href: string; as?: string; type?: string }[];
 }
 
-const { title, description, ogImage, robots, headLinks = [] } = Astro.props;
-const canonical = new URL(Astro.url.pathname, Astro.site);
-const ogImageURL = ogImage ? new URL(ogImage, Astro.site) : undefined;
+const { title, description, ogImage = "/og/home.jpg", robots, headLinks = [] } = Astro.props;
+const indexable = !robots?.includes("noindex");
+const canonical = indexable ? new URL(Astro.url.pathname, Astro.site) : undefined;
+const ogImageURL = new URL(ogImage, Astro.site);
 
 const dealerSchema = {
   "@context": "https://schema.org",
@@ -32,7 +33,6 @@ const dealerSchema = {
   },
   geo: { "@type": "GeoCoordinates", latitude: site.geo.latitude, longitude: site.geo.longitude },
   memberOf: { "@type": "Organization", name: site.ucda.fullName, alternateName: site.ucda.name },
-  ...(site.hours ? { openingHours: site.hours } : {}),
   ...(site.phone ? { telephone: site.phone } : {}),
   ...(site.email ? { email: site.email } : {}),
 };
@@ -45,13 +45,13 @@ const dealerSchema = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {canonical && <link rel="canonical" href={canonical} />}
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
-    {ogImageURL && <meta property="og:image" content={ogImageURL} />}
+    {canonical && <meta property="og:url" content={canonical} />}
+    <meta property="og:image" content={ogImageURL} />
     {robots && <meta name="robots" content={robots} />}
     {headLinks.map((link) => (
       <link rel={link.rel} href={link.href} as={link.as} type={link.type} />
@@ -66,7 +66,7 @@ const dealerSchema = {
     >
       Skip to content
     </a>
-    <script type="application/ld+json" set:html={JSON.stringify(dealerSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(dealerSchema).replaceAll("<", "\\u003c")} />
     <slot />
   </body>
 </html>
