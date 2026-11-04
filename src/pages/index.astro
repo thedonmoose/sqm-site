@@ -84,11 +84,10 @@ const hero = site.heroVideo;
         <video
           data-hero-video
           class="absolute inset-0 h-full w-full object-cover"
-          autoplay
           muted
           loop
           playsinline
-          preload="metadata"
+          preload="none"
         >
           <source src={hero.mobileWebm} media="(max-width: 767px)" type="video/webm" />
           <source src={hero.mobileMp4} media="(max-width: 767px)" type="video/mp4" />
@@ -101,6 +100,7 @@ const hero = site.heroVideo;
       <button
         type="button"
         data-hero-toggle
+        hidden
         class="absolute right-6 bottom-6 z-20 inline-flex h-12 w-12 items-center justify-center border border-alabaster/60"
       >
         <span class="sr-only" data-toggle-label>Pause video</span>
