@@ -29,7 +29,9 @@ export function vehicleTitle(v: Vehicle): string {
 export function metaDescription(text: string, max = 155): string {
   const flat = text.replace(/\s+/g, " ").trim();
   if (flat.length <= max) return flat;
-  const cut = flat.slice(0, max - 1);
+  let cut = flat.slice(0, max - 1);
+  // Don't leave half of an emoji/astral character before the ellipsis.
+  if (/[\uD800-\uDBFF]$/.test(cut)) cut = cut.slice(0, -1);
   const space = cut.lastIndexOf(" ");
   return `${(space > 0 ? cut.slice(0, space) : cut).replace(/[\s,;:.–—-]+$/, "")}…`;
 }

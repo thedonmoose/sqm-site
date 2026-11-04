@@ -126,7 +126,7 @@ const structuredData = {
 <Layout
   title={`${title}, ${formatKm(vehicle.mileageKm)}, ${price} | ${site.name}`}
   description={metaDescription(
-    vehicle.description || `${title}, ${meta}. ${price} all-in at ${site.name} in ${site.address.city}.`,
+    vehicle.description.trim() || `${title}, ${meta}. ${price} all-in at ${site.name} in ${site.address.city}.`,
   )}
   robots={noindex ? "noindex" : undefined}
   ogImage={ogImageSrc(vehicle.photos[0].src)}
