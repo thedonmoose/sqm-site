@@ -7,7 +7,7 @@ You do this in the Sanity Studio (the "Serene Quality Motors" studio). Everythin
 1. Open the studio and click **Vehicles**, then the **+** (pencil-plus) button. A blank vehicle form opens.
 2. Fill in the details from top to bottom. Fields marked with **\*** are needed before the car can go live (the form tells you what's missing when you try to publish).
 3. The **slug** field: click **Generate** after entering year/make/model — it creates the web address.
-4. Answer every question in **Vehicle disclosures** at the bottom. Ontario law (OMVIC) requires this, and the site will not publish the car until each one is answered.
+4. Answer every question in **Vehicle disclosures** at the bottom. Ontario law (OMVIC) requires this, and the site will not publish the car until each one is answered. Leave **Sold as certified** unticked for an as-is car: the website and listing kit add OMVIC's required as-is paragraph for you. Anything else a buyer should know goes in **Other disclosures**; it shows on the car's page.
 5. Click **Publish**. The car appears on the website within a few minutes.
 
 ## Photos

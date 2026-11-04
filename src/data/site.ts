@@ -37,6 +37,11 @@ export const site = {
   },
 };
 
+/** OMVIC's required paragraph for any ad of a vehicle sold as-is (As-Is Sales
+ * Guideline; O. Reg. 333/08 s. 40(6)). Every non-certified vehicle is sold as-is. */
+export const AS_IS_STATEMENT =
+  "The motor vehicle sold under this contract is being sold \u201Cas-is\u201D and is not represented as being in road worthy condition, mechanically sound or maintained at any guaranteed level of quality. The vehicle may not be fit for use as a means of transportation and may require substantial repairs at the purchaser\u2019s expense. It may not be possible to register the vehicle to be driven in its current condition.";
+
 export function fullAddress(address: Address = site.address): string {
   return `${address.street}, ${address.city}, ${address.province} ${address.postal}`;
 }

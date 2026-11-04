@@ -6,7 +6,7 @@ import Footer from "../../components/Footer.astro";
 import VehicleCard from "../../components/VehicleCard.astro";
 import VehicleGallery from "../../components/VehicleGallery.astro";
 import Form from "../../components/Form.astro";
-import { site, telHref, smsHref, whatsappHref } from "../../data/site";
+import { site, telHref, smsHref, whatsappHref, AS_IS_STATEMENT } from "../../data/site";
 import { getVehicles, pickRelated, similarVehiclesHref } from "../../lib/data";
 import { isSoldWithinDays } from "../../lib/types";
 import { formatPrice, formatKm, formatTransmission, vehicleTitle } from "../../lib/format";
@@ -94,12 +94,13 @@ const disclosures = [
     value: vehicle.disclosures.odometerNote.status === "accurate" ? "Accurate" : "Discrepancy disclosed",
     details: vehicle.disclosures.odometerNote.details,
   },
-  {
-    label: "Sold as certified",
-    value: vehicle.disclosures.soldAsCertified ? "Yes" : "No",
-    details: vehicle.disclosures.certificationDetails,
-  },
+  vehicle.disclosures.soldAsCertified
+    ? { label: "Sold as", value: "Certified", details: vehicle.disclosures.certificationDetails }
+    : { label: "Sold as", value: "As-is", details: AS_IS_STATEMENT },
   { label: "UVIP", value: vehicle.uvipAvailable ? "Available" : "Not available" },
+  ...(vehicle.disclosures.otherDisclosures
+    ? [{ label: "Other disclosures", value: "Disclosed", details: vehicle.disclosures.otherDisclosures }]
+    : []),
 ];
 
 const structuredData = {

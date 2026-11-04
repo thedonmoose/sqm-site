@@ -1,7 +1,7 @@
 ---
 import type { Vehicle } from "../../../lib/types";
 import Layout from "../../../layouts/Layout.astro";
-import { site, fullAddress } from "../../../data/site";
+import { site, fullAddress, AS_IS_STATEMENT } from "../../../data/site";
 import { getVehicles } from "../../../lib/data";
 import { formatPrice, formatKm, formatTransmission, vehicleTitle } from "../../../lib/format";
 
@@ -70,10 +70,10 @@ const disclosureRows = [
         : `Discrepancy disclosed — ${vehicle.disclosures.odometerNote.details ?? "details on request"}`,
   },
   {
-    label: "Sold as certified",
+    label: "Sold as",
     value: vehicle.disclosures.soldAsCertified
-      ? `Yes — ${vehicle.disclosures.certificationDetails ?? "details on request"}`
-      : "No (sold as-is per OMVIC rules unless otherwise agreed in writing)",
+      ? `Certified — ${vehicle.disclosures.certificationDetails ?? "details on request"}`
+      : `As-is. ${AS_IS_STATEMENT}`,
   },
   { label: "UVIP", value: vehicle.uvipAvailable ? "Available on request" : "Not available" },
   {
@@ -114,7 +114,8 @@ const listingText = [
   "",
   `View online: ${pageUrl.href}`,
   "",
-  `${site.name} — registered with ${site.ucda.name}`,
+  `${site.name} — OMVIC-registered dealer, ${site.ucda.name} member`,
+  ...(site.phone ? [site.phone] : []),
   fullAddress(),
 ].join("\n");
 ---

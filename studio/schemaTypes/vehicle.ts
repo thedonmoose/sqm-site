@@ -329,7 +329,7 @@ export default defineType({
           name: 'soldAsCertified',
           title: 'Sold as certified',
           type: 'boolean',
-          description: 'Only tick if the vehicle is actually sold certified. Never claim certification you cannot document.',
+          description: 'Only tick if the vehicle is actually sold certified. Never claim certification you cannot document. Unticked = sold as-is: the site and listing kit add OMVIC\'s as-is statement automatically, so don\'t repeat it in Other disclosures.',
         }),
         defineField({
           name: 'certificationDetails',
