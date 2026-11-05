@@ -64,8 +64,7 @@
         "accidentOrDamageHistory": { "status": "none" },
         "rebuiltOrSalvageStatus": { "status": "none" },
         "odometerNote": { "status": "accurate" },
-        "soldAsCertified": false,
-        "otherDisclosures": "Vehicle is sold as-is per OMVIC rules unless otherwise agreed in writing at the time of sale."
+        "soldAsCertified": false
       }
     },
     {
@@ -132,8 +131,7 @@
         },
         "rebuiltOrSalvageStatus": { "status": "none" },
         "odometerNote": { "status": "accurate" },
-        "soldAsCertified": false,
-        "otherDisclosures": "Vehicle is sold as-is per OMVIC rules unless otherwise agreed in writing at the time of sale."
+        "soldAsCertified": false
       }
     },
     {
@@ -199,8 +197,7 @@
           "status": "discrepancy",
           "details": "Instrument cluster was replaced at 96,000 km in 2019; the odometer does not show total distance. Documented on the UVIP, copy available on request."
         },
-        "soldAsCertified": false,
-        "otherDisclosures": "Vehicle is sold as-is per OMVIC rules unless otherwise agreed in writing at the time of sale."
+        "soldAsCertified": false
       }
     },
     {
@@ -261,7 +258,7 @@
         "rebuiltOrSalvageStatus": { "status": "none" },
         "odometerNote": { "status": "accurate" },
         "soldAsCertified": false,
-        "otherDisclosures": "Aftermarket all-weather floor mats installed; originals included. Vehicle is sold as-is per OMVIC rules unless otherwise agreed in writing at the time of sale."
+        "otherDisclosures": "Aftermarket all-weather floor mats installed; originals included."
       }
     }
   ]

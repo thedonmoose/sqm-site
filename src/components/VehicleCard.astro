@@ -9,6 +9,7 @@ import {
   vehicleHref,
 } from "../lib/format";
 import { responsiveImage } from "../lib/images";
+import { AS_IS_STATEMENT } from "../data/site";
 
 interface Props {
   vehicle: Vehicle;
@@ -48,11 +49,11 @@ const soldTarget = soldHref ?? `/inventory/?make=${encodeURIComponent(vehicle.ma
     </a>
     {
       sold ? (
-        <span class="absolute top-4 left-4 bg-green px-3 py-1.5 text-[13px] font-bold uppercase tracking-[0.12em] text-alabaster">
+        <span class="absolute top-4 left-4 bg-green px-3 py-1.5 text-[13px] font-bold uppercase tracking-[0.12em] text-white">
           Sold
         </span>
       ) : badge ? (
-        <span class="absolute top-4 left-4 bg-green px-3 py-1.5 text-[13px] uppercase tracking-[0.12em] text-alabaster">
+        <span class="absolute top-4 left-4 bg-green px-3 py-1.5 text-[13px] uppercase tracking-[0.12em] text-white">
           {badge}
         </span>
       ) : null
@@ -90,7 +91,12 @@ const soldTarget = soldHref ?? `/inventory/?make=${encodeURIComponent(vehicle.ma
     }
 
     {
-      !sold && <p class="mb-4 text-sm opacity-75">All-in price. Plus HST and licensing.</p>
+      !sold && (
+        <div class="mb-4 flex flex-col gap-2">
+          <p class="text-sm opacity-75">All-in price. Plus HST and licensing.</p>
+          {!vehicle.disclosures.soldAsCertified && <p class="text-xs opacity-75">{AS_IS_STATEMENT}</p>}
+        </div>
+      )
     }
 
     {

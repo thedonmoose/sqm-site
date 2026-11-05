@@ -6,5 +6,7 @@ export default defineConfig({
   output: "static",
   vite: {
     plugins: [tailwindcss()],
+    // No inline <script>s, so the CSP can use script-src 'self' (public/_headers).
+    build: { assetsInlineLimit: 0 },
   },
 });

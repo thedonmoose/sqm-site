@@ -110,6 +110,8 @@ const navLinks = [
 </header>
 
 <script>
+  import { setInertOutside } from "../scripts/inert";
+
   const header = document.querySelector<HTMLElement>("[data-sqm-header]");
   const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
   const menu = document.querySelector<HTMLElement>("[data-mobile-menu]");
@@ -121,6 +123,7 @@ const navLinks = [
   function setOpen(open: boolean): void {
     if (!menu) return;
     menu.hidden = !open;
+    setInertOutside(menu, open);
     toggle?.setAttribute("aria-expanded", String(open));
     document.documentElement.classList.toggle("overflow-hidden", open);
     if (open) {

@@ -31,8 +31,8 @@ const rtbItems = [
     icon: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle>',
   },
   {
-    title: "Registered with UCDA",
-    detail: `Member of the ${site.ucda.fullName}.`,
+    title: "OMVIC registered, UCDA member",
+    detail: `Registered with the ${site.omvic.fullName} and a member of the ${site.ucda.fullName}.`,
     icon: '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"></path><path d="M8.5 12l2.5 2.5 5-5"></path>',
   },
 ];
@@ -54,7 +54,7 @@ const hero = site.heroVideo;
 
 <Layout
   title={`${site.name} — Used cars in Scarborough, ON`}
-  description="UCDA-registered used-car dealer on 4650 Kingston Rd, Scarborough. Every vehicle listed at an honest all-in price with disclosures up front."
+  description="OMVIC-registered used-car dealer and UCDA member on 4650 Kingston Rd, Scarborough. Every vehicle listed at an honest all-in price with disclosures up front."
   ogImage="/og/home.jpg"
   headLinks={[
     { rel: "preload", href: hero.posterAvif, as: "image", type: "image/avif" },
@@ -83,11 +83,10 @@ const hero = site.heroVideo;
         <video
           data-hero-video
           class="absolute inset-0 h-full w-full object-cover"
-          autoplay
           muted
           loop
           playsinline
-          preload="metadata"
+          preload="none"
         >
           <source src={hero.mobileWebm} media="(max-width: 767px)" type="video/webm" />
           <source src={hero.mobileMp4} media="(max-width: 767px)" type="video/mp4" />
@@ -100,6 +99,7 @@ const hero = site.heroVideo;
       <button
         type="button"
         data-hero-toggle
+        hidden
         class="absolute right-6 bottom-6 z-20 inline-flex h-12 w-12 items-center justify-center border border-alabaster/60"
       >
         <span class="sr-only" data-toggle-label>Pause video</span>
@@ -129,7 +129,7 @@ const hero = site.heroVideo;
       </div>
     </section>
 
-    <section class="bg-green text-alabaster">
+    <section class="bg-green text-white">
       <h2 class="sr-only">Why buy from Serene Quality Motors</h2>
       <div class="container-sqm grid gap-7 py-10 md:grid-cols-3 md:gap-x-10 md:gap-y-12 md:py-16">
         {

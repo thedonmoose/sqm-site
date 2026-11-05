@@ -74,6 +74,7 @@ const callHref = telHref();
             data-open="false"
             class="fixed inset-0 z-50 hidden flex-col gap-5 overflow-y-auto bg-alabaster p-5 text-charcoal data-[open=true]:flex md:static md:z-auto md:flex md:flex-1 md:flex-row md:flex-wrap md:items-end md:gap-5 md:bg-transparent md:p-0"
           >
+            <p data-count-announcer role="status" aria-live="polite" class="sr-only"></p>
             <div class="flex items-center justify-between md:hidden">
               <p class="text-xl font-semibold">Filters</p>
               <button
@@ -145,7 +146,7 @@ const callHref = telHref();
 
     <section>
       <div class="container-sqm flex flex-col gap-8 pt-10 md:pt-14">
-        <p data-count class="text-base">{forSale.length} vehicles available</p>
+        <p data-count role="status" aria-live="polite" class="text-base">{forSale.length} vehicles available</p>
         <p data-empty hidden class="flex flex-wrap items-center gap-4 text-lg">
           No vehicles match those filters.
           <button type="button" data-filters-clear class="text-base font-semibold underline underline-offset-4">

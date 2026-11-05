@@ -329,7 +329,7 @@ export default defineType({
           name: 'soldAsCertified',
           title: 'Sold as certified',
           type: 'boolean',
-          description: 'Only tick if the vehicle is actually sold certified. Never claim certification you cannot document.',
+          description: 'Only tick if the vehicle is actually sold certified. Never claim certification you cannot document. Unticked = sold as-is: the site and listing kit add OMVIC\'s as-is statement automatically, so don\'t repeat it in Other disclosures.',
         }),
         defineField({
           name: 'certificationDetails',
@@ -394,7 +394,14 @@ export default defineType({
             .replace(/^-+|-+$/g, '')
             .slice(0, 96),
       },
-      validation: (Rule) => Rule.required().error('A slug is required — it becomes the vehicle page URL.'),
+      validation: (Rule) =>
+        Rule.required()
+          .error('A slug is required — it becomes the vehicle page URL.')
+          .custom((slug?: {current?: string}) =>
+            !slug?.current || /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug.current)
+              ? true
+              : 'Use lowercase letters, numbers and single hyphens only — press "Generate".',
+          ),
     }),
     defineField({
       name: 'datePosted',

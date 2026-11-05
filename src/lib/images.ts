@@ -1,4 +1,4 @@
-export type ResponsiveImageSlot = "card" | "gallery" | "thumbnail";
+export type ResponsiveImageSlot = "card" | "gallery" | "thumbnail" | "lightboxThumb";
 
 const IMAGE_SIZES: Record<ResponsiveImageSlot, string> = {
   card: [
@@ -20,6 +20,7 @@ const IMAGE_SIZES: Record<ResponsiveImageSlot, string> = {
     "(max-width: 1359px) calc((100vw - 704px) / 5)",
     "131px",
   ].join(", "),
+  lightboxThumb: "96px",
 };
 
 function localCandidate(src: string, width: number): string {
@@ -28,13 +29,27 @@ function localCandidate(src: string, width: number): string {
   return `${url.pathname}${url.search}${url.hash}`;
 }
 
-function sanityCandidate(src: string, width: number): string {
+function isRemote(src: string): boolean {
+  return /^https?:\/\//.test(src);
+}
+
+/** Every Sanity URL we emit carries transform params: Sanity serves a bare
+ * asset URL byte-for-byte, camera EXIF/GPS included, while a transformed one
+ * is re-encoded. */
+function sanityUrl(src: string, params: Record<string, string | number>): string {
   const url = new URL(src);
-  url.searchParams.set("w", String(width));
-  url.searchParams.set("auto", "format");
-  url.searchParams.set("fit", "max");
-  url.searchParams.set("q", "80");
+  for (const [key, value] of Object.entries(params)) url.searchParams.set(key, String(value));
   return url.toString();
+}
+
+/** 1200×630 crop for og:image. */
+export function shareImage(src: string): string {
+  return isRemote(src) ? sanityUrl(src, { w: 1200, h: 630, fit: "crop", fm: "jpg", q: 80 }) : src;
+}
+
+/** Full-resolution JPEG for staff to download and post to marketplaces. */
+export function downloadImage(src: string): string {
+  return isRemote(src) ? sanityUrl(src, { w: 2400, fit: "max", fm: "jpg", q: 90 }) : src;
 }
 
 export function responsiveImage(
@@ -48,24 +63,14 @@ export function responsiveImage(
       [localCandidate(src, 800), 800],
       [src, 1600],
     ];
-  } else if (/^https?:\/\//.test(src)) {
-    candidates = [400, 800, 1600].map((width) => [sanityCandidate(src, width), width]);
+  } else if (isRemote(src)) {
+    candidates = [400, 800, 1600].map((w) => [sanityUrl(src, { w, auto: "format", fit: "max", q: 80 }), w]);
   } else {
     candidates = [[src, 1600]];
   }
   return {
-    src,
+    src: candidates[candidates.length - 1][0],
     srcset: candidates.map(([url, width]) => `${url} ${width}w`).join(", "),
     sizes: IMAGE_SIZES[slot],
   };
-}
-
-/** 1200×630 JPEG for link previews; Sanity originals are multi-MB portraits. */
-export function ogImageSrc(src: string): string {
-  if (!/^https?:\/\//.test(src)) return src;
-  const url = new URL(src);
-  for (const [key, value] of Object.entries({ w: "1200", h: "630", fit: "crop", fm: "jpg", q: "80" })) {
-    url.searchParams.set(key, value);
-  }
-  return url.toString();
 }

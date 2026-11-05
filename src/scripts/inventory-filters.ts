@@ -1,3 +1,5 @@
+import { setInertOutside } from "./inert";
+
 /** Inventory: client-side filtering over server-rendered cards, sorting,
  * mobile filter sheet and active-filter chips (spec §4.2). No reloads. */
 
@@ -49,6 +51,7 @@ function initInventory(root: HTMLElement): void {
   const count = root.querySelector<HTMLElement>("[data-count]");
   const empty = root.querySelector<HTMLElement>("[data-empty]");
   const chips = root.querySelector<HTMLElement>("[data-chips]");
+  const announcer = form?.querySelector<HTMLElement>("[data-count-announcer]");
   const sheetToggle = root.querySelector<HTMLButtonElement>("[data-filters-toggle]");
   if (!form || !sortSelect || !gridElement) return;
   const grid = gridElement;
@@ -106,7 +109,10 @@ function initInventory(root: HTMLElement): void {
       .sort((a, b) => comparator(a, b))
       .forEach((item) => grid.append(item.element));
 
-    if (count) count.textContent = `${visible.length} vehicles available`;
+    const countText = `${visible.length} vehicles available`;
+    if (count) count.textContent = countText;
+    // The visible count is inert while the mobile sheet is open; announce from inside it instead.
+    if (announcer && form?.dataset.open === "true") announcer.textContent = countText;
     if (empty) empty.hidden = visible.length > 0;
     renderChips();
     syncUrl(values, sort);
@@ -143,14 +149,24 @@ function initInventory(root: HTMLElement): void {
   sortSelect.addEventListener("change", apply);
 
   const setSheet = (open: boolean) => {
+    if ((form.dataset.open === "true") === open) return;
     form.dataset.open = String(open);
     sheetToggle?.setAttribute("aria-expanded", String(open));
     document.documentElement.classList.toggle("overflow-hidden", open);
-    if (open) form.querySelector<HTMLElement>("select, button")?.focus();
+    setInertOutside(form, open);
+    if (open) {
+      form.querySelector<HTMLElement>("select, button")?.focus();
+    } else {
+      sheetToggle?.focus();
+    }
   };
   sheetToggle?.addEventListener("click", () => setSheet(form.dataset.open !== "true"));
   form.querySelector("[data-filters-apply]")?.addEventListener("click", () => setSheet(false));
   form.querySelector("[data-filters-close]")?.addEventListener("click", () => setSheet(false));
+  // Sheet controls are hidden at md; an open sheet would otherwise keep the page inert.
+  matchMedia("(min-width: 768px)").addEventListener("change", (event) => {
+    if (event.matches) setSheet(false);
+  });
   for (const button of document.querySelectorAll("[data-filters-clear]")) {
     button.addEventListener("click", () => {
       form.reset();

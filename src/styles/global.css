@@ -21,9 +21,12 @@ body {
   }
 }
 
+/* Two-tone ring: charcoal outline plus an alabaster band in the offset gap, so
+   one of the two always contrasts with whatever surface the control sits on. */
 :focus-visible {
-  outline: 2px solid currentColor;
+  outline: 2px solid var(--color-charcoal);
   outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--color-alabaster);
 }
 
 /* Clickable buttons show the pointer; .btn:disabled keeps not-allowed. */
@@ -113,8 +116,8 @@ button:not(:disabled):not([aria-disabled="true"]) {
 
   .btn-primary {
     background-color: var(--color-green);
-    color: var(--color-alabaster);
-    /* Alabaster on green is 4.2:1 — qualify as WCAG large text (bold). */
+    color: #fff;
+    /* White on green is 5.96:1 (AA at any size); alabaster is only 4.16:1. */
     font-weight: 700;
   }
 

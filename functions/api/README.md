@@ -1,6 +1,6 @@
 # Google reviews API setup
 
-The `/api/reviews` Pages Function calls Places API (New) at request time and briefly edge-caches successful responses. Review text is not included in the static build or stored in the repository. If configuration or the Google API call fails, the function returns `{ "hidden": true }` so the site can hide the section.
+The `/api/reviews` Pages Function calls Places API (New) at request time and briefly edge-caches successful responses. Review text is not included in the static build or stored in the repository. If configuration or the Google API call fails, the function returns `{ "hidden": true }` so the site can hide the section; a failed Google lookup is cached for 10 minutes so repeat requests don't each trigger a billed call. Also set a daily request quota on Places API (New) in Google Cloud: the edge cache is per data centre, so it is not a cost cap on its own.
 
 ## Google Cloud setup
 

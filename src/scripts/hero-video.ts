@@ -1,6 +1,8 @@
 /**
  * Hero video: poster-only under prefers-reduced-motion, Save-Data or 2g/3g
- * (spec §4.1); otherwise plays muted and offers a pause control.
+ * (spec §4.1). The markup has no autoplay and preload="none", so nothing
+ * downloads or moves until these checks pass; then it plays muted and the
+ * pause control is revealed.
  */
 interface NetworkInformation {
   saveData?: boolean;
@@ -10,7 +12,7 @@ interface NetworkInformation {
 function slowConnection(): boolean {
   const connection = (navigator as Navigator & { connection?: NetworkInformation }).connection;
   if (!connection) return false;
-  return Boolean(connection.saveData) || /^(slow-)?2g$/.test(connection.effectiveType ?? "");
+  return Boolean(connection.saveData) || /^(slow-2g|2g|3g)$/.test(connection.effectiveType ?? "");
 }
 
 function usePosterOnly(video: HTMLVideoElement | null, toggle: HTMLElement | null): void {
@@ -28,7 +30,11 @@ if (!video) {
   if (reducedMotion.matches || slowConnection()) {
     usePosterOnly(video, toggle);
   } else {
-    video.play().catch(() => usePosterOnly(video, toggle));
+    if (toggle) toggle.hidden = false;
+    // Pausing before the first play() settles rejects with AbortError; keep the video then.
+    video.play().catch((error: unknown) => {
+      if ((error as DOMException)?.name !== "AbortError") usePosterOnly(video, toggle);
+    });
     reducedMotion.addEventListener("change", (event) => {
       if (event.matches) usePosterOnly(video, toggle);
     });
