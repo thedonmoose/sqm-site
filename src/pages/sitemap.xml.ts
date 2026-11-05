@@ -1,6 +1,5 @@
 import type { APIRoute } from "astro";
 import { getVehicles } from "../lib/data";
-import { isSoldWithinDays } from "../lib/types";
 
 const STATIC_PATHS = [
   "/",
@@ -22,17 +21,17 @@ function escapeXml(value: string): string {
     .replaceAll('"', "&quot;");
 }
 
-/** §7: all static pages + vehicle pages; sold vehicles drop out after 30 days. */
+/** §7: all static pages + vehicle pages; sold vehicles are noindex, so left out. */
 export const GET: APIRoute = async ({ site }) => {
   const vehicles = await getVehicles();
   const entries: { loc: string; lastmod?: string }[] = STATIC_PATHS.map((path) => ({
     loc: new URL(path, site).href,
   }));
   for (const vehicle of vehicles) {
-    if (vehicle.status === "sold" && !isSoldWithinDays(vehicle, 30)) continue;
+    if (vehicle.status === "sold") continue;
     entries.push({
       loc: new URL(`/vehicles/${vehicle.slug}/`, site).href,
-      lastmod: vehicle.status === "sold" ? vehicle.dateSold : vehicle.datePosted,
+      lastmod: vehicle.datePosted,
     });
   }
 

@@ -8,7 +8,7 @@ import VehicleGallery from "../../components/VehicleGallery.astro";
 import Form from "../../components/Form.astro";
 import { site, telHref, smsHref, whatsappHref, AS_IS_STATEMENT } from "../../data/site";
 import { getVehicles, pickRelated, similarVehiclesHref } from "../../lib/data";
-import { isSoldWithinDays } from "../../lib/types";
+import { responsiveImage, shareImage } from "../../lib/images";
 import { formatPrice, formatKm, formatTransmission, vehicleTitle } from "../../lib/format";
 
 export async function getStaticPaths() {
@@ -32,8 +32,7 @@ interface Props {
 const { vehicle, related, soldHref } = Astro.props;
 const title = vehicleTitle(vehicle);
 const sold = vehicle.status === "sold";
-// A sold page drops out of search after 30 days (spec §6).
-const noindex = sold && !isSoldWithinDays(vehicle, 30);
+// Sold pages stay up so shared links keep working, but leave search and drop the price.
 const callHref = telHref();
 const smsHrefValue = smsHref(undefined, `Is the ${title} still available?`);
 const whatsappHrefValue = whatsappHref();
@@ -42,10 +41,9 @@ const price = formatPrice(vehicle.allInPrice);
 const pageUrl = new URL(`/vehicles/${vehicle.slug}/`, Astro.site);
 const meta = `${formatKm(vehicle.mileageKm)} · ${formatTransmission(vehicle.transmission)} · ${vehicle.drivetrain.toUpperCase()}`;
 
-const AVAILABILITY: Record<Vehicle["status"], string> = {
+const AVAILABILITY: Record<Exclude<Vehicle["status"], "sold">, string> = {
   available: "InStock",
-  pending: "InStoreOnly",
-  sold: "SoldOut",
+  pending: "Reserved",
 };
 
 const BODY_LABELS: Record<string, string> = {
@@ -107,27 +105,31 @@ const structuredData = {
   "@context": "https://schema.org",
   "@type": "Car",
   name: title,
+  url: pageUrl.toString(),
+  image: vehicle.photos.map((photo) => new URL(responsiveImage(photo.src, "gallery").src, Astro.site).href),
   vehicleIdentificationNumber: vehicle.vin,
   brand: { "@type": "Brand", name: vehicle.make },
   model: vehicle.model,
   vehicleModelDate: String(vehicle.year),
-  mileage: { "@type": "QuantitativeValue", value: vehicle.mileageKm, unitCode: "KMT" },
+  mileageFromOdometer: { "@type": "QuantitativeValue", value: vehicle.mileageKm, unitCode: "KMT" },
   itemCondition: "https://schema.org/UsedCondition",
-  offer: {
-    "@type": "Offer",
-    price: vehicle.allInPrice,
-    priceCurrency: "CAD",
-    availability: `https://schema.org/${AVAILABILITY[vehicle.status]}`,
-    url: pageUrl.toString(),
-  },
+  ...(vehicle.status !== "sold" && {
+    offers: {
+      "@type": "Offer",
+      price: vehicle.allInPrice,
+      priceCurrency: "CAD",
+      availability: `https://schema.org/${AVAILABILITY[vehicle.status]}`,
+      url: pageUrl.toString(),
+    },
+  }),
 };
 ---
 
 <Layout
-  title={`${title}, ${formatKm(vehicle.mileageKm)}, ${price} | ${site.name}`}
+  title={sold ? `${title} (sold) | ${site.name}` : `${title}, ${formatKm(vehicle.mileageKm)}, ${price} | ${site.name}`}
   description={vehicle.description.slice(0, 155)}
-  robots={noindex ? "noindex" : undefined}
-  ogImage={vehicle.photos[0].src}
+  robots={sold ? "noindex" : undefined}
+  ogImage={shareImage(vehicle.photos[0].src)}
 >
   <Header active="/inventory/" />
 
@@ -172,10 +174,14 @@ const structuredData = {
                 </a>
               )
             }
-            <div data-price-block class="mt-2 border-y border-charcoal/30 py-4">
-              <div class="text-[44px] leading-[1.05] font-bold md:text-[52px]">{price}</div>
-              <p class="text-[15px]">All-in price. Plus HST and licensing.</p>
-            </div>
+            {
+              !sold && (
+                <div data-price-block class="mt-2 border-y border-charcoal/30 py-4">
+                  <div class="text-[44px] leading-[1.05] font-bold md:text-[52px]">{price}</div>
+                  <p class="text-[15px]">All-in price. Plus HST and licensing.</p>
+                </div>
+              )
+            }
           </div>
 
           {

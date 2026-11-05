@@ -27,7 +27,7 @@ You do this in the Sanity Studio (the "Serene Quality Motors" studio). Everythin
 
 ## Mark a car as sold
 
-Open the car and click the **Mark as sold** button at the top of the form. Confirm the dialog. It sets the status to Sold and the date sold to today, and publishes in one step. The car moves to "Recently sold" on the website on the next update, and its page stays up for 30 days. Made a mistake? Click **Mark as available** to reverse it.
+Open the car and click the **Mark as sold** button at the top of the form. Confirm the dialog. It sets the status to Sold and the date sold to today, and publishes in one step. On the next update the car shows under "Recently sold" for 30 days; its own page stays up (without the price) so shared links still work, and it's removed from Google. Made a mistake? Click **Mark as available** to reverse it.
 
 ## Fix a mistake
 
