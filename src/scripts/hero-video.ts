@@ -31,7 +31,10 @@ if (!video) {
     usePosterOnly(video, toggle);
   } else {
     if (toggle) toggle.hidden = false;
-    video.play().catch(() => usePosterOnly(video, toggle));
+    // Pausing before the first play() settles rejects with AbortError; keep the video then.
+    video.play().catch((error: unknown) => {
+      if ((error as DOMException)?.name !== "AbortError") usePosterOnly(video, toggle);
+    });
     reducedMotion.addEventListener("change", (event) => {
       if (event.matches) usePosterOnly(video, toggle);
     });
