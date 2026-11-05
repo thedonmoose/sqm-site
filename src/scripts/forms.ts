@@ -33,7 +33,8 @@ function initForm(form: HTMLFormElement): void {
     }
 
     try {
-      const payload = Object.fromEntries(new FormData(form));
+      // Web3Forms' `redirect` is for plain HTML posts only; the JS path shows its own status.
+      const { redirect: _redirect, ...payload } = Object.fromEntries(new FormData(form));
       const response = await fetch(WEB3FORMS_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },

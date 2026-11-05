@@ -1,0 +1,29 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { site } from "../data/site";
+---
+
+<Layout
+  title={`Thanks · ${site.name}`}
+  description="Your message has been sent to Serene Quality Motors."
+  robots="noindex"
+>
+  <Header />
+  <main id="main">
+    <section class="bg-charcoal text-alabaster">
+      <div class="container-sqm py-20 md:py-28">
+        <div class="max-w-3xl">
+          <p class="label text-alabaster/80">Message sent</p>
+          <h1 class="display-2 mt-4">Thanks — we got it</h1>
+          <p class="mt-6 max-w-2xl text-lg text-alabaster/80">
+            Your message has been sent. We'll get back to you shortly.
+          </p>
+          <a href="/inventory/" class="btn btn-primary btn-lg mt-10">View inventory</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>

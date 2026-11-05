@@ -9,7 +9,7 @@ import Form from "../../components/Form.astro";
 import { site, telHref, smsHref, whatsappHref, AS_IS_STATEMENT } from "../../data/site";
 import { getVehicles, pickRelated, similarVehiclesHref } from "../../lib/data";
 import { responsiveImage, shareImage } from "../../lib/images";
-import { formatPrice, formatKm, formatTransmission, vehicleTitle } from "../../lib/format";
+import { formatPrice, formatKm, formatTransmission, metaDescription, vehicleTitle } from "../../lib/format";
 
 export async function getStaticPaths() {
   const vehicles = await getVehicles();
@@ -127,7 +127,12 @@ const structuredData = {
 
 <Layout
   title={sold ? `${title} (sold) | ${site.name}` : `${title}, ${formatKm(vehicle.mileageKm)}, ${price} | ${site.name}`}
-  description={vehicle.description.slice(0, 155)}
+  description={metaDescription(
+    vehicle.description.trim() ||
+      (sold
+        ? `${title}, ${meta}. Sold by ${site.name} in ${site.address.city}.`
+        : `${title}, ${meta}. ${price} all-in at ${site.name} in ${site.address.city}.`),
+  )}
   robots={sold ? "noindex" : undefined}
   ogImage={shareImage(vehicle.photos[0].src)}
 >
@@ -438,7 +443,7 @@ const structuredData = {
     )
   }
 
-  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData).replaceAll("<", "\\u003c")} />
 </Layout>
 
 <script src="../../scripts/gallery.ts"></script>
