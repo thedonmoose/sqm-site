@@ -65,6 +65,7 @@ function isVehicle(value: unknown): value is Vehicle {
   return (
     v !== null &&
     typeof v.slug === "string" &&
+    /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(v.slug) &&
     typeof v.vin === "string" &&
     typeof v.allInPrice === "number" &&
     Array.isArray(v.photos) &&
@@ -76,6 +77,8 @@ function toVehicle(doc: unknown): Vehicle | null {
   if (!isVehicle(doc)) return null;
   return {
     ...doc,
+    // Studio enforces https, but documents written through the API skip Studio validation.
+    historyReportUrl: doc.historyReportUrl?.startsWith("https://") ? doc.historyReportUrl : undefined,
     description: toPlainText(doc.description),
     highlights: Array.isArray(doc.highlights) ? doc.highlights : [],
     features: Array.isArray(doc.features) ? doc.features : [],
