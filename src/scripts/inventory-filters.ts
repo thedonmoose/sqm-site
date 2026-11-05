@@ -66,14 +66,24 @@ function initInventory(root: HTMLElement): void {
     }),
   );
 
-  const controls = ["make", "price", "year", "body"].map((name) =>
+  const FILTER_NAMES = ["make", "price", "year", "body"] as const;
+  const controls = FILTER_NAMES.map((name) =>
     form.querySelector<HTMLSelectElement>(`select[name="${name}"]`),
   );
 
-  // ?make= / ?body= prefilter (used by "See similar vehicles"), read once on load.
+  // Filters and sort live in the query string so views survive Back and can be shared.
   const params = new URLSearchParams(window.location.search);
-  prefillSelect(controls[0], params.get("make"));
-  prefillSelect(controls[3], params.get("body"));
+  controls.forEach((select, i) => prefillSelect(select, params.get(FILTER_NAMES[i])));
+  prefillSelect(sortSelect, params.get("sort"));
+
+  function syncUrl(values: string[], sort: string): void {
+    const query = new URLSearchParams(window.location.search);
+    FILTER_NAMES.forEach((name, i) => (values[i] ? query.set(name, values[i]) : query.delete(name)));
+    if (sort === "newest") query.delete("sort");
+    else query.set("sort", sort);
+    const search = query.toString();
+    history.replaceState(history.state, "", `${location.pathname}${search ? `?${search}` : ""}${location.hash}`);
+  }
 
   function apply(): void {
     const values = controls.map((select) => select?.value ?? "");
@@ -99,6 +109,7 @@ function initInventory(root: HTMLElement): void {
     if (count) count.textContent = `${visible.length} vehicles available`;
     if (empty) empty.hidden = visible.length > 0;
     renderChips();
+    syncUrl(values, sort);
   }
 
   function renderChips(): void {

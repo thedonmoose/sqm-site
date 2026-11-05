@@ -9,7 +9,8 @@ import Form from "../../components/Form.astro";
 import { site, telHref, smsHref, whatsappHref } from "../../data/site";
 import { getVehicles, pickRelated, similarVehiclesHref } from "../../lib/data";
 import { isSoldWithinDays } from "../../lib/types";
-import { formatPrice, formatKm, formatTransmission, vehicleTitle } from "../../lib/format";
+import { formatPrice, formatKm, formatTransmission, metaDescription, vehicleTitle } from "../../lib/format";
+import { ogImageSrc } from "../../lib/images";
 
 export async function getStaticPaths() {
   const vehicles = await getVehicles();
@@ -124,9 +125,11 @@ const structuredData = {
 
 <Layout
   title={`${title}, ${formatKm(vehicle.mileageKm)}, ${price} | ${site.name}`}
-  description={vehicle.description.slice(0, 155)}
+  description={metaDescription(
+    vehicle.description.trim() || `${title}, ${meta}. ${price} all-in at ${site.name} in ${site.address.city}.`,
+  )}
   robots={noindex ? "noindex" : undefined}
-  ogImage={vehicle.photos[0].src}
+  ogImage={ogImageSrc(vehicle.photos[0].src)}
 >
   <Header active="/inventory/" />
 
@@ -432,7 +435,7 @@ const structuredData = {
     )
   }
 
-  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData).replaceAll("<", "\\u003c")} />
 </Layout>
 
 <script src="../../scripts/gallery.ts"></script>
