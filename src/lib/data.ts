@@ -78,7 +78,10 @@ function toVehicle(doc: unknown): Vehicle | null {
   return {
     ...doc,
     // Studio enforces https, but documents written through the API skip Studio validation.
-    historyReportUrl: doc.historyReportUrl?.startsWith("https://") ? doc.historyReportUrl : undefined,
+    historyReportUrl:
+      typeof doc.historyReportUrl === "string" && doc.historyReportUrl.startsWith("https://")
+        ? doc.historyReportUrl
+        : undefined,
     description: toPlainText(doc.description),
     highlights: Array.isArray(doc.highlights) ? doc.highlights : [],
     features: Array.isArray(doc.features) ? doc.features : [],
