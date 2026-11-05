@@ -3,6 +3,7 @@ import type { Vehicle } from "../../../lib/types";
 import Layout from "../../../layouts/Layout.astro";
 import { site, fullAddress, AS_IS_STATEMENT } from "../../../data/site";
 import { getVehicles } from "../../../lib/data";
+import { downloadImage } from "../../../lib/images";
 import { formatPrice, formatKm, formatTransmission, vehicleTitle } from "../../../lib/format";
 
 /**
@@ -25,7 +26,7 @@ const { vehicle } = Astro.props;
 const title = vehicleTitle(vehicle);
 const pageUrl = new URL(`/vehicles/${vehicle.slug}/`, Astro.site);
 const photos = vehicle.photos.map((photo) => ({
-  url: new URL(photo.src, Astro.site).href,
+  url: new URL(downloadImage(photo.src), Astro.site).href,
   alt: photo.alt,
 }));
 
