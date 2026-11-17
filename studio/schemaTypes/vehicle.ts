@@ -231,7 +231,44 @@ export default defineType({
       name: 'description',
       title: 'Description',
       type: 'array',
-      of: [defineArrayMember({type: 'block'})],
+      of: [
+        defineArrayMember({
+          type: 'block',
+          styles: [
+            {title: 'Normal', value: 'normal'},
+            {title: 'Heading', value: 'h3'},
+            {title: 'Quote', value: 'blockquote'},
+          ],
+          lists: [
+            {title: 'Bullet list', value: 'bullet'},
+            {title: 'Numbered list', value: 'number'},
+          ],
+          marks: {
+            decorators: [
+              {title: 'Bold', value: 'strong'},
+              {title: 'Italic', value: 'em'},
+            ],
+            annotations: [
+              {
+                name: 'link',
+                type: 'object',
+                title: 'Link',
+                fields: [
+                  defineField({
+                    name: 'href',
+                    type: 'url',
+                    title: 'Web address',
+                    validation: (Rule) =>
+                      Rule.uri({scheme: ['https', 'http', 'mailto', 'tel']}).error(
+                        'Use a web address starting with https://, or a mailto: / tel: link.',
+                      ),
+                  }),
+                ],
+              },
+            ],
+          },
+        }),
+      ],
       description: 'Shown under the photo gallery on the vehicle page.',
     }),
     defineField({

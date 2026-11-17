@@ -51,6 +51,26 @@ export interface VehicleDisclosures {
   otherDisclosures?: string;
 }
 
+export interface DescriptionSpan {
+  text: string;
+  /** Decorator names ("strong", "em", ...) and markDefs keys. */
+  marks: string[];
+}
+
+export interface DescriptionBlock {
+  style: "normal" | "h1" | "h2" | "h3" | "h4" | "blockquote";
+  listItem?: "bullet" | "number";
+  level: number;
+  children: DescriptionSpan[];
+  /** Link annotations by key; href is already restricted to safe schemes. */
+  links: Record<string, string>;
+}
+
+export interface DescriptionListNode {
+  ordered: boolean;
+  items: { block: DescriptionBlock; sublists: DescriptionListNode[] }[];
+}
+
 export interface Vehicle {
   status: VehicleStatus;
   year: number;
@@ -72,6 +92,7 @@ export interface Vehicle {
   interiorColour: string;
   photos: VehiclePhoto[];
   description: string;
+  descriptionBlocks: DescriptionBlock[];
   highlights: VehicleHighlight[];
   features: string[];
   historyReportUrl?: string;

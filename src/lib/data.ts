@@ -1,4 +1,4 @@
-import type { Vehicle } from "./types";
+import type { DescriptionBlock, DescriptionSpan, Vehicle } from "./types";
 import fixtureJson from "../data/vehicles.fixture.json";
 
 /**
@@ -18,7 +18,7 @@ const GROQ_QUERY = /* groq */ `*[_type == "vehicle"] | order(datePosted desc) {
 
 const SANITY_API_VERSION = "v2025-01-01";
 
-interface SampleVehicleJson extends Omit<Vehicle, "datePosted" | "dateSold"> {
+interface SampleVehicleJson extends Omit<Vehicle, "datePosted" | "dateSold" | "descriptionBlocks"> {
   daysAgoPosted: number;
   daysAgoSold?: number;
 }
@@ -38,25 +38,76 @@ function loadFixture(): Vehicle[] {
   const today = new Date();
   return sample.vehicles.map(({ daysAgoPosted, daysAgoSold, ...vehicle }) => ({
     ...vehicle,
+    descriptionBlocks: toDescriptionBlocks(vehicle.description),
     datePosted: isoDaysAgo(daysAgoPosted, today),
     ...(daysAgoSold != null ? { dateSold: isoDaysAgo(daysAgoSold, today) } : {}),
   }));
 }
 
-/** Sanity portable text (array of blocks) to plain text; passes strings through. */
-function toPlainText(value: unknown): string {
-  if (typeof value === "string") return value;
-  if (!Array.isArray(value)) return "";
-  return value
-    .map((block) => {
-      const children = asRecord(block)?.children;
-      if (!Array.isArray(children)) return "";
-      return children.map((child) => {
-        const text = asRecord(child)?.text;
-        return typeof text === "string" ? text : "";
-      }).join("");
-    })
+const BLOCK_STYLES: Record<string, true> = { normal: true, h1: true, h2: true, h3: true, h4: true, blockquote: true };
+const SAFE_HREF = /^(https?:\/\/|mailto:|tel:)/i;
+
+function paragraphBlocks(text: string): DescriptionBlock[] {
+  return text
+    .split(/\n{2,}/)
+    .map((p) => p.trim())
     .filter(Boolean)
+    .map((p): DescriptionBlock => ({ style: "normal", level: 1, children: [{ text: p, marks: [] }], links: {} }));
+}
+
+/** Sanity portable text (or a plain string) to renderable blocks. Unknown shapes are dropped. */
+export function toDescriptionBlocks(value: unknown): DescriptionBlock[] {
+  if (typeof value === "string") return paragraphBlocks(value);
+  if (!Array.isArray(value)) return [];
+  const blocks: DescriptionBlock[] = [];
+  for (const raw of value) {
+    const block = asRecord(raw);
+    if (!block || !Array.isArray(block.children)) continue;
+    const links: Record<string, string> = {};
+    if (Array.isArray(block.markDefs)) {
+      for (const def of block.markDefs) {
+        const d = asRecord(def);
+        if (d && typeof d._key === "string" && typeof d.href === "string" && SAFE_HREF.test(d.href.trim())) {
+          links[d._key] = d.href.trim();
+        }
+      }
+    }
+    const children: DescriptionSpan[] = [];
+    for (const raw of block.children) {
+      const child = asRecord(raw);
+      if (!child || typeof child.text !== "string" || child.text === "") continue;
+      const marks = Array.isArray(child.marks) ? child.marks.filter((m): m is string => typeof m === "string") : [];
+      children.push({ text: child.text, marks });
+    }
+    if (children.length === 0) continue;
+    const style = typeof block.style === "string" && Object.hasOwn(BLOCK_STYLES, block.style) ? block.style : "normal";
+    blocks.push({
+      style: style as DescriptionBlock["style"],
+      ...(block.listItem === "bullet" || block.listItem === "number" ? { listItem: block.listItem } : {}),
+      level: typeof block.level === "number" && block.level >= 1 ? Math.floor(block.level) : 1,
+      children,
+      links,
+    });
+  }
+  return blocks;
+}
+
+/** Plain text for meta description, JSON-LD and the listing kit. */
+export function descriptionToPlainText(blocks: DescriptionBlock[]): string {
+  const counters: number[] = [];
+  return blocks
+    .map((block) => {
+      const text = block.children.map((c) => c.text).join("");
+      if (!block.listItem) {
+        counters.length = 0;
+        return text;
+      }
+      counters.length = block.level;
+      for (let i = 0; i < block.level; i++) counters[i] ??= 0;
+      if (block.listItem === "bullet") return `• ${text}`;
+      counters[block.level - 1]++;
+      return `${counters[block.level - 1]}. ${text}`;
+    })
     .join("\n\n");
 }
 
@@ -75,6 +126,7 @@ function isVehicle(value: unknown): value is Vehicle {
 
 function toVehicle(doc: unknown): Vehicle | null {
   if (!isVehicle(doc)) return null;
+  const descriptionBlocks = toDescriptionBlocks(asRecord(doc)?.description);
   return {
     ...doc,
     // Studio enforces https, but documents written through the API skip Studio validation.
@@ -82,7 +134,8 @@ function toVehicle(doc: unknown): Vehicle | null {
       typeof doc.historyReportUrl === "string" && doc.historyReportUrl.startsWith("https://")
         ? doc.historyReportUrl
         : undefined,
-    description: toPlainText(doc.description),
+    description: descriptionToPlainText(descriptionBlocks),
+    descriptionBlocks,
     highlights: Array.isArray(doc.highlights) ? doc.highlights : [],
     features: Array.isArray(doc.features) ? doc.features : [],
   };
