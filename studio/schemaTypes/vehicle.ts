@@ -161,7 +161,13 @@ export default defineType({
       name: 'mileageKm',
       title: 'Mileage (km)',
       type: 'number',
-      validation: (Rule) => Rule.required().min(0).error('Mileage is required.'),
+      description: 'Digits only, no commas or dots — e.g. 192345.',
+      validation: (Rule) =>
+        Rule.required()
+          .integer()
+          .min(0)
+          .max(1000000)
+          .error('Enter mileage as whole km digits only, from 0 to 1,000,000 — e.g. 192345 (no commas or dots).'),
     }),
     defineField({
       name: 'bodyType',
