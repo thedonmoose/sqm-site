@@ -5,8 +5,6 @@
 //   <root>/<stockNumber or VIN>/*.jpg|jpeg|png|webp|avif|gif
 //   - one subfolder per vehicle, named by its stock number or VIN (case-insensitive)
 //   - files are added to the photos array in filename order
-//   - a filename containing "interior" (case-insensitive) becomes an Interior
-//     photo; everything else becomes an Exterior photo
 //
 // Usage:
 //   node scripts/import-photos.mjs --dir ./photos --project-id <id> [--dry-run]
@@ -37,8 +35,6 @@ Folder convention:
   - one subfolder per vehicle, named by its stock number or VIN (case-insensitive)
   - files are appended to the vehicle's photos in filename order
     (1.jpg, 2.jpg, … or any names sorted alphabetically)
-  - a filename containing "interior" (e.g. dash-interior-3.jpg) is uploaded as
-    an Interior photo; all others are Exterior
 
 Options:
   --dir <path>        Root folder containing one subfolder per vehicle (required)
@@ -50,7 +46,7 @@ Options:
 
 Notes:
   - Changes are written to the DRAFT version of each vehicle so staff can
-    review alt text and ordering before publishing.
+    review the photos and their order before publishing.
   - Running the script twice adds duplicate photos — re-run only for new folders.
 `)
   process.exit(0)
@@ -83,16 +79,6 @@ const filenameOrder = new Intl.Collator('en', {numeric: true, sensitivity: 'base
 async function findVehicle(key) {
   const query = `*[!(_id in path("drafts.**")) && _type == "vehicle" && (lower(vin) == $key || lower(stockNumber) == $key)][0]{_id, year, make, model, trim}`
   return client.fetch(query, {key: key.toLowerCase()})
-}
-
-function humanizeFilename(filename, vehicle) {
-  const cleaned = filename
-    .replace(/\.[^.]+$/, '')
-    .replace(/[-_]+/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
-  const vehicleName = [vehicle.year, vehicle.make, vehicle.model, vehicle.trim].filter(Boolean).join(' ')
-  return `${vehicleName} — ${cleaned}`
 }
 
 async function importFolder(subfolderName) {
@@ -132,9 +118,7 @@ async function importFolder(subfolderName) {
 
   const newPhotos = []
   for (const filename of files) {
-    const category = /interior/i.test(filename) ? 'interior' : 'exterior'
-    const alt = humanizeFilename(filename, vehicle)
-    console.log(`  ${category.padEnd(8)} ${filename}`)
+    console.log(`  ${filename}`)
     if (dryRun) {
       continue
     }
@@ -145,8 +129,6 @@ async function importFolder(subfolderName) {
       _type: 'vehiclePhoto',
       _key: randomUUID(),
       asset: {_type: 'reference', _ref: asset._id},
-      alt,
-      category,
     })
   }
 

@@ -39,3 +39,7 @@ export function metaDescription(text: string, max = 155): string {
 export function vehicleHref(v: Vehicle): string {
   return `/vehicles/${v.slug}/`;
 }
+
+export function photoAlt(v: Vehicle, i: number): string {
+  return `${vehicleTitle(v)}, photo ${i + 1} of ${v.photos.length}`;
+}

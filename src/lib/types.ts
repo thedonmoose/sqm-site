@@ -30,12 +30,8 @@ export type Transmission = "automatic" | "manual" | "cvt";
 
 export type FuelType = "gasoline" | "diesel" | "hybrid" | "electric" | "phev";
 
-export type PhotoCategory = "exterior" | "interior";
-
 export interface VehiclePhoto {
   src: string;
-  alt: string;
-  category: PhotoCategory;
 }
 
 export interface VehicleHighlight {

@@ -6,7 +6,7 @@ const today = () => new Date().toISOString().slice(0, 10)
 const STAFF_HELP =
   'HOW TO ADD A VEHICLE\n' +
   '1. Fill in the details below. Fields marked with * must be filled in before the vehicle can be published.\n' +
-  '2. Add at least one photo. Drag photos to reorder — the first one is the cover photo shown everywhere on the site.\n' +
+  '2. Add your photos: drag or select all of them at once. Drag to reorder — the first one is the cover photo shown everywhere on the site.\n' +
   '3. Answer every question in the Vehicle disclosures section at the bottom — Ontario law (OMVIC) requires this.\n' +
   '4. Press Publish. The car appears on the website within a few minutes.\n' +
   'When a car sells, use the "Mark as sold" button at the top of this page. Full instructions are in STAFF-GUIDE.md.'
@@ -218,7 +218,7 @@ export default defineType({
       title: 'Photos',
       type: 'array',
       of: [defineArrayMember({type: 'vehiclePhoto'})],
-      description: 'At least one photo is required. Drag to reorder — the first photo is the cover.',
+      description: 'Drag or select all photos at once. Drag to reorder — the first photo is the cover.',
       options: {
         layout: 'grid',
       },

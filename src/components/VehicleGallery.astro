@@ -1,9 +1,9 @@
 ---
 /** Vehicle photo gallery: fixed 4:3 main frame, single thumbnail strip with
- * +N overflow. Keyboard and touch handled in src/scripts/gallery.ts.
- * Photo category data is kept in the CMS but the gallery shows all photos. */
+ * +N overflow. Keyboard and touch handled in src/scripts/gallery.ts. */
 import type { Vehicle } from "../lib/types";
 import { responsiveImage } from "../lib/images";
+import { photoAlt } from "../lib/format";
 
 interface Props {
   vehicle: Vehicle;
@@ -27,7 +27,7 @@ const mainImage = responsiveImage(vehicle.photos[0].src, "gallery");
       src={mainImage.src}
       srcset={mainImage.srcset}
       sizes={mainImage.sizes}
-      alt={vehicle.photos[0].alt}
+      alt={photoAlt(vehicle, 0)}
       width="1600"
       height="1200"
       loading="eager"
@@ -70,8 +70,8 @@ const mainImage = responsiveImage(vehicle.photos[0].src, "gallery");
           data-gallery-thumb
           data-full={image.src}
           data-full-srcset={image.srcset}
-          data-alt={photo.alt}
-          aria-label={`Show photo ${i + 1}: ${photo.alt}`}
+          data-alt={photoAlt(vehicle, i)}
+          aria-label={`Show photo ${i + 1}: ${photoAlt(vehicle, i)}`}
           aria-pressed={i === 0 ? "true" : "false"}
           hidden={i >= MAX_THUMBS}
           class="relative aspect-4/3 overflow-hidden bg-charcoal/10"
@@ -145,7 +145,7 @@ const mainImage = responsiveImage(vehicle.photos[0].src, "gallery");
             <button
               type="button"
               data-lightbox-thumb
-              aria-label={`Show photo ${i + 1}: ${photo.alt}`}
+              aria-label={`Show photo ${i + 1}: ${photoAlt(vehicle, i)}`}
               class="relative aspect-4/3 w-24 shrink-0 cursor-pointer overflow-hidden bg-charcoal/10"
             >
               <img

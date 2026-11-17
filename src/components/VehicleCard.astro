@@ -7,6 +7,7 @@ import {
   formatTransmission,
   vehicleTitle,
   vehicleHref,
+  photoAlt,
 } from "../lib/format";
 import { responsiveImage } from "../lib/images";
 
@@ -38,7 +39,7 @@ const soldTarget = soldHref ?? `/inventory/?make=${encodeURIComponent(vehicle.ma
         src={coverImage.src}
         srcset={coverImage.srcset}
         sizes={coverImage.sizes}
-        alt={cover.alt}
+        alt={photoAlt(vehicle, 0)}
         width="1600"
         height="1200"
         loading="lazy"

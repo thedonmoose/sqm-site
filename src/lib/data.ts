@@ -10,7 +10,7 @@ const GROQ_QUERY = /* groq */ `*[_type == "vehicle"] | order(datePosted desc) {
   allInPrice, previousPrice, previousPriceAdvertised, mileageKm,
   bodyType, drivetrain, transmission, fuelType, engine,
   exteriorColour, interiorColour,
-  "photos": photos[]{ "src": asset->url, alt, category },
+  "photos": photos[]{ "src": asset->url },
   description, highlights, features,
   historyReportUrl, uvipAvailable, disclosures,
   "slug": slug.current, datePosted, dateSold
