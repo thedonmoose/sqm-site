@@ -30,12 +30,8 @@ export type Transmission = "automatic" | "manual" | "cvt";
 
 export type FuelType = "gasoline" | "diesel" | "hybrid" | "electric" | "phev";
 
-export type PhotoCategory = "exterior" | "interior";
-
 export interface VehiclePhoto {
   src: string;
-  alt: string;
-  category: PhotoCategory;
 }
 
 export interface VehicleHighlight {
@@ -53,6 +49,26 @@ export interface VehicleDisclosures {
   soldAsCertified: boolean;
   certificationDetails?: string;
   otherDisclosures?: string;
+}
+
+export interface DescriptionSpan {
+  text: string;
+  /** Decorator names ("strong", "em", ...) and markDefs keys. */
+  marks: string[];
+}
+
+export interface DescriptionBlock {
+  style: "normal" | "h1" | "h2" | "h3" | "h4" | "blockquote";
+  listItem?: "bullet" | "number";
+  level: number;
+  children: DescriptionSpan[];
+  /** Link annotations by key; href is already restricted to safe schemes. */
+  links: Record<string, string>;
+}
+
+export interface DescriptionListNode {
+  ordered: boolean;
+  items: { block: DescriptionBlock; sublists: DescriptionListNode[] }[];
 }
 
 export interface Vehicle {
@@ -76,6 +92,7 @@ export interface Vehicle {
   interiorColour: string;
   photos: VehiclePhoto[];
   description: string;
+  descriptionBlocks: DescriptionBlock[];
   highlights: VehicleHighlight[];
   features: string[];
   historyReportUrl?: string;

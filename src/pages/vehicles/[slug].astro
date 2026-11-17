@@ -4,6 +4,7 @@ import Layout from "../../layouts/Layout.astro";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
 import VehicleCard from "../../components/VehicleCard.astro";
+import DescriptionBody from "../../components/DescriptionBody.astro";
 import VehicleGallery from "../../components/VehicleGallery.astro";
 import Form from "../../components/Form.astro";
 import { site, telHref, smsHref, whatsappHref, AS_IS_STATEMENT } from "../../data/site";
@@ -276,12 +277,16 @@ const structuredData = {
           </aside>
         </div>
 
-        <section aria-labelledby="about-vehicle" class="order-4 flex flex-col gap-4 lg:col-start-1 lg:row-start-2">
-          <h2 id="about-vehicle" class="text-[28px] leading-[1.1] font-medium md:text-[32px]">
-            About this vehicle
-          </h2>
-          {vehicle.description.split("\n\n").map((paragraph) => <p>{paragraph}</p>)}
-        </section>
+        {
+          vehicle.descriptionBlocks.length > 0 && (
+            <section aria-labelledby="about-vehicle" class="order-4 flex flex-col gap-4 lg:col-start-1 lg:row-start-2">
+              <h2 id="about-vehicle" class="text-[28px] leading-[1.1] font-medium md:text-[32px]">
+                About this vehicle
+              </h2>
+              <DescriptionBody blocks={vehicle.descriptionBlocks} />
+            </section>
+          )
+        }
 
         {
           vehicle.highlights.length > 0 && (

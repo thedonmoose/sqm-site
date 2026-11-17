@@ -57,8 +57,8 @@ function block(text) {
   return {_type: 'block', _key: randomUUID(), style: 'normal', markDefs: [], children: [{_type: 'span', _key: randomUUID(), text, marks: []}]}
 }
 
-function photo(assetId, alt, category = 'exterior') {
-  return {_type: 'vehiclePhoto', _key: randomUUID(), asset: {_type: 'reference', _ref: assetId}, alt, category}
+function photo(assetId) {
+  return {_type: 'vehiclePhoto', _key: randomUUID(), asset: {_type: 'reference', _ref: assetId}}
 }
 
 function okDisclosures() {
@@ -265,7 +265,7 @@ for (const vehicle of sampleVehicles) {
     ...vehicle,
     _type: 'vehicle',
     staffInstructions: undefined,
-    photos: [photo(placeholderAssetId, 'Placeholder photo — replace with real photos of this vehicle')],
+    photos: [photo(placeholderAssetId)],
   }
   await client.createIfNotExists(doc)
   console.log(`Seeded ${vehicle._id}: ${vehicle.year} ${vehicle.make} ${vehicle.model} (${vehicle.status})`)

@@ -6,7 +6,7 @@ const today = () => new Date().toISOString().slice(0, 10)
 const STAFF_HELP =
   'HOW TO ADD A VEHICLE\n' +
   '1. Fill in the details below. Fields marked with * must be filled in before the vehicle can be published.\n' +
-  '2. Add at least one photo. Drag photos to reorder — the first one is the cover photo shown everywhere on the site.\n' +
+  '2. Add your photos: drag or select all of them at once. Drag to reorder — the first one is the cover photo shown everywhere on the site.\n' +
   '3. Answer every question in the Vehicle disclosures section at the bottom — Ontario law (OMVIC) requires this.\n' +
   '4. Press Publish. The car appears on the website within a few minutes.\n' +
   'When a car sells, use the "Mark as sold" button at the top of this page. Full instructions are in STAFF-GUIDE.md.'
@@ -161,7 +161,13 @@ export default defineType({
       name: 'mileageKm',
       title: 'Mileage (km)',
       type: 'number',
-      validation: (Rule) => Rule.required().min(0).error('Mileage is required.'),
+      description: 'Digits only, no commas or dots — e.g. 192345.',
+      validation: (Rule) =>
+        Rule.required()
+          .integer()
+          .min(0)
+          .max(1000000)
+          .error('Enter mileage as whole km digits only, from 0 to 1,000,000 — e.g. 192345 (no commas or dots).'),
     }),
     defineField({
       name: 'bodyType',
@@ -212,7 +218,7 @@ export default defineType({
       title: 'Photos',
       type: 'array',
       of: [defineArrayMember({type: 'vehiclePhoto'})],
-      description: 'At least one photo is required. Drag to reorder — the first photo is the cover.',
+      description: 'Drag or select all photos at once. Drag to reorder — the first photo is the cover.',
       options: {
         layout: 'grid',
       },
@@ -225,7 +231,44 @@ export default defineType({
       name: 'description',
       title: 'Description',
       type: 'array',
-      of: [defineArrayMember({type: 'block'})],
+      of: [
+        defineArrayMember({
+          type: 'block',
+          styles: [
+            {title: 'Normal', value: 'normal'},
+            {title: 'Heading', value: 'h3'},
+            {title: 'Quote', value: 'blockquote'},
+          ],
+          lists: [
+            {title: 'Bullet list', value: 'bullet'},
+            {title: 'Numbered list', value: 'number'},
+          ],
+          marks: {
+            decorators: [
+              {title: 'Bold', value: 'strong'},
+              {title: 'Italic', value: 'em'},
+            ],
+            annotations: [
+              {
+                name: 'link',
+                type: 'object',
+                title: 'Link',
+                fields: [
+                  defineField({
+                    name: 'href',
+                    type: 'url',
+                    title: 'Web address',
+                    validation: (Rule) =>
+                      Rule.uri({scheme: ['https', 'http', 'mailto', 'tel']}).error(
+                        'Use a web address starting with https://, or a mailto: / tel: link.',
+                      ),
+                  }),
+                ],
+              },
+            ],
+          },
+        }),
+      ],
       description: 'Shown under the photo gallery on the vehicle page.',
     }),
     defineField({

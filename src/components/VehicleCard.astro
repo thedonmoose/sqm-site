@@ -7,9 +7,9 @@ import {
   formatTransmission,
   vehicleTitle,
   vehicleHref,
+  photoAlt,
 } from "../lib/format";
 import { responsiveImage } from "../lib/images";
-import { AS_IS_STATEMENT } from "../data/site";
 
 interface Props {
   vehicle: Vehicle;
@@ -39,7 +39,7 @@ const soldTarget = soldHref ?? `/inventory/?make=${encodeURIComponent(vehicle.ma
         src={coverImage.src}
         srcset={coverImage.srcset}
         sizes={coverImage.sizes}
-        alt={cover.alt}
+        alt={photoAlt(vehicle, 0)}
         width="1600"
         height="1200"
         loading="lazy"
@@ -47,17 +47,26 @@ const soldTarget = soldHref ?? `/inventory/?make=${encodeURIComponent(vehicle.ma
         class="h-full w-full object-cover"
       />
     </a>
-    {
-      sold ? (
-        <span class="absolute top-4 left-4 bg-green px-3 py-1.5 text-[13px] font-bold uppercase tracking-[0.12em] text-white">
-          Sold
-        </span>
-      ) : badge ? (
-        <span class="absolute top-4 left-4 bg-green px-3 py-1.5 text-[13px] uppercase tracking-[0.12em] text-white">
-          {badge}
-        </span>
-      ) : null
-    }
+    <div class="absolute top-4 left-4 flex flex-col items-start gap-2">
+      {
+        sold ? (
+          <span class="bg-green px-3 py-1.5 text-[13px] font-bold uppercase tracking-[0.12em] text-white">
+            Sold
+          </span>
+        ) : badge ? (
+          <span class="bg-green px-3 py-1.5 text-[13px] uppercase tracking-[0.12em] text-white">
+            {badge}
+          </span>
+        ) : null
+      }
+      {
+        !sold && !vehicle.disclosures.soldAsCertified && (
+          <span class="bg-charcoal px-3 py-1.5 text-[13px] uppercase tracking-[0.12em] text-alabaster">
+            As-Is
+          </span>
+        )
+      }
+    </div>
   </div>
 
   <div class="flex flex-1 flex-col gap-1.5 p-6">
@@ -94,7 +103,6 @@ const soldTarget = soldHref ?? `/inventory/?make=${encodeURIComponent(vehicle.ma
       !sold && (
         <div class="mb-4 flex flex-col gap-2">
           <p class="text-sm opacity-75">All-in price. Plus HST and licensing.</p>
-          {!vehicle.disclosures.soldAsCertified && <p class="text-xs opacity-75">{AS_IS_STATEMENT}</p>}
         </div>
       )
     }

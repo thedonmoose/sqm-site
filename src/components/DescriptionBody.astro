@@ -1,0 +1,57 @@
+---
+import DescriptionInline from "./DescriptionInline.astro";
+import DescriptionList from "./DescriptionList.astro";
+import type { DescriptionBlock, DescriptionListNode } from "../lib/types";
+
+interface Props {
+  blocks: DescriptionBlock[];
+}
+
+type Node = { block: DescriptionBlock } | { list: DescriptionListNode };
+
+const { blocks } = Astro.props;
+
+// Consecutive list blocks become one nested list; `open[i]` is the list currently open at level i + 1.
+const nodes: Node[] = [];
+let open: DescriptionListNode[] = [];
+for (const block of blocks) {
+  if (!block.listItem) {
+    open = [];
+    nodes.push({ block });
+    continue;
+  }
+  const ordered = block.listItem === "number";
+  // A level can only go one deeper than the list that is open.
+  const depth = Math.min(Math.max(1, block.level), open.length + 1);
+  open = open.slice(0, depth);
+  let list = open[depth - 1];
+  if (!list || list.ordered !== ordered) {
+    list = { ordered, items: [] };
+    open[depth - 1] = list;
+    if (depth === 1) nodes.push({ list });
+    else open[depth - 2].items.at(-1)?.sublists.push(list);
+  }
+  list.items.push({ block, sublists: [] });
+}
+
+const headingTag = { h1: "h3", h2: "h3", h3: "h3", h4: "h4" } as const;
+const inlineClass = "text-lg leading-snug font-medium";
+---
+
+<div class="flex flex-col gap-4">
+  {
+    nodes.map((node) => {
+      if ("list" in node) return <DescriptionList list={node.list} />;
+      const { block } = node;
+      const spans = block.children.map((span) => (
+        <DescriptionInline text={span.text} marks={span.marks} links={block.links} />
+      ));
+      if (block.style === "blockquote") {
+        return <blockquote class="border-s-4 border-green ps-4 italic">{spans}</blockquote>;
+      }
+      if (block.style === "normal") return <p>{spans}</p>;
+      const Heading = headingTag[block.style];
+      return <Heading class={inlineClass}>{spans}</Heading>;
+    })
+  }
+</div>

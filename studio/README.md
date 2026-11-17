@@ -53,7 +53,7 @@ node scripts/import-photos.mjs --dir ./photos --project-id your-project-id
 node scripts/import-photos.mjs --help   # full usage + dry-run
 ```
 
-Folder convention: one subfolder per vehicle named by stock number or VIN, files ordered by filename, `interior` in a filename marks an interior shot. Imports are written as **drafts** for staff review. See STAFF-GUIDE.md for the convention summary.
+Folder convention: one subfolder per vehicle named by stock number or VIN, files ordered by filename. Imports are written as **drafts** for staff review. See STAFF-GUIDE.md for the convention summary.
 
 ## 6. Publish webhook → website rebuild
 

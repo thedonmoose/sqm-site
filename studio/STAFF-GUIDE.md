@@ -12,11 +12,9 @@ You do this in the Sanity Studio (the "Serene Quality Motors" studio). Everythin
 
 ## Photos
 
-1. In the **Photos** section, click **+** and upload your photos (or drag them in).
-2. Write **alt text** for every photo — one line describing it, e.g. "Front three-quarter view from the driver side". The form insists on this.
-3. Set **Exterior** or **Interior** on each photo. The website splits the gallery into these two tabs.
-4. **Reorder** by dragging photos — the **first photo is the cover** shown on the inventory page, so keep the front three-quarter shot first.
-5. Click **Publish** to make changes live.
+1. In the **Photos** section, select or drag in **all of your photos at once**.
+2. **Reorder** by dragging photos — the **first photo is the cover** shown on the inventory page, so keep the front three-quarter shot first.
+3. Click **Publish** to make changes live.
 
 ## Set a price reduction correctly
 
@@ -42,13 +40,12 @@ photos/
   S-1001/
     01-front.jpg
     02-rear.jpg
-    03-dash-interior.jpg
+    03-dash.jpg
   S-1002/
     ...
 ```
 
 - File names sort alphabetically and are added to the car in that order — name them `01-…`, `02-…` to control the order.
-- Any file name containing **"interior"** is filed as an Interior photo; everything else is Exterior.
 - The import saves everything as **drafts** — you still review and publish in the Studio.
 
 Ask the site maintainer to run the import script, or see `studio/README.md` for the exact command.

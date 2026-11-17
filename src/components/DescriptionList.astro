@@ -1,0 +1,27 @@
+---
+import Self from "./DescriptionList.astro";
+import DescriptionInline from "./DescriptionInline.astro";
+import type { DescriptionListNode } from "../lib/types";
+
+interface Props {
+  list: DescriptionListNode;
+  nested?: boolean;
+}
+
+const { list, nested = false } = Astro.props;
+const Tag = list.ordered ? "ol" : "ul";
+const cls = `${list.ordered ? "list-decimal" : "list-disc"} flex flex-col gap-1.5 ps-6 marker:text-green ${nested ? "mt-1.5" : ""}`;
+---
+
+<Tag class={cls}>
+  {
+    list.items.map((item) => (
+      <li>
+        {item.block.children.map((span) => (
+          <DescriptionInline text={span.text} marks={span.marks} links={item.block.links} />
+        ))}
+        {item.sublists.map((sub) => <Self list={sub} nested />)}
+      </li>
+    ))
+  }
+</Tag>

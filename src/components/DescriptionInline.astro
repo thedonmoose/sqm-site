@@ -1,0 +1,46 @@
+---
+import Self from "./DescriptionInline.astro";
+
+interface Props {
+  text: string;
+  marks: string[];
+  links: Record<string, string>;
+}
+
+const { text, marks, links } = Astro.props;
+const SAFE_HREF = /^(https?:\/\/|mailto:|tel:)/i;
+const [mark, ...rest] = marks;
+const href = mark !== undefined && Object.hasOwn(links, mark) && SAFE_HREF.test(links[mark]) ? links[mark] : undefined;
+const external = href !== undefined && /^https?:/i.test(href);
+const lines = text.split("\n");
+---
+
+{
+  mark === undefined ? (
+    lines.map((line, i) => (
+      <Fragment>
+        {i > 0 && <br />}
+        {line}
+      </Fragment>
+    ))
+  ) : mark === "strong" ? (
+    <strong><Self text={text} marks={rest} links={links} /></strong>
+  ) : mark === "em" ? (
+    <em><Self text={text} marks={rest} links={links} /></em>
+  ) : mark === "underline" ? (
+    <u><Self text={text} marks={rest} links={links} /></u>
+  ) : mark === "strike-through" ? (
+    <s><Self text={text} marks={rest} links={links} /></s>
+  ) : mark === "code" ? (
+    <code class="bg-charcoal/10 px-1 font-mono text-[0.9em]"><Self text={text} marks={rest} links={links} /></code>
+  ) : href ? (
+    <a
+      href={href}
+      class="underline underline-offset-4 hover:text-green"
+      rel={external ? "noopener noreferrer" : undefined}
+      target={external ? "_blank" : undefined}
+    ><Self text={text} marks={rest} links={links} /></a>
+  ) : (
+    <Self text={text} marks={rest} links={links} />
+  )
+}
