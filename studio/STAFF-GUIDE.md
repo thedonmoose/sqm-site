@@ -12,7 +12,7 @@ You do this in the Sanity Studio (the "Serene Quality Motors" studio). Everythin
 
 ## Photos
 
-1. In the **Photos** section, select or drag in **all of your photos at once**.
+1. In the **Photos** section, press **Upload photos** and select **all of your photos at once** (or drag them into the Photos box).
 2. **Reorder** by dragging photos — the **first photo is the cover** shown on the inventory page, so keep the front three-quarter shot first.
 3. Click **Publish** to make changes live.
 
