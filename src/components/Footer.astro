@@ -13,6 +13,10 @@ const legalLinks = [
   { href: "/terms/", label: "Terms" },
   { href: "/accessibility/", label: "Accessibility" },
 ];
+const regulatorLinks = [
+  { href: "https://www.omvic.ca", label: site.omvic.name },
+  { href: "https://www.ucda.com", label: site.ucda.name },
+];
 const year = new Date().getFullYear();
 ---
 
@@ -32,6 +36,12 @@ const year = new Date().getFullYear();
     <nav aria-label="Footer" class="flex flex-col items-start gap-2 text-base">
       {navLinks.map((link) => (
         <a href={link.href} class="hover:underline underline-offset-4">{link.label}</a>
+      ))}
+    </nav>
+
+    <nav aria-label="Industry bodies" class="flex flex-col items-start gap-2 text-base">
+      {regulatorLinks.map((link) => (
+        <a href={link.href} target="_blank" rel="noopener noreferrer" class="hover:underline underline-offset-4">{link.label}</a>
       ))}
     </nav>
 
@@ -61,13 +71,6 @@ const year = new Date().getFullYear();
   </div>
 
   <div class="container-sqm flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-alabaster/25 pb-10 pt-6 text-sm">
-    <span class="inline-flex items-center gap-2">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true">
-        <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"></path>
-        <path d="M8.5 12l2.5 2.5 5-5"></path>
-      </svg>
-      {site.omvic.name} registered · {site.ucda.name} member
-    </span>
     {legalLinks.map((link) => (
       <a href={link.href} class="hover:underline underline-offset-4">{link.label}</a>
     ))}

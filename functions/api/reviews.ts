@@ -54,6 +54,9 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+/** Longer reviews are skipped so the three cards stay visually balanced. */
+const MAX_REVIEW_CHARS = 300;
+
 export function mapPlacesResponse(value: unknown): ReviewsPayload | null {
   if (!isRecord(value)) return null;
 
@@ -109,6 +112,9 @@ export function mapPlacesResponse(value: unknown): ReviewsPayload | null {
     }
     if (typeof authorAttribution?.photoUri === "string") {
       review.authorPhotoUri = authorAttribution.photoUri;
+    }
+    if (review.text.trim() === "" || review.text.length > MAX_REVIEW_CHARS) {
+      continue;
     }
     mappedReviews.push(review);
   }
