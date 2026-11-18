@@ -21,7 +21,7 @@ const DRIVE_HOME_COPY =
 const mapEmbed = `https://maps.google.com/maps?q=${encodeURIComponent(fullAddress())}&z=15&output=embed`;
 const rtbItems = [
   {
-    title: "All-in pricing",
+    title: "Transparent pricing",
     detail: "No surprise fees. Only HST and licensing are added.",
     icon: '<path d="M3 12V4h8l10 10-8 8L3 12z"></path><circle cx="7.5" cy="8.5" r="1.5"></circle>',
   },
@@ -40,7 +40,7 @@ const steps = [
   {
     number: "01",
     title: "Browse the lot",
-    detail: "Every vehicle has its own page with photos, the all-in price and full disclosures.",
+    detail: "Every vehicle has its own page with photos, the full price and complete disclosures.",
   },
   {
     number: "02",
@@ -54,7 +54,7 @@ const hero = site.heroVideo;
 
 <Layout
   title={`${site.name} — Used cars in Scarborough, ON`}
-  description="OMVIC-registered used-car dealer and UCDA member on 4650 Kingston Rd, Scarborough. Every vehicle listed at an honest all-in price with disclosures up front."
+  description="OMVIC-registered used-car dealer and UCDA member on 4650 Kingston Rd, Scarborough. Every vehicle priced with all fees included except HST and licensing, with disclosures up front."
   ogImage="/og/home.jpg"
   headLinks={[
     { rel: "preload", href: hero.posterAvif, as: "image", type: "image/avif" },

@@ -132,7 +132,7 @@ const structuredData = {
     vehicle.description.trim() ||
       (sold
         ? `${title}, ${meta}. Sold by ${site.name} in ${site.address.city}.`
-        : `${title}, ${meta}. ${price} all-in at ${site.name} in ${site.address.city}.`),
+        : `${title}, ${meta}. ${price} plus HST and licensing at ${site.name} in ${site.address.city}.`),
   )}
   robots={sold ? "noindex" : undefined}
   ogImage={shareImage(vehicle.photos[0].src)}
@@ -433,7 +433,7 @@ const structuredData = {
         <div class="flex items-center gap-2.5 px-4 py-3">
           <div class="mr-auto leading-tight">
             <span class="block text-2xl font-bold">{price}</span>
-            <span class="text-xs opacity-80">All-in</span>
+            <span class="text-xs opacity-80">Total price</span>
           </div>
           {callHref ? (
             <a href={callHref} class="btn btn-outline-light min-h-14 flex-1">Call</a>
