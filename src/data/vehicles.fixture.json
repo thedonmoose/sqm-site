@@ -58,7 +58,7 @@
         "accidentOrDamageHistory": { "status": "none" },
         "rebuiltOrSalvageStatus": { "status": "none" },
         "odometerNote": { "status": "accurate" },
-        "soldAsCertified": false
+        "saleStatus": "as-is-certifiable"
       }
     },
     {
@@ -119,7 +119,7 @@
         },
         "rebuiltOrSalvageStatus": { "status": "none" },
         "odometerNote": { "status": "accurate" },
-        "soldAsCertified": false
+        "saleStatus": "as-is"
       }
     },
     {
@@ -179,7 +179,7 @@
           "status": "discrepancy",
           "details": "Instrument cluster was replaced at 96,000 km in 2019; the odometer does not show total distance. Documented on the UVIP, copy available on request."
         },
-        "soldAsCertified": false
+        "saleStatus": "as-is"
       }
     },
     {
@@ -233,7 +233,7 @@
         "accidentOrDamageHistory": { "status": "none" },
         "rebuiltOrSalvageStatus": { "status": "none" },
         "odometerNote": { "status": "accurate" },
-        "soldAsCertified": false,
+        "saleStatus": "as-is",
         "otherDisclosures": "Aftermarket all-weather floor mats installed; originals included."
       }
     }

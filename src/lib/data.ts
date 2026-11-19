@@ -12,7 +12,11 @@ const GROQ_QUERY = /* groq */ `*[_type == "vehicle"] | order(datePosted desc) {
   exteriorColour, interiorColour,
   "photos": photos[]{ "src": asset->url },
   description, highlights, features,
-  historyReportUrl, uvipAvailable, disclosures,
+  historyReportUrl, uvipAvailable,
+  "disclosures": disclosures{
+    ...,
+    "saleStatus": coalesce(saleStatus, select(soldAsCertified == true => "certified", "as-is"))
+  },
   "slug": slug.current, datePosted, dateSold
 }`;
 
