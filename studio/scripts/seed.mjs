@@ -67,7 +67,7 @@ function okDisclosures() {
     accidentOrDamageHistory: {_type: 'disclosureItem', status: 'none'},
     rebuiltOrSalvageStatus: {_type: 'disclosureItem', status: 'none'},
     odometerNote: {_type: 'object', status: 'accurate'},
-    soldAsCertified: false,
+    saleStatus: 'as-is',
   }
 }
 

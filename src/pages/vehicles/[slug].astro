@@ -7,7 +7,7 @@ import VehicleCard from "../../components/VehicleCard.astro";
 import DescriptionBody from "../../components/DescriptionBody.astro";
 import VehicleGallery from "../../components/VehicleGallery.astro";
 import Form from "../../components/Form.astro";
-import { site, telHref, smsHref, whatsappHref, AS_IS_STATEMENT } from "../../data/site";
+import { site, telHref, smsHref, whatsappHref, AS_IS_STATEMENT, CERTIFICATION_PRICE } from "../../data/site";
 import { getVehicles, pickRelated, similarVehiclesHref } from "../../lib/data";
 import { responsiveImage, shareImage } from "../../lib/images";
 import { formatPrice, formatKm, formatTransmission, metaDescription, vehicleTitle } from "../../lib/format";
@@ -93,9 +93,16 @@ const disclosures = [
     value: vehicle.disclosures.odometerNote.status === "accurate" ? "Accurate" : "Discrepancy disclosed",
     details: vehicle.disclosures.odometerNote.details,
   },
-  vehicle.disclosures.soldAsCertified
-    ? { label: "Sold as", value: "Certified", details: vehicle.disclosures.certificationDetails }
-    : { label: "Sold as", value: "As-is", details: AS_IS_STATEMENT },
+  vehicle.disclosures.saleStatus === "certified"
+    ? { label: "Sold as", value: "Certified" }
+    : {
+        label: "Sold as",
+        value: "As-is",
+        details:
+          vehicle.disclosures.saleStatus === "as-is-certifiable"
+            ? `${AS_IS_STATEMENT} Safety certification available for ${formatPrice(CERTIFICATION_PRICE)}.`
+            : AS_IS_STATEMENT,
+      },
   { label: "UVIP", value: vehicle.uvipAvailable ? "Available" : "Not available" },
   ...(vehicle.disclosures.otherDisclosures
     ? [{ label: "Other disclosures", value: "Disclosed", details: vehicle.disclosures.otherDisclosures }]

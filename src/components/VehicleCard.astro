@@ -60,7 +60,7 @@ const soldTarget = soldHref ?? `/inventory/?make=${encodeURIComponent(vehicle.ma
         ) : null
       }
       {
-        !sold && !vehicle.disclosures.soldAsCertified && (
+        !sold && vehicle.disclosures.saleStatus !== "certified" && (
           <span class="bg-charcoal px-3 py-1.5 text-[13px] uppercase tracking-[0.12em] text-alabaster">
             As-Is
           </span>

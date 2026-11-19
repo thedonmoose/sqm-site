@@ -40,14 +40,14 @@ export interface VehicleHighlight {
 }
 
 export type DisclosureStatus = "none" | "disclosed";
+export type SaleStatus = "as-is" | "as-is-certifiable" | "certified";
 export type OdometerStatus = "accurate" | "discrepancy";
 
 export interface VehicleDisclosures {
   accidentOrDamageHistory: { status: DisclosureStatus; details?: string };
   rebuiltOrSalvageStatus: { status: DisclosureStatus; details?: string };
   odometerNote: { status: OdometerStatus; details?: string };
-  soldAsCertified: boolean;
-  certificationDetails?: string;
+  saleStatus: SaleStatus;
   otherDisclosures?: string;
 }
 

@@ -1,7 +1,7 @@
 ---
 import type { Vehicle } from "../../../lib/types";
 import Layout from "../../../layouts/Layout.astro";
-import { site, fullAddress, AS_IS_STATEMENT } from "../../../data/site";
+import { site, fullAddress, AS_IS_STATEMENT, CERTIFICATION_PRICE } from "../../../data/site";
 import { getVehicles } from "../../../lib/data";
 import { downloadImage } from "../../../lib/images";
 import { formatPrice, formatKm, formatTransmission, vehicleTitle, photoAlt } from "../../../lib/format";
@@ -72,9 +72,12 @@ const disclosureRows = [
   },
   {
     label: "Sold as",
-    value: vehicle.disclosures.soldAsCertified
-      ? `Certified — ${vehicle.disclosures.certificationDetails ?? "details on request"}`
-      : `As-is. ${AS_IS_STATEMENT}`,
+    value:
+      vehicle.disclosures.saleStatus === "certified"
+        ? "Certified"
+        : vehicle.disclosures.saleStatus === "as-is-certifiable"
+          ? `As-is. ${AS_IS_STATEMENT} Safety certification available for ${formatPrice(CERTIFICATION_PRICE)}.`
+          : `As-is. ${AS_IS_STATEMENT}`,
   },
   { label: "UVIP", value: vehicle.uvipAvailable ? "Available on request" : "Not available" },
   {

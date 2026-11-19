@@ -372,26 +372,18 @@ export default defineType({
           ],
         }),
         defineField({
-          name: 'soldAsCertified',
-          title: 'Sold as certified',
-          type: 'boolean',
-          description: 'Only tick if the vehicle is actually sold certified. Never claim certification you cannot document. Unticked = sold as-is: the site and listing kit add OMVIC\'s as-is statement automatically, so don\'t repeat it in Other disclosures.',
-        }),
-        defineField({
-          name: 'certificationDetails',
-          title: 'Certification details',
+          name: 'saleStatus',
+          title: 'Sale status',
           type: 'string',
-          description: 'Required when the vehicle is sold as certified — what the certification covers and who issued it.',
-          validation: (Rule) =>
-            Rule.custom((details, context) => {
-              const doc = context.document as {
-                disclosures?: {soldAsCertified?: boolean}
-              } | undefined
-              if (doc?.disclosures?.soldAsCertified === true && !details) {
-                return 'Certification details are required when the vehicle is sold as certified.'
-              }
-              return true
-            }),
+          description: 'Only choose Certified if the vehicle is actually sold certified. Never claim certification you cannot document. Both as-is options add OMVIC\'s as-is statement automatically, so don\'t repeat it in Other disclosures. "As-is, certifiable" also shows that safety certification is available for $899.',
+          options: {
+            list: [
+              {title: 'As-is', value: 'as-is'},
+              {title: 'As-is, can be certified ($899)', value: 'as-is-certifiable'},
+              {title: 'Certified', value: 'certified'},
+            ],
+            layout: 'radio',
+          },
         }),
         defineField({
           name: 'otherDisclosures',
@@ -408,7 +400,7 @@ export default defineType({
                 accidentOrDamageHistory?: {status?: string}
                 rebuiltOrSalvageStatus?: {status?: string}
                 odometerNote?: {status?: string}
-                soldAsCertified?: boolean
+                saleStatus?: string
               }
             | undefined
           if (!d) {
@@ -418,7 +410,7 @@ export default defineType({
           if (!d.accidentOrDamageHistory?.status) missing.push('accident or damage history')
           if (!d.rebuiltOrSalvageStatus?.status) missing.push('rebuilt/salvage status')
           if (!d.odometerNote?.status) missing.push('odometer')
-          if (typeof d.soldAsCertified !== 'boolean') missing.push('sold as certified')
+          if (!d.saleStatus) missing.push('sale status')
           if (missing.length > 0) {
             return `Disclosures must be answered explicitly — missing: ${missing.join(', ')}.`
           }
